@@ -22,8 +22,6 @@ CY_ISR(uart_int_Handler){
 
 void initializeAHT();
 void RestartAHT();
-void S_sequence();
-void P_sequence();
 
 
 int main(void)
@@ -39,36 +37,22 @@ int main(void)
     uint8 i2cWrBuf[3];
     uint8 i2cRdBuf[7];
     
-    RestartAHT();
-    CyDelay(20);
-    
     CyDelay(40); // wait 40ms after AHT power on
-//    initializeAHT();
+    initializeAHT();
     CyDelay(80); // wait 80ms for measurement to complete
        
     sprintf(s, "initialized\r\n");
     UART_PutString(s); 
     
-    S_sequence();
     i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
 
     I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
     
-    while(i2cRdBuf[0] >= 128){
-        i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
-        I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-        while(SDA_Read()); // SDA pulled low for ACK
-
-        I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
-        
-        sprintf(s, "%i\r\n", i2cRdBuf[0]);
-        UART_PutString(s);
-        
-        CyDelay(500);
-    }
+    while((int)i2cRdBuf & (1 << 7)); //check that bit 7 (busy) is low
     
+    // print status a measurement values
     for(int i = 0; i < 7; i++){
         sprintf(s, "%i\r\n", i2cRdBuf[i]);
         UART_PutString(s);
@@ -82,8 +66,6 @@ int main(void)
 void initializeAHT(){
     uint8 i2cWrBuf[4];
     
-    S_sequence();
-    
     i2cWrBuf[0] = 0b01110000; // slave addr ; b[0] = 0 for write mode
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
@@ -91,43 +73,18 @@ void initializeAHT(){
     i2cWrBuf[0] = 0xBE; // initialization cmd
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
-
-    i2cWrBuf[0] = 0x08; // initialization cmd
-    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-    while(SDA_Read()); // SDA pulled low for ACK
     
-    i2cWrBuf[0] = 0x00; // initialization cmd
-    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-    while(SDA_Read()); // SDA pulled low for ACK
-    
-    P_sequence();
     CyDelay(10);
-    
-    S_sequence();
-    i2cWrBuf[0] = 0b01110000; // slave addr ; b[0] = 0 for write mode
-    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-    while(SDA_Read()); // SDA pulled low for ACK
     
     i2cWrBuf[0] = 0xAC; // start measurement cmd
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
-    
-    i2cWrBuf[0] = 0x33;
-    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-    while(SDA_Read()); // SDA pulled low for ACK
-    
-    i2cWrBuf[0] = 0x00;
-    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-    while(SDA_Read()); // SDA pulled low for ACK    
-    
-    P_sequence();
     
 }
 
 void RestartAHT(){
     uint8 i2cWrBuf[1];
 
-    S_sequence();
     i2cWrBuf[0] = 0b01110000; // slave addr ; b[0] = 0 for write mode
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
@@ -135,21 +92,6 @@ void RestartAHT(){
     i2cWrBuf[0] = 0b10111010;
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(SDA_Read()); // SDA pulled low for ACK
-    P_sequence();
-}
-
-// Start Transmit State
-void S_sequence(){
-    SDA_Write(0);
-    CyDelay(10);
-    SCL_Write(0);
-}
-
-// Stop Transmit State
-void P_sequence(){
-    SCL_Write(1);
-    CyDelay(10);
-    SDA_Write(1);
 }
 
 /* [] END OF FILE */
