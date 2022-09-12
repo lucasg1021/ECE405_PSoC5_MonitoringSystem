@@ -126,6 +126,47 @@
 <VisibleNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
+<v>Workspace04\Design01\CortexM3</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\Cm3Start.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cy_em_eeprom.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyDmac.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyFlash.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyLib.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cymetadata.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyPm.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\esprx_int.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_BOOT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_INT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_IntClock.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_PM.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_BOOT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_INT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_MASTER.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_PM.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_SLAVE.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\rx_int.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SCL.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SDA.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ssd1306.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\UART.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_BOOT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_INT.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_IntClock.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_PM.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Design01.elf</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Design01.hex</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Design01.map</v>
+<v>Workspace04\Design01\Design01.gpdsc</v>
 <v>Workspace04\Design01\Design01.rpt</v>
 <v>Workspace04\Design01\Design01_timing.html</v>
 </VisibleNodeIds>
@@ -186,7 +227,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="3efa15b1-ad2b-4781-94c3-f9365eaef7b7"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="396633fb-923f-4008-809b-d98f6f346025" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="3efa15b1-ad2b-4781-94c3-f9365eaef7b7" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cydwr" Guid="d827e592-2a8e-47ad-8ae7-e80955b1535c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.c" Guid="42f116ee-abc1-4766-949f-ef7ff5a7c72c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.h" Guid="6797786c-a455-40cf-bb89-fd934be592d6" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="3efa15b1-ad2b-4781-94c3-f9365eaef7b7"><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="396633fb-923f-4008-809b-d98f6f346025" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="3efa15b1-ad2b-4781-94c3-f9365eaef7b7" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cydwr" Guid="d827e592-2a8e-47ad-8ae7-e80955b1535c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.c" Guid="42f116ee-abc1-4766-949f-ef7ff5a7c72c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.h" Guid="6797786c-a455-40cf-bb89-fd934be592d6" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

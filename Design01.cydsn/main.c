@@ -18,25 +18,30 @@
 #define AHT_ADDR (uint8)(0x38)
 #define DISPLAY_ADDRESS (0x3C)
 
+#define WIFI_SSID "wifiname"
+#define WIfI_PWD "wifipwd"
+
 CY_ISR(uart_int_Handler){
     char c = UART_GetChar();
     UART_PutChar(c);
-    ESPUART_PutChar(c);
     UART_ClearRxBuffer();
 }
 
 CY_ISR(esp_int_Handler){
-//    char c;
-//    while(ESPUART_GetRxBufferSize() > 0){
-//        c = ESPUART_GetChar();
-//        UART_PutChar(c);
-//    }
-//    ESPUART_ClearRxBuffer();
+    char c;
+    while((c = ESPUART_GetChar()) != '\0'){
+        UART_PutChar(c);
+    }
+    ESPUART_ClearRxBuffer();
 }
 
 void initializeAHT();
 void takeMeasurementAHT();
 void restartAHT();
+
+void sendESPCommand(char s[]);
+void initESP();
+void joinWifiESP(char ssid[], char pwd[]);
 
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
 float convertHumidity(uint8 num1, uint8 num2, uint8 num3);
@@ -47,6 +52,8 @@ int main(void)
     CyGlobalIntEnable; /* Enable global interrupts. */
     
     ESPUART_Start();
+    ESPUART_ClearRxBuffer();
+    ESPUART_ClearTxBuffer();
     UART_Start();
     rx_int_StartEx(uart_int_Handler);
     esprx_int_StartEx(esp_int_Handler);
@@ -60,11 +67,11 @@ int main(void)
      
     float tempF, humidity;
     
-//    while(1){
-//        sprintf(s, "AT\r\n");
-//        ESPUART_PutString(s);
-//        CyDelay(1000);
-//    }
+    sendESPCommand("AT+CWMODE=3");
+    sendESPCommand("\r\n");
+    CyDelay(1000);
+    
+    joinWifiESP(WIFI_SSID, WIfI_PWD);
 
     CyDelay(100); // wait 40ms after AHT power on
     initializeAHT();
@@ -100,7 +107,7 @@ int main(void)
         
         //print temp to uart
         sprintf(s, "Temperature: %.2f F\r\n", tempF);
-        UART_PutString(s);
+//        UART_PutString(s);
         
         //clear and set up OLED settings, print temp
         display_clear();    
@@ -112,7 +119,7 @@ int main(void)
         
         //print humidity to uart and OLED
         sprintf(s, "Humidity: %.2f \%% \r\n", humidity);
-        UART_PutString(s);
+//        UART_PutString(s);
         gfx_setCursor(2, 20);
         gfx_println(s);
         display_update(); 
@@ -212,5 +219,25 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
     float result = ((double)num20b/pow(2.0, 20.0)) * 100.0;
     
     return result;
+}
+
+void sendESPCommand(char s[]){
+    ESPUART_PutString(s);
+//    CyDelay(100);
+}
+
+void initESP(){
+    char s[80];
+    sprintf(s, "AT+UART_DEF=57600, 8, 1, 0, 0\r\n");
+    ESPUART_PutString(s);
+    CyDelay(5000);    
+}
+
+void joinWifiESP(char ssid[], char pwd[]){
+    char s[80];
+    
+    sprintf(s, "AT+CWJAP=\"%s\",\"%s\"", ssid, pwd);
+    sendESPCommand(s);
+    sendESPCommand("\r\n");
 }
 /* [] END OF FILE */
