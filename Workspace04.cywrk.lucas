@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\Header Files\ssd1306.h">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\TopDesign">
 <ExpandedNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
@@ -183,14 +183,6 @@
 <v>Workspace04\Design01\PSoC 5LP Architecture TRM</v>
 <v>Workspace04\Design01\CY8C58LP Family Datasheet</v>
 <v>Workspace04\Design01\System Reference Guides</v>
-<v>Workspace04\Design01\System Reference Guides\cy_boot_v6_0</v>
-<v>Workspace04\Design01\cy_isr_v1_70</v>
-<v>Workspace04\Design01\cy_isr_v1_70\cy_isr_v1_70.pdf</v>
-<v>Workspace04\Design01\cy_pins_v2_20</v>
-<v>Workspace04\Design01\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
-<v>Workspace04\Design01\I2C_v3_50.pdf</v>
-<v>Workspace04\Design01\UART_v2_50</v>
-<v>Workspace04\Design01\UART_v2_50\UART_v2_50.pdf</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
 <v>Workspace04</v>
@@ -198,14 +190,6 @@
 <v>Workspace04\Design01\PSoC 5LP Architecture TRM</v>
 <v>Workspace04\Design01\CY8C58LP Family Datasheet</v>
 <v>Workspace04\Design01\System Reference Guides</v>
-<v>Workspace04\Design01\System Reference Guides\cy_boot_v6_0</v>
-<v>Workspace04\Design01\cy_isr_v1_70</v>
-<v>Workspace04\Design01\cy_isr_v1_70\cy_isr_v1_70.pdf</v>
-<v>Workspace04\Design01\cy_pins_v2_20</v>
-<v>Workspace04\Design01\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
-<v>Workspace04\Design01\I2C_v3_50.pdf</v>
-<v>Workspace04\Design01\UART_v2_50</v>
-<v>Workspace04\Design01\UART_v2_50\UART_v2_50.pdf</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStatesV2>
@@ -215,11 +199,9 @@
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
 <OpenDocs>
-<name v=".\Design01.cydsn\TopDesign\TopDesign.cysch" />
 <name v=".\Design01.cydsn\main.c" />
-<name v=".\Design01.cydsn\Design01.cydwr" />
-<name v=".\Design01.cydsn\ssd1306.c" />
 <name v=".\Design01.cydsn\ssd1306.h" />
+<name v=".\Design01.cydsn\TopDesign\TopDesign.cysch" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -227,7 +209,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="3efa15b1-ad2b-4781-94c3-f9365eaef7b7"><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="396633fb-923f-4008-809b-d98f6f346025" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="3efa15b1-ad2b-4781-94c3-f9365eaef7b7" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cydwr" Guid="d827e592-2a8e-47ad-8ae7-e80955b1535c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.c" Guid="42f116ee-abc1-4766-949f-ef7ff5a7c72c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.h" Guid="6797786c-a455-40cf-bb89-fd934be592d6" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="0eae97fb-74cd-44ae-9f18-7bfe7a224ce4"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="0eae97fb-74cd-44ae-9f18-7bfe7a224ce4" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\ssd1306.h" Guid="fe53ddaf-2b7e-4e34-b3e5-1dc537e4532d" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="c9397d45-fd74-4d63-a9a0-028723992182" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
