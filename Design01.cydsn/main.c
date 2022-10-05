@@ -10,16 +10,41 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #define AHT_ADDR (uint8)(0x38)
 #define DISPLAY_ADDRESS (0x3C)
 
-#define WIFI_SSID "wifi_ssid"
-#define WIfI_PWD "wifi_pwd"
+#define WIFI_SSID ""
+#define WIfI_PWD ""
 
 #define TIMEOUT_ESP 10000
+#define ESP_CIRCBUF_LEN 64
 
+
+// Circular buffer definition
+// Buffer is used to store most recent strings returned from ESP
+typedef struct{
+    uint8_t * const buffer;
+    int head;
+    int tail;
+    const int length;
+} circBufESP;
+
+int circBufPush(circBufESP *circBuf, uint8_t data);
+int circBufPop(circBufESP *circBuf, uint8_t *data);
+
+// declare circular buffer data array and variable
+uint8_t espStringData[ESP_CIRCBUF_LEN];
+circBufESP espBuf = {
+    .buffer = espStringData,
+    .head = 0,
+    .tail = 0,
+    .length = ESP_CIRCBUF_LEN
+};
+
+int commandFlag = 0;
 
 CY_ISR(uart_int_Handler){
     char c = UART_GetChar();
@@ -28,16 +53,10 @@ CY_ISR(uart_int_Handler){
 }
 
 CY_ISR(esp_int_Handler){
-    char c;
-    char s[80];
-    int i = 0;
+    char c = ESPUART_GetChar();
     
-    while((c = ESPUART_GetChar()) != '\0'){
-        s[i] = c;
-        i++;
-        UART_PutChar(c);
-    }
-
+    circBufPush(&espBuf, c);
+   
     ESPUART_ClearRxBuffer();
 }
 
@@ -50,10 +69,12 @@ void initESP();
 void joinWifiESP(char ssid[], char pwd[]);
 char* getStringESP(int Timeout);
 int sendCommandESP(char command[], int Timeout);
+int waitForResponseESP(char returnStr[], int Timeout);
 
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
 float convertHumidity(uint8 num1, uint8 num2, uint8 num3);
 
+int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
 
 int main(void)
 {
@@ -67,35 +88,18 @@ int main(void)
     esprx_int_StartEx(esp_int_Handler);   
     I2C_Start();
     
-    
     char s[80], sESP[80];
-    uint8 i2cWrBuf[3];
-    uint8 i2cRdBuf[7];
-     
+    uint8 i2cWrBuf[3], i2cRdBuf[7], cESP;
     float tempF, humidity;
     
-    int lengthESP = 10;
     
     // initialize wifi settings and join network
     initESP();
-    
-    // listen on port 54321
-    ESPUART_PutString("AT+CIPSERVER=1,54321\r\n\n");
-    CyDelay(10000);
 
-    // send 6 bytes of data
-    ESPUART_PutString("AT+CIPSEND=0,6\r\n\n");
-    CyDelay(1000);
-    
-    // send to connected device
-    ESPUART_PutString("hiiiii");
-    CyDelay(1000);
-    
-    //close TCP connection
-    ESPUART_PutString("AT+CIPCLOSE=0\r\n\n");
-    CyDelay(1000);
-
-
+    // restart and initialize temp/humid sensor
+    restartAHT();
+    I2C_MasterSendStop();
+    I2C_MasterClearStatus();
     CyDelay(100); // wait 40ms after AHT power on
     initializeAHT();
     CyDelay(80); // wait 80ms for measurement to complete
@@ -107,16 +111,24 @@ int main(void)
     I2C_MasterClearStatus();
     
     for(;;)
-    {        
-        takeMeasurementAHT();
+    {            
+        // every loop check for connection, if none listen on port 54321
+        if(connection == 0){
+            ESPUART_PutString("AT+CIPSERVER=1,54321\r\n\n");
+            if(!waitForResponseESP("Android\n", 5000)){
+                connection = 1;   
+            }
+        }
+        
+        takeMeasurementAHT();   // measure temp and humid
 
+        // read AHT measurement
         i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
         I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
         while(SDA_Read());
         while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
         I2C_MasterClearStatus();
         CyDelay(10);
-       
         I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
         while (!I2C_MSTAT_RD_CMPLT);
         I2C_MasterClearStatus();
@@ -134,8 +146,41 @@ int main(void)
         //clear I2C buffer
         I2C_MasterClearReadBuf();
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
+        
+        // check if anything in ESP buffer
+        if(!circBufPop(&espBuf, &cESP)){
+            // check if TCP connection has been closed
+            if(!waitForResponseESP("CLOSED\r\n", 1000)){
+                connection = 0;
+            }
+            
+        }
+        
+        // if connected to app, send temp and humidity information
+        if(connection){
+            
+            // send 11 bytes of data
+            ESPUART_PutString("AT+CIPSEND=0,11\r\n\n");
+            waitForResponseESP(">", 2000);
+            
+            // send to connected device
+            sprintf(sESP,"%.2f %.2f", tempF, humidity);
+            ESPUART_PutString(sESP);
+            waitForResponseESP("OK\r\n", 1000);
+            
+            //close TCP connection
+            ESPUART_PutString("AT+CIPSTATUS\r\n\n");
+            if(!waitForResponseESP("STATUS:3\r\n", 1000)){
+                //close TCP connection
+                ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
+                waitForResponseESP("OK\r\n", 5000);
+                
+                connection = 0;
+            }
+            
+        }
 
-        CyDelay(1000);
+        CyDelay(250);
     }
 }
 
@@ -148,11 +193,12 @@ void initializeAHT(){
     uint8 i2cRdBuf[1];
     
     i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
+    
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
     I2C_MasterClearStatus();
     CyDelay(10);
-        
+    
     I2C_MasterReadBuf(AHT_ADDR, i2cRdBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(!I2C_MSTAT_RD_CMPLT);
     I2C_MasterClearStatus();
@@ -255,13 +301,15 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
 }
 
 void initESP(){
-    char s[80];
-    char c;
+    char s[80];  
+    char OK[] = "OK\r\n";
     
-    ESPUART_PutString("AT+CWMODE=1\r\n\n");
-    UART_PutString(s);
-    CyDelay(1000);
+        ESPUART_PutString("AT+CSYSWDTDISABLE\r\n\n");
+    waitForResponseESP(OK, 5000);
     
+    ESPUART_PutString("AT+CWMODE=3\r\n\n");
+    waitForResponseESP(OK, 5000);
+
     // set up UART settings
 //    sprintf(s, "AT+UART=57600,8,1,0,0\r\n\n");
 //    ESPUART_PutString(s);
@@ -269,16 +317,19 @@ void initESP(){
     
     // enable dhcp station mode
     ESPUART_PutString("AT+CWDHCP=1,1\r\n\n");
-    CyDelay(1000);
+    waitForResponseESP(OK, 5000);
     
     joinWifiESP(WIFI_SSID, WIfI_PWD);
 
 //  show device's current IP
-    ESPUART_PutString("AT+CIFSR\r\n\n");
-    CyDelay(5000);
+//    ESPUART_PutString("AT+CIFSR\r\n\n");
+//    CyDelay(1000);
+//    waitForResponseESP("OK", 5000);
     
 //    enable multiple connections
     ESPUART_PutString("AT+CIPMUX=1\r\n\n");
+    waitForResponseESP(OK, 5000);
+    
     CyDelay(1000);
     
 }
@@ -288,67 +339,93 @@ void joinWifiESP(char ssid[], char pwd[]){
     
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
     ESPUART_PutString(s);
-    CyDelay(5000);
+    waitForResponseESP("OK\r\n", 10000);
+    CyDelay(1000);
 }
 
-
-// incomplete functions that may need to be used in order to parse returned info from ESP e.g. current IP, whether a command executely correctly etc.
-char* getStringESP(int Timeout){
+int waitForResponseESP(char returnStr[], int Timeout){
+    uint8_t c;
     char s[80];
-    char* sESP = malloc(50);
-    memset(sESP, '\0', 50);
-    
+    char ERROR[] = "ERROR\r\n";
     int i = 0;
-    int t = 0;
+    int time = 0;
     
-    do{
-        // wait for next char from ESP
-        while(ESPUART_GetRxBufferSize() == 0){
-            
-            if(t == Timeout){
-                UART_PutString("getStringESP() Timed out");
-                sESP = "TIMEOUT";
-                return sESP;
-            }
-            
+    memset(s, '\0', 80);
+    while(strstr(s, returnStr) == NULL){
+        while(circBufPop(&espBuf, &c) != 0){
+            time++;
             CyDelay(1);
-            t++;
+            
+            if(time == Timeout){
+            UART_PutString("Timed out waiting for response\r\n");
+            return -1;
+            }
         }
-                
-        sESP[i] = ESPUART_GetChar();
-        
-        t = 0;
+        s[i] = c;
+        UART_PutChar(c);
         i++;
+        time = 0;
         
-    }while(sESP[i-1] != '\n');
+        if(strstr(s, "ERROR\r\n") != NULL){
+            return -1;   
+        }
+        // THIS DOESNT WORK - figure out why ESP sometimes infinitely prints "0, CONNECT FAIL" and stop the loop
+        else if(strstr(s, "FAIL\r\n") != NULL){
+            ESP_RST_Write(0);
+            CyDelay(1000);
+            ESP_RST_Write(1);
+            CyDelay(1000);
+            CySoftwareReset();
+        }
+        else if(strstr(s, "Android\r\n") != NULL){
+            connection = 1;
+            return -1;   
+        }
+        
+    }
     
-    return sESP;
+    return 0;
 }
 
-int sendCommandESP(char command[], int Timeout){
-    volatile char e[6];
-    volatile char ok[3];
-    char* sESP = malloc(150);
-        
-    uint8 flag = 0, i = 0;
+int circBufPush(circBufESP *circBuf, uint8_t data){
+    int next;
     
-    sprintf((char *)e, "ERROR"); 
-    sprintf((char *)ok, "OK"); 
-    memset(sESP, '\0', 150);
+    next = circBuf->head + 1;
     
-    ESPUART_PutString(command);
-    
-    while(1){
-        sESP = getStringESP(Timeout);
-        UART_PutString(sESP);
-        
-        if(strstr(sESP, (char *)ok) != NULL){
-            return 0;
-        }
-        else if(strstr(sESP, (char *)e) != NULL){
-            return 1;   
-        }
+    //check if length exceeded
+    if(next >= circBuf->length){
+        //next location is 0
+        next = 0;   
     }
+    
+    //check if buffer full
+    if(next == circBuf->tail){
+        return -1;   
+    }
+    
+    // load data into current location and increment location
+    circBuf->buffer[circBuf->head] = data;
+    circBuf->head = next;
+    
+    return 0;
+}
 
+int circBufPop(circBufESP *circBuf, uint8_t *data){
+    int next;
+    
+    // if head == tail, buffer empty
+    if(circBuf->head == circBuf->tail){
+        return -1;
+    }
+    
+    next = circBuf->tail + 1;
+    
+    if(next >= circBuf->length){
+        next = 0;
+    }
+    
+    *data = circBuf->buffer[circBuf->tail];
+    circBuf->tail = next;
+    return 0;
 }
 /* [] END OF FILE */
