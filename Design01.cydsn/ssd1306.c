@@ -43,7 +43,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <project.h>
 #include <stdlib.h>
 
-#include "font.h"
 #include "ssd1306.h"
 
 
@@ -84,9 +83,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TRANSFER_ERROR    (0xFFu)
 
 
-static uint32 display_write_buf( uint8* buf, uint16_t size );
 
-void gfx_init( int16_t width, int16_t height );
 
 static uint8 _i2caddr;
 
@@ -109,8 +106,6 @@ static uint16_t _displaybuf_size = sizeof(SSD1306_buffer) - 1;
 #define PIXEL_ON(X,Y) (*GDDRAM_ADDRESS(x,y) |= GDDRAM_PIXMASK(y))
 #define PIXEL_OFF(X,Y) (*GDDRAM_ADDRESS(x,y) &= ~GDDRAM_PIXMASK(y))
 #define PIXEL_TOGGLE(X,Y) (*GDDRAM_ADDRESS(x,y) ^= GDDRAM_PIXMASK(y)) 
-
-
 
 // call before first use of other functions
 void display_init( uint8 i2caddr ){
@@ -150,7 +145,6 @@ void display_init( uint8 i2caddr ){
     display_write_buf( cmdbuf, sizeof(cmdbuf) ); 
 }
 
-
 // for submitting command sequences:
 //  buf[0] must be 0x00
 // for submitting bulk data (writing to display RAM):
@@ -166,7 +160,6 @@ static uint32 display_write_buf( uint8* buf, uint16_t size ){
     I2C_MasterSendStop();
     return status;
 }
-
 
 // used by gfx_ functions. Needs to be implemented by display_
 static void display_setPixel( int16_t x, int16_t y, uint16_t color ){
@@ -187,12 +180,10 @@ static void display_setPixel( int16_t x, int16_t y, uint16_t color ){
     }
 }
 
-
 void display_clear(void){
     memset( _displaybuf, 0, _displaybuf_size );
     SSD1306_buffer[0] = 0x40; // to be sure its there
 }
-
 
 // contrast: 0 ...255
 void display_contrast( uint8_t contrast ){
@@ -205,7 +196,6 @@ void display_contrast( uint8_t contrast ){
     display_write_buf( cmdbuf, sizeof(cmdbuf) ); 
 }
 
-
 // invert <> 0 for inverse display, invert == 0 for normal display
 void display_invert( uint8_t invert ){
 
@@ -216,7 +206,6 @@ void display_invert( uint8_t invert ){
     cmdbuf[1] = invert ? SSD1306_INVERTDISPLAY : SSD1306_NORMALDISPLAY;
     display_write_buf( cmdbuf, sizeof(cmdbuf) ); 
 }
-
 
 void display_update(void) {
       
@@ -232,7 +221,6 @@ void display_update(void) {
     display_write_buf( cmdbuf, sizeof(cmdbuf) ); 
     display_write_buf( SSD1306_buffer, sizeof(SSD1306_buffer) );
 }
-
 
 // draws horizontal or vertical line
 // Note: no check for valid coords, this needs to be done by caller
@@ -296,8 +284,6 @@ static void display_line( int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16
     }
 }
 
-
-
 void display_stopscroll(void){
 
     uint8 cmdbuf[] = {
@@ -323,8 +309,6 @@ void display_scroll( SCROLL_AREA start, SCROLL_AREA end, SCROLL_DIR dir, SCROLL_
     display_write_buf( cmdbuf, sizeof(cmdbuf) ); 
 }
 
-
-
 // ============================================================
 // graphics library stuff
 
@@ -335,8 +319,6 @@ static uint16_t textcolor, textbgcolor;
 static uint8_t textsize;
 uint8_t rotation;
 uint8_t wrap; // If set, 'wrap' text at right edge of display
-
-
 
 void gfx_init( int16_t width, int16_t height ){
     WIDTH = width;
@@ -533,7 +515,6 @@ void gfx_fillRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color ){
     }
 }
 
-
 // circle outline
 void gfx_drawCircle( int16_t x0, int16_t y0, int16_t r,uint16_t color ){
 
@@ -572,7 +553,6 @@ void gfx_drawTriangle( int16_t x0, int16_t y0,int16_t x1, int16_t y1, int16_t x2
     gfx_drawLine( x1, y1, x2, y2, color );
     gfx_drawLine( x2, y2, x0, y0, color );
 }
-
 
 // Draw a character
 void gfx_drawChar( int16_t x, int16_t y, unsigned char c,uint16_t color, uint16_t bg, uint8_t size) {

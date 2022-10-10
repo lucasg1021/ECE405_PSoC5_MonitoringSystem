@@ -10,12 +10,14 @@
  * ========================================
 */
 
-
 #ifndef _SSD1306_H
-#define _SSD1306_H
-    
+#define _SSD1306_H    
 
-
+#include "project.h"
+#include "cytypes.h"
+#include "cyfitter.h"
+#include "cypins.h"
+#include "font.h"
 
     
 #define BLACK 0
@@ -57,7 +59,9 @@ void display_scroll( SCROLL_AREA start, SCROLL_AREA end, SCROLL_DIR dir, SCROLL_
 void display_contrast( uint8_t contrast );
 void display_invert( uint8_t invert );
 
+static uint32 display_write_buf( uint8* buf, uint16_t size );
 
+void gfx_init( int16_t width, int16_t height );
 
 
 void gfx_drawPixel(int16_t x, int16_t y, uint16_t color);
