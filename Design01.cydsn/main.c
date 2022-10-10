@@ -54,9 +54,7 @@ CY_ISR(uart_int_Handler){
 
 CY_ISR(esp_int_Handler){
     char c = ESPUART_GetChar();
-    
     circBufPush(&espBuf, c);
-   
     ESPUART_ClearRxBuffer();
 }
 
@@ -65,16 +63,20 @@ void takeMeasurementAHT();
 void restartAHT();
 void printTempHumid(float temp, float humid);
 
-void initESP();
-void joinWifiESP(char ssid[], char pwd[]);
-char* getStringESP(int Timeout);
-int sendCommandESP(char command[], int Timeout);
-int waitForResponseESP(char returnStr[], int Timeout);
+void initESP(char* sESP);
+void joinWifiESP(char ssid[], char pwd[], char* sESP);
+void getEncryptStartupESP(char* sESP);
+void initUDPConnectionESP(char* sESP);
+void closeConnectionESP(char* sESP);
+int waitForResponseESP(char returnStr[], char* sESP, int Timeout);
 
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
 float convertHumidity(uint8 num1, uint8 num2, uint8 num3);
 
 int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
+
+int BASE, MOD, PRIV;
+unsigned KEY;
 
 int main(void)
 {
@@ -85,16 +87,20 @@ int main(void)
     ESPUART_ClearTxBuffer();
     UART_Start();
     rx_int_StartEx(uart_int_Handler);
-    esprx_int_StartEx(esp_int_Handler);   
+    esprx_int_StartEx(esp_int_Handler);  
     I2C_Start();
-    
-    char s[80], sESP[80];
+        
+    char s[80], sESP[80], modS[2];
+    char baseS;
     uint8 i2cWrBuf[3], i2cRdBuf[7], cESP;
+    int baseESP, modESP;
     float tempF, humidity;
-    
+
+    CyDelay(1000);
+    ESP_RST_Write(1);
     
     // initialize wifi settings and join network
-    initESP();
+    initESP(sESP);
 
     // restart and initialize temp/humid sensor
     restartAHT();
@@ -110,14 +116,28 @@ int main(void)
     I2C_MasterSendStop();
     I2C_MasterClearStatus();
     
+        // start WDT
+    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    CyWdtClear();
+    
     for(;;)
     {            
         // every loop check for connection, if none listen on port 54321
         if(connection == 0){
-            ESPUART_PutString("AT+CIPSERVER=1,54321\r\n\n");
-            if(!waitForResponseESP("Android\n", 5000)){
-                connection = 1;   
+            initUDPConnectionESP(sESP);
+            if(!waitForResponseESP("OK", sESP, 1000)){
+                CyWdtClear();
+                waitForResponseESP("OK", sESP, 1000);
+              
             }
+            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
+                CyWdtClear();
+                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
+                    CyWdtClear();
+                    waitForResponseESP("OK", sESP, 1000);
+                }
+            }
+            CyWdtClear();
         }
         
         takeMeasurementAHT();   // measure temp and humid
@@ -136,6 +156,8 @@ int main(void)
         
         while(i2cRdBuf[0] & (1 << 7)); //check that bit 7 (busy) is low
         
+        CyWdtClear();
+        
         // convert readings to temp and humidity
         humidity = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
         tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
@@ -147,40 +169,39 @@ int main(void)
         I2C_MasterClearReadBuf();
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
         
+        
         // check if anything in ESP buffer
         if(!circBufPop(&espBuf, &cESP)){
             // check if TCP connection has been closed
-            if(!waitForResponseESP("CLOSED\r\n", 1000)){
+            if(!waitForResponseESP("CLOSED\r\n", sESP, 1000)){
                 connection = 0;
+            }
+            if(!waitForResponseESP("Android\r\n", sESP, 1000)){
+                connection = 1;
             }
             
         }
-        
+        CyWdtClear();
         // if connected to app, send temp and humidity information
         if(connection){
             
             // send 11 bytes of data
             ESPUART_PutString("AT+CIPSEND=0,11\r\n\n");
-            waitForResponseESP(">", 2000);
+            waitForResponseESP(">", sESP, 2000);
             
             // send to connected device
             sprintf(sESP,"%.2f %.2f", tempF, humidity);
             ESPUART_PutString(sESP);
-            waitForResponseESP("OK\r\n", 1000);
-            
-            //close TCP connection
-            ESPUART_PutString("AT+CIPSTATUS\r\n\n");
-            if(!waitForResponseESP("STATUS:3\r\n", 1000)){
-                //close TCP connection
-                ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
-                waitForResponseESP("OK\r\n", 5000);
-                
-                connection = 0;
-            }
-            
+            waitForResponseESP("OK\r\n", sESP, 1000);
+           
+            closeConnectionESP(sESP);
+                                    
+            connection = 0;           
         }
 
-        CyDelay(250);
+        CyWdtClear();
+        CyDelay(1000);
+        CyWdtClear();
     }
 }
 
@@ -300,15 +321,15 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
     return result;
 }
 
-void initESP(){
+void initESP(char* sESP){
     char s[80];  
     char OK[] = "OK\r\n";
     
-        ESPUART_PutString("AT+CSYSWDTDISABLE\r\n\n");
-    waitForResponseESP(OK, 5000);
+    ESPUART_PutString("AT+CSYSWDTDISABLE\r\n\n");
+    waitForResponseESP(OK, sESP, 5000);
     
-    ESPUART_PutString("AT+CWMODE=3\r\n\n");
-    waitForResponseESP(OK, 5000);
+    ESPUART_PutString("AT+CWMODE=1\r\n\n");
+    waitForResponseESP(OK, sESP, 5000);
 
     // set up UART settings
 //    sprintf(s, "AT+UART=57600,8,1,0,0\r\n\n");
@@ -317,9 +338,9 @@ void initESP(){
     
     // enable dhcp station mode
     ESPUART_PutString("AT+CWDHCP=1,1\r\n\n");
-    waitForResponseESP(OK, 5000);
+    waitForResponseESP(OK, sESP, 5000);
     
-    joinWifiESP(WIFI_SSID, WIfI_PWD);
+    joinWifiESP(WIFI_SSID, WIfI_PWD, sESP);
 
 //  show device's current IP
 //    ESPUART_PutString("AT+CIFSR\r\n\n");
@@ -328,30 +349,28 @@ void initESP(){
     
 //    enable multiple connections
     ESPUART_PutString("AT+CIPMUX=1\r\n\n");
-    waitForResponseESP(OK, 5000);
-    
-    CyDelay(1000);
+    waitForResponseESP(OK, sESP, 5000);
     
 }
 
-void joinWifiESP(char ssid[], char pwd[]){
+void joinWifiESP(char ssid[], char pwd[], char* sESP){
     char s[80];
     
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
     ESPUART_PutString(s);
-    waitForResponseESP("OK\r\n", 10000);
+    waitForResponseESP("OK\r\n", sESP, 10000);
     CyDelay(1000);
 }
 
-int waitForResponseESP(char returnStr[], int Timeout){
+int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     uint8_t c;
-    char s[80];
     char ERROR[] = "ERROR\r\n";
     int i = 0;
     int time = 0;
+    int time2 = 0;
     
-    memset(s, '\0', 80);
-    while(strstr(s, returnStr) == NULL){
+    memset(sESP, '\0', 80);
+    while(strstr(sESP, returnStr) == NULL){
         while(circBufPop(&espBuf, &c) != 0){
             time++;
             CyDelay(1);
@@ -360,31 +379,122 @@ int waitForResponseESP(char returnStr[], int Timeout){
             UART_PutString("Timed out waiting for response\r\n");
             return -1;
             }
+            CyWdtClear();
         }
-        s[i] = c;
+        sESP[i] = c;
         UART_PutChar(c);
         i++;
         time = 0;
         
-        if(strstr(s, "ERROR\r\n") != NULL){
-            return -1;   
-        }
-        // THIS DOESNT WORK - figure out why ESP sometimes infinitely prints "0, CONNECT FAIL" and stop the loop
-        else if(strstr(s, "FAIL\r\n") != NULL){
+//        if(strstr(s, "ERROR\r\n") != NULL){
+//            return -1;   
+//        }
+
+       if(strstr(sESP, "CONNECT FAIL\r\n") != NULL){
+            esprx_int_Disable();
             ESP_RST_Write(0);
-            CyDelay(1000);
+            CyDelay(100);
             ESP_RST_Write(1);
-            CyDelay(1000);
+            CyDelay(100);
             CySoftwareReset();
         }
-        else if(strstr(s, "Android\r\n") != NULL){
+        else if(strstr(sESP, "Android\r\n") != NULL){
             connection = 1;
             return -1;   
         }
+        else if(strstr(sESP, "STARTUP\r\n") != NULL){
+            getEncryptStartupESP(sESP); 
+
+            return -1;
+        }
+        if(strstr(sESP, "ALREADY CONNECTED\r\n") != NULL){
+            return 0;   
+        }
+        CyWdtClear();
         
     }
     
     return 0;
+}
+
+//start the key exchange process with the app for encryption
+void getEncryptStartupESP(char* sESP){
+    char s[80], modS[2];
+    char baseS;
+    const char colon[2] = ":";
+    char* token;
+    int baseESP, modESP;
+    
+    token = strtok(sESP, colon); 
+    char *str = strtok(NULL, "");
+    CyWdtClear();
+    modS[0] = str[0];
+    modS[1] = str[1];
+    baseS = str[3];
+    CyWdtClear();
+    
+    modESP = atoi(modS);
+    baseESP = baseS - '0';
+    
+    BASE = baseESP;
+    MOD = modESP;
+        
+    // send ACK
+    ESPUART_PutString("AT+CIPSEND=0,3\r\n\n");
+    waitForResponseESP(">", sESP, 5000);
+    
+    // send to connected device
+    ESPUART_PutString("ACK");
+    waitForResponseESP("OK\r\n", sESP, 1000);
+    
+    closeConnectionESP(sESP);
+    initUDPConnectionESP(sESP);
+    waitForResponseESP("OK\r\n", sESP, 1000);
+    
+    // generate private int
+    PRIV = rand() % (9) + 1; // generate random number 1-9
+    
+    int A = (int)pow((double)BASE, (double)PRIV) % (int)MOD;
+    
+    waitForResponseESP("ENDSTARTUP", sESP, 60000);
+    token = strtok(sESP, colon); 
+    char *str2 = strtok(NULL, "");
+    CyWdtClear();
+    
+    int B = atoi(str2);
+    
+    // send ACK and A
+    ESPUART_PutString("AT+CIPSEND=0,6\r\n\n");
+    waitForResponseESP(">", sESP, 5000);
+    
+    // send to connected device
+    sprintf(s, "%i ACK", A);
+    ESPUART_PutString(s);
+    waitForResponseESP("OK\r\n", sESP, 1000);
+    
+    KEY = (int)pow(B, PRIV) % (int)MOD;
+    sprintf(s, "\r\n%i\r\n", KEY);
+    UART_PutString(s);
+    
+    closeConnectionESP(sESP);
+    initUDPConnectionESP(sESP);
+    waitForResponseESP("OK\r\n", sESP, 1000);
+}
+
+void initUDPConnectionESP(char* sESP){
+    ESPUART_PutString("AT+CIPSERVER=1,54321\r\n\n");
+    waitForResponseESP("OK\r\n\n", sESP, 1000);
+    CyWdtClear();
+    ESPUART_PutString("AT+CIPSTART=0,\"UDP\",\"0.0.0.0\",54321,54321,2\r\n\n");
+}
+
+
+void closeConnectionESP(char* sESP){
+    //close connection
+    ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
+    waitForResponseESP("OK\r\n", sESP, 5000);
+    ESPUART_PutString("AT+CIPCLOSE=0\r\n\n");
+    waitForResponseESP("OK\r\n", sESP, 5000);
 }
 
 int circBufPush(circBufESP *circBuf, uint8_t data){
