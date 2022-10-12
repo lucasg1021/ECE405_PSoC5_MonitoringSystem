@@ -21,8 +21,8 @@
 
 #define ESP_CIRCBUF_LEN 64  //esp.h
 
-extern volatile int connection;
-extern volatile int BASE, MOD, PRIV;
+extern volatile int connection, keyFlag, BASE, PRIV, timeoutCount;
+extern volatile long long MOD;
 extern volatile unsigned KEY;
 extern uint8_t espStringData[ESP_CIRCBUF_LEN];
 extern circBufESP espBuf;
@@ -31,7 +31,7 @@ void initESP(char* sESP){
     char s[80];  
     char OK[] = "OK\r\n";
     
-    ESPUART_PutString("AT+CSYSWDTDISABLE\r\n\n");
+    ESPUART_PutString("AT+CSYSWDTENABLE\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
     
     ESPUART_PutString("AT+CWMODE=1\r\n\n");
@@ -83,6 +83,16 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             
             if(time == Timeout){
             UART_PutString("Timed out waiting for response\r\n");
+            timeoutCount++;
+            
+            if(timeoutCount == 10){
+                esprx_int_Disable();
+                ESP_RST_Write(0);
+                CyDelay(100);
+                ESP_RST_Write(1);
+                CyDelay(100);
+                CySoftwareReset();
+            }
             return -1;
             }
             CyWdtClear();
@@ -105,7 +115,12 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             CySoftwareReset();
         }
         else if(strstr(sESP, "Android\r\n") != NULL){
-            connection = 1;
+            if(keyFlag){
+                connection = 1;
+            }
+            else{
+                requestStartup(sESP);
+            }
             return -1;   
         }
         else if(strstr(sESP, "STARTUP\r\n") != NULL){
@@ -113,7 +128,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
 
             return -1;
         }
-        if(strstr(sESP, "ALREADY CONNECTED\r\n") != NULL){
+        else if(strstr(sESP, "ALREADY CONNECTED\r\n") != NULL){
             return 0;   
         }
         CyWdtClear();
@@ -131,19 +146,19 @@ void getEncryptStartupESP(char* sESP){
     char* token;
     int baseESP, modESP;
     
-    token = strtok(sESP, colon); 
-    char *str = strtok(NULL, "");
-    CyWdtClear();
-    modS[0] = str[0];
-    modS[1] = str[1];
-    baseS = str[3];
-    CyWdtClear();
-    
-    modESP = atoi(modS);
-    baseESP = baseS - '0';
-    
-    BASE = baseESP;
-    MOD = modESP;
+//    token = strtok(sESP, colon); 
+//    char *str = strtok(NULL, "");
+//    CyWdtClear();
+//    modS[0] = str[0];
+//    modS[1] = str[1];
+//    baseS = str[3];
+//    CyWdtClear();
+//    
+//    modESP = atoi(modS);
+//    baseESP = baseS - '0';
+//    
+//    BASE = baseESP;
+//    MOD = modESP;
         
     // send ACK
     ESPUART_PutString("AT+CIPSEND=0,3\r\n\n");
@@ -160,7 +175,7 @@ void getEncryptStartupESP(char* sESP){
     // generate private int
     PRIV = rand() % (9) + 1; // generate random number 1-9
     
-    int A = (int)pow((double)BASE, (double)PRIV) % (int)MOD;
+    int A = (int)pow((double)BASE, (double)PRIV) % MOD;
     
     waitForResponseESP("ENDSTARTUP", sESP, 60000);
     token = strtok(sESP, colon); 
@@ -170,21 +185,29 @@ void getEncryptStartupESP(char* sESP){
     int B = atoi(str2);
     
     // send ACK and A
-    ESPUART_PutString("AT+CIPSEND=0,6\r\n\n");
+    sprintf(s, "%i ACK", A);
+    int l = strlen(s);
+    char str[80];
+    sprintf(str, "AT+CIPSEND=0,%i\r\n\n", l);
+    ESPUART_PutString(str);
     waitForResponseESP(">", sESP, 5000);
     
     // send to connected device
-    sprintf(s, "%i ACK", A);
     ESPUART_PutString(s);
     waitForResponseESP("OK\r\n", sESP, 1000);
+    CyWdtClear();
     
-    KEY = (int)pow(B, PRIV) % (int)MOD;
-    sprintf(s, "\r\n%i\r\n", KEY);
+    KEY = (unsigned)pow((double)B, (double)PRIV) % MOD;
+    sprintf(s, "%i\r\n", B);
     UART_PutString(s);
-    
+    sprintf(s, "%i\r\n", KEY);
+    UART_PutString(s);
+    if(KEY != 0 && KEY != 1){
+        keyFlag = 1;
+    }
     closeConnectionESP(sESP);
-    initUDPConnectionESP(sESP);
-    waitForResponseESP("OK\r\n", sESP, 1000);
+
+    CyWdtClear();
 }
 
 void initUDPConnectionESP(char* sESP){
@@ -201,5 +224,34 @@ void closeConnectionESP(char* sESP){
     waitForResponseESP("OK\r\n", sESP, 5000);
     ESPUART_PutString("AT+CIPCLOSE=0\r\n\n");
     waitForResponseESP("OK\r\n", sESP, 5000);
+    CyWdtClear();
+}
+
+// encrypt sESP string using XOR
+void encryptESP(char* s, unsigned key, int len){
+    uint8_t key8b = key & 0xFF; // lower 8 bits of key
+    char c;
+    char sIn[30];
+    
+//    strcpy(sIn, s);
+//    UART_PutString(sIn);
+//    memset(sESP, '\0', len);
+    for(int i = 0; i < len; i++){
+        s[i] = s[i] ^ key8b;
+//        s[i] = c;
+        CyWdtClear();
+    }
+//    UART_PutString(sESP);
+}
+
+void requestStartup(char* sESP){
+    ESPUART_PutString("AT+CIPSEND=0,10\r\n\n");
+    waitForResponseESP(">", sESP, 2000);
+
+    // send to connected device
+    ESPUART_PutString("STARTUPSEQ");
+    waitForResponseESP("OK\r\n", sESP, 1000);
+
+    closeConnectionESP(sESP);
 }
 /* [] END OF FILE */

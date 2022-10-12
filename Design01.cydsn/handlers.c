@@ -95,15 +95,8 @@ CY_ISR(tout_int_Handler){
 }
 
 //CY_ISR(esp_int_Handler){
-//    char c;
-//    char s[80];
-//    int i = 0;
-//    
-//    while((c = ESPUART_GetChar()) != '\0'){
-//        s[i] = c;
-//        i++;
-//        UART_PutChar(c);
-//    }
-//
+//    char c = ESPUART_GetChar();
+//    circBufPush(&espBuf, c);
 //    ESPUART_ClearRxBuffer();
+//}
 /* [] END OF FILE */

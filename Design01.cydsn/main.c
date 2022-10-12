@@ -19,12 +19,13 @@
 #define TIMEOUT_ESP 10000   //esp.h
 #define ESP_CIRCBUF_LEN 64  //esp.h
 
-int commandFlag = 0;
-
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-
-volatile int BASE, MOD, PRIV;
-volatile unsigned KEY;
+volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
+volatile int PRIV;
+volatile int BASE = 7;
+volatile int timeoutCount = 0;
+volatile long long MOD = 2147483647;
+volatile unsigned KEY = 0;
 
 // declare circular buffer data array and variable
 uint8_t espStringData[ESP_CIRCBUF_LEN];
@@ -53,7 +54,7 @@ int main(void)
     esprx_int_StartEx(esp_int_Handler);  
     I2C_Start();
         
-    char s[80], sESP[80], modS[2];
+    char s[80], sESP[80];
     char baseS;
     uint8 i2cWrBuf[3], i2cRdBuf[7], cESP;
     int baseESP, modESP;
@@ -79,8 +80,8 @@ int main(void)
     I2C_MasterSendStop();
     I2C_MasterClearStatus();
     
-        // start WDT
-    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    // start WDT
+//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
     
     for(;;)
@@ -91,6 +92,7 @@ int main(void)
             if(!waitForResponseESP("OK", sESP, 1000)){
                 CyWdtClear();
                 waitForResponseESP("OK", sESP, 1000);
+                CyWdtClear();
               
             }
             else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
@@ -98,6 +100,7 @@ int main(void)
                 if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
                     CyWdtClear();
                     waitForResponseESP("OK", sESP, 1000);
+                    CyWdtClear();
                 }
             }
             CyWdtClear();
@@ -132,33 +135,30 @@ int main(void)
         //clear I2C buffer
         I2C_MasterClearReadBuf();
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
-        
-        
-        // check if anything in ESP buffer
-        if(!circBufPop(&espBuf, &cESP)){
-            // check if TCP connection has been closed
-            if(!waitForResponseESP("CLOSED\r\n", sESP, 1000)){
-                connection = 0;
-            }
-            if(!waitForResponseESP("Android\r\n", sESP, 1000)){
-                connection = 1;
-            }
-            
-        }
+
         CyWdtClear();
         // if connected to app, send temp and humidity information
         if(connection){
             
+            sprintf(s,"%.2f %.2f DATA", tempF, humidity);
+
+            if(keyFlag){
+                encryptESP(s, KEY, 16);
+            }
+            CyWdtClear();
+
             // send 11 bytes of data
-            ESPUART_PutString("AT+CIPSEND=0,11\r\n\n");
+            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", 16);
+            ESPUART_PutString(sESP);
             waitForResponseESP(">", sESP, 2000);
+            CyWdtClear();
             
             // send to connected device
-            sprintf(sESP,"%.2f %.2f", tempF, humidity);
-            ESPUART_PutString(sESP);
+            ESPUART_PutString(s);
             waitForResponseESP("OK\r\n", sESP, 1000);
            
             closeConnectionESP(sESP);
+            CyWdtClear();
                                     
             connection = 0;           
         }
@@ -166,6 +166,7 @@ int main(void)
         CyWdtClear();
         CyDelay(1000);
         CyWdtClear();
+        timeoutCount = 0;
     }
 }
 
