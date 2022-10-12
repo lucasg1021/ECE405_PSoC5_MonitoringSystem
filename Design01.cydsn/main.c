@@ -16,8 +16,8 @@
 #include <math.h>
 #include <string.h>
 
-#define TIMEOUT_ESP 10000   //esp.h
-#define ESP_CIRCBUF_LEN 64  //esp.h
+#define TIMEOUT_ESP 10000  
+#define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
 volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
@@ -90,7 +90,7 @@ int main(void)
     I2C_MasterClearStatus();
     
     // start WDT
-//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    // CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
     
     for(;;)
@@ -178,8 +178,4 @@ int main(void)
         timeoutCount = 0;
     }
 }
-
-
-/* ============== FUNCTIONS ============== */
-
 /* [] END OF FILE */
