@@ -17,7 +17,7 @@
 #include "cyfitter.h"
 #include "cypins.h"
     
-#define WIFI_SSID ""    //esp.h
+#define WIFI_SSID "Welcome to SIUE"    //esp.h
 #define WIfI_PWD ""    // esp.h 
     
 void initESP(char* sESP);

@@ -27,35 +27,6 @@ CY_ISR(uart_int_Handler){
 
 CY_ISR(enc_int_Handler){
 
-    CyDelay(1);
- 
-    if(ENC_Read() == ENC_INTR_RISING){
-        SetTemp = SetTemp + 1;
-    }
-    else if(ENC_Read() == ENC_INTR_FALLING){
-        SetTemp = SetTemp - 1; 
-    }
- 
-    TL = (SetTemp - tol); //Change value of TL 
-    TH = (SetTemp + tol); //Change value of TH
-    HL = (SetHumid - tolh); //Change value of HL
-    HH = (SetHumid + tolh); //Change value of HH
- 
-    i2cBuffer[0] = 0xA1; //Reconfigure TH
-    i2cBuffer[1] = TH;
-    i2cBuffer[2] = 0x00;
-    I2C_MasterWriteBuf((uint8)0x48,i2cBuffer,4,I2C_MODE_COMPLETE_XFER);
-    while (!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
-    I2C_MasterClearStatus();
- 
-    i2cBuffer[0] = 0xA2; //Reconfigure TL
-    i2cBuffer[1] = TL;
-    i2cBuffer[2] = 0x00;
-    I2C_MasterWriteBuf((uint8)0x48,i2cBuffer,3,I2C_MODE_COMPLETE_XFER);
-    while (!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
-    I2C_MasterClearStatus();
- 
- //ENC_ClearInterrupt();
     
 }
 
