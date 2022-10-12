@@ -27,6 +27,15 @@ volatile int timeoutCount = 0;
 volatile long long MOD = 2147483647;
 volatile unsigned KEY = 0;
 
+volatile int SetTemp = 70;
+volatile int SetHumid = 50;
+volatile int TH, HH;
+volatile int TL, HL;
+volatile int tol = 2;
+volatile int tolh = 2;
+volatile float tempF, humid;
+volatile int Select;
+
 // declare circular buffer data array and variable
 uint8_t espStringData[ESP_CIRCBUF_LEN];
 circBufESP espBuf = {
