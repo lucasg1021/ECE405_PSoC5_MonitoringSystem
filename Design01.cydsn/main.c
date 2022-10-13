@@ -20,12 +20,12 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag = 1; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
 volatile int timeoutCount = 0;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 0;
+volatile unsigned KEY = 123;
 
 volatile int SetTemp = 70;
 volatile int SetHumid = 50;

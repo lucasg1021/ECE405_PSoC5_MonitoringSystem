@@ -70,12 +70,16 @@ void joinWifiESP(char ssid[], char pwd[], char* sESP){
 
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     uint8_t c;
-    char ERROR[] = "ERROR\r\n";
+    uint8_t key8b = KEY & 0xFF;
+
+    char str[80];
+    
     int i = 0;
     int time = 0;
     int time2 = 0;
     
     memset(sESP, '\0', 80);
+    memset(str, '\0', 80);
     while(strstr(sESP, returnStr) == NULL){
         while(circBufPop(&espBuf, &c) != 0){
             time++;
@@ -97,8 +101,14 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             }
             CyWdtClear();
         }
+        
         sESP[i] = c;
         UART_PutChar(c);
+        
+        if(keyFlag){
+            str[i] = c ^ key8b;   
+        }
+                
         i++;
         time = 0;
         
@@ -114,7 +124,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             CyDelay(100);
             CySoftwareReset();
         }
-        else if(strstr(sESP, "Android\r\n") != NULL){
+        else if(strstr(sESP, "Android\r\n") != NULL || strstr(str, "Android") != NULL){
             if(keyFlag){
                 connection = 1;
             }
@@ -230,18 +240,21 @@ void closeConnectionESP(char* sESP){
 // encrypt sESP string using XOR
 void encryptESP(char* s, unsigned key, int len){
     uint8_t key8b = key & 0xFF; // lower 8 bits of key
-    char c;
-    char sIn[30];
-    
-//    strcpy(sIn, s);
-//    UART_PutString(sIn);
-//    memset(sESP, '\0', len);
+
     for(int i = 0; i < len; i++){
         s[i] = s[i] ^ key8b;
-//        s[i] = c;
         CyWdtClear();
     }
-//    UART_PutString(sESP);
+}
+
+// decrypt string using XOR (same function as encryption, just more readable this way)
+void decryptESP(char* s, unsigned key, int len){
+    uint8_t key8b = key & 0xFF;
+    
+    for(int i = 0; i < len; i++){
+        s[i] = s[i] ^ key8b;
+        CyWdtClear();
+    }
 }
 
 void requestStartup(char* sESP){
