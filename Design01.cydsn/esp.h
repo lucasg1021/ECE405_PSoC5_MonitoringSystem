@@ -17,17 +17,14 @@
 #include "cyfitter.h"
 #include "cypins.h"
     
-#define WIFI_SSID "LRG"    //esp.h
-#define WIfI_PWD "baseball10"    // esp.h 
-    
 void initESP(char* sESP);
 void joinWifiESP(char ssid[], char pwd[], char* sESP);
 void getEncryptStartupESP(char* sESP);
 void initUDPConnectionESP(char* sESP);
 void closeConnectionESP(char* sESP);
 void encryptESP(char* s, unsigned key, int len);
-void decryptESP(char* s, unsigned key, int len);
 void requestStartup(char* sESP);
+void changeSetPointsESP(char* sESP, char* str);
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout);
     
 #endif

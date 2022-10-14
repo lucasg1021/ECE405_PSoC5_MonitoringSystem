@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\Source Files\esp.c">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\Header Files\aht.h">
 <ExpandedNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
@@ -98,18 +98,15 @@
 <v>Workspace04\Design01\Generated_Source\PSoC5\SW1</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04">
 <ExpandedNodeIds>
 <v>Workspace04</v>
-<v>Workspace04\Design01</v>
 <v>Workspace04\Design01\TopDesign</v>
 <v>Workspace04\Design01\TopDesign\TopDesign.cysch</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
-<v>Workspace04\Design01\TopDesign</v>
-<v>Workspace04\Design01\TopDesign\TopDesign.cysch</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 <CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04">
@@ -181,52 +178,6 @@
 <VisibleNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
-<v>Workspace04\Design01\CortexM3</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\aht.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\circbuf.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\Cm3Start.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cy_em_eeprom.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyBootAsmGnu.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyDmac.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyfitter_cfg.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyFlash.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CyLib.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cymetadata.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyPm.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC_ISR.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\esp.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESP_RST.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\esprx_int.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_BOOT.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_INT.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_IntClock.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ESPUART_PM.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\handlers.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_BOOT.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_INT.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_MASTER.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_PM.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_SLAVE.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_H_G.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_H_R.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_T_G.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_T_R.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\rx_int.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SCL.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SDA.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ssd1306.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SW1.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\SW1_ISR.lst</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -285,14 +236,21 @@
 </userData>
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
-<OpenDocs />
+<OpenDocs>
+<name v=".\Design01.cydsn\TopDesign\TopDesign.cysch" />
+<name v=".\Design01.cydsn\main.c" />
+<name v=".\Design01.cydsn\esp.h" />
+<name v=".\Design01.cydsn\esp.c" />
+<name v=".\Design01.cydsn\EEPROM.c" />
+<name v=".\Design01.cydsn\EEPROM.h" />
+</OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
   Actipro Docking/MDI for WinForms
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1057, 431" SelectedTabbedMdiWindow="bd1929f9-3da8-4556-9c42-9295704ca3cc"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="62e3a614-9f21-4d41-a378-a5a158e358bb"><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="f090bc39-ff64-41e0-b446-8c6ccbbcc098" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="62e3a614-9f21-4d41-a378-a5a158e358bb" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.h" Guid="8381a9ba-4508-4eb7-85ae-7f392c04bcf5" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.c" Guid="ce6fae9c-c7a4-4c29-8052-9544ee134d7c" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM.c" Guid="5c85c377-e916-4ced-af29-4a2cbc995f4e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM.h" Guid="d0bc8bc0-ffd0-47e8-8283-57b698dcfc30" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

@@ -26,6 +26,7 @@
 <dep name=".\Generated_Source\PSoC5\cypins.h" />
 <dep name=".\Generated_Source\PSoC5\cytypes.h" />
 <dep name=".\Generated_Source\PSoC5\esprx_int.h" />
+<dep name=".\EEPROM.h" />
 <dep name=".\circbuf.h" />
 <dep name=".\cyapicallbacks.h" />
 <dep name=".\esp.c" />
@@ -45,6 +46,7 @@
 <file name=".\Generated_Source\PSoC5\cypins.h" />
 <file name=".\Generated_Source\PSoC5\cytypes.h" />
 <file name=".\Generated_Source\PSoC5\esprx_int.h" />
+<file name=".\EEPROM.h" />
 <file name=".\circbuf.h" />
 <file name=".\cyapicallbacks.h" />
 <file name=".\esp.c" />
@@ -103,6 +105,7 @@
 <dep name=".\Generated_Source\PSoC5\esprx_int.h" />
 <dep name=".\Generated_Source\PSoC5\project.h" />
 <dep name=".\Generated_Source\PSoC5\rx_int.h" />
+<dep name=".\EEPROM.h" />
 <dep name=".\aht.h" />
 <dep name=".\circbuf.h" />
 <dep name=".\cyapicallbacks.h" />
@@ -168,7 +171,6 @@
 <dep name=".\cyapicallbacks.h" />
 </file>
 <file name=".\EEPROM.c" />
-<file name=".\EEPROM.h" />
 <file name=".\CortexM3\ARM_GCC_541\Debug\Cm3Start.o">
 <dep name=".\Generated_Source\PSoC5\CyFlash.h" />
 <dep name=".\Generated_Source\PSoC5\CyLib.h" />
@@ -1536,7 +1538,7 @@
 <dataGuid v="769d31ea-68b1-4f0c-b90a-7c10a43ee563">
 <CyGuid_769d31ea-68b1-4f0c-b90a-7c10a43ee563 type_name="CyDesigner.Common.ProjMgmt.Model.CyLinkCustomData" version="1">
 <link_deps_times>
-<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@CortexM3" v="133100950398037213" />
+<name_val_pair name="c9323d49-d323-40b8-9b59-cc008d68a989@Debug@CortexM3" v="133102467956637711" />
 </link_deps_times>
 </CyGuid_769d31ea-68b1-4f0c-b90a-7c10a43ee563>
 </dataGuid>
