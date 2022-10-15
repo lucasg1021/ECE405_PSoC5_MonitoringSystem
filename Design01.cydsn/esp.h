@@ -16,7 +16,7 @@
 #include "cytypes.h"
 #include "cyfitter.h"
 #include "cypins.h"
-    
+
 void initESP(char* sESP);
 void joinWifiESP(char ssid[], char pwd[], char* sESP);
 void getEncryptStartupESP(char* sESP);

@@ -23,6 +23,8 @@
 void initializeAHT();
 void takeMeasurementAHT();
 void restartAHT();
+void checkParam();
+void setTol();
 void printTempHumid(float temp, float humid);
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
 float convertHumidity(uint8 num1, uint8 num2, uint8 num3);

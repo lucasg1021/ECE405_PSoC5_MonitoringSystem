@@ -1,3 +1,4 @@
+
 /* ========================================
  *
  * ECE405 Pet Environment Monitoring System
@@ -8,9 +9,11 @@
 #include "project.h"
 #include "aht.h"
 #include "esp.h"
+//#include "menu.h"
 #include "EEPROM.h"
 #include "circbuf.h"
 #include "ssd1306.h"
+#include "Tout.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,14 +31,17 @@ volatile int timeoutCount = 0;
 volatile long long MOD = 2147483647;
 volatile unsigned KEY = 123;
 
-volatile int SetTemp = 70;
+volatile int SetTemp = 80;
 volatile int SetHumid = 50;
 volatile int TH, HH;
 volatile int TL, HL;
 volatile int tol = 2;
 volatile int tolh = 2;
 volatile float tempF, humid;
-volatile int Select;
+volatile int Select = 0;
+volatile int ENC_Flag = 0;
+volatile int SW1_Flag = 0;
+volatile int SW2_Flag = 0;
 
 volatile char * wifi_ssid;
 volatile char * wifi_pwd;
@@ -63,8 +69,14 @@ int main(void)
     ESPUART_ClearRxBuffer();
     ESPUART_ClearTxBuffer();
     UART_Start();
-    esprx_int_StartEx(esp_int_Handler);  
+
+    esprx_int_StartEx(esp_int_Handler);
+    TOUT_ISR_Start();
+
     I2C_Start();
+    SW1_ISR_Start();
+    SW2_ISR_Start();
+    ENC_ISR_Start();
         
     char s[80], sESP[80], eepromS[30];
     char* str;
@@ -189,13 +201,12 @@ int main(void)
         CyWdtClear();
         
         // convert readings to temp and humidity
-        humidity = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
+        humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
         tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
+        checkParam();
         
         // print to OLED
-        printTempHumid(tempF, humidity);
-        
-        
+        printTempHumid(tempF, humid);
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
@@ -205,7 +216,7 @@ int main(void)
         // if connected to app, send temp and humidity information
         if(connection){
             
-            sprintf(s,"%.2f %.2f DATA", tempF, humidity);
+            sprintf(s,"%.2f %.2f DATA", tempF, humid);
 
             if(keyFlag){
                 encryptESP(s, KEY, 16);
@@ -234,6 +245,7 @@ int main(void)
         CyDelay(1000);
         CyWdtClear();
         timeoutCount = 0;
+//        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
     }
 }
 /* [] END OF FILE */
