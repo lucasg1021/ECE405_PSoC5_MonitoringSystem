@@ -9,11 +9,8 @@
 #include "project.h"
 #include "aht.h"
 #include "esp.h"
-<<<<<<< HEAD
-#include "menu.h"
-=======
+//#include "menu.h"
 #include "EEPROM.h"
->>>>>>> Lucas-Edits
 #include "circbuf.h"
 #include "ssd1306.h"
 #include "Tout.h"
@@ -72,13 +69,10 @@ int main(void)
     ESPUART_ClearRxBuffer();
     ESPUART_ClearTxBuffer();
     UART_Start();
-<<<<<<< HEAD
-//    rx_int_StartEx(uart_int_Handler);
+
     esprx_int_StartEx(esp_int_Handler);
     TOUT_ISR_Start();
-=======
-    esprx_int_StartEx(esp_int_Handler);  
->>>>>>> Lucas-Edits
+
     I2C_Start();
     SW1_ISR_Start();
     SW2_ISR_Start();
@@ -212,13 +206,7 @@ int main(void)
         checkParam();
         
         // print to OLED
-<<<<<<< HEAD
         printTempHumid(tempF, humid);
-=======
-        printTempHumid(tempF, humidity);
-        
-        
->>>>>>> Lucas-Edits
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
@@ -257,7 +245,7 @@ int main(void)
         CyDelay(1000);
         CyWdtClear();
         timeoutCount = 0;
-        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
+//        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
     }
 }
 /* [] END OF FILE */
