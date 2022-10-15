@@ -12,6 +12,9 @@
 #include "aht.h"
 #include "I2C.h"
 #include "ssd1306.h"
+#include "Tout.h"
+#include "LED_T_Y.h"
+#include "LED_H_Y.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -54,6 +57,7 @@ void initializeAHT(){
     }
     
     takeMeasurementAHT();
+    setTol();
    
 }
 
@@ -133,6 +137,28 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
     float result = ((double)num20b/pow(2.0, 20.0)) * 100.0;
     
     return result;
+}
+
+void checkParam(){
+    if((tempF > TH) |(tempF < TL) | (humid > HH) | (humid < HL)){
+        Tout_Write(1); 
+    }
+    if(((TH < tempF) & (tempF > (TH - (tol/2)))) | ((TL > tempF) &(tempF < (TL + (tol/2))))){
+        LED_T_Y_Write(1);
+    }
+    if(((HH < humid ) & (humid > (HH - (tolh/2)))) | ((HL > humid) & (humid < (HL + (tolh/2))))){
+        LED_H_Y_Write(1);
+    }
+    CyWdtClear();
+}
+
+void setTol(){
+  TH = SetTemp + tol;
+  TL = SetTemp - tol;
+  HH = SetHumid + tolh;
+  HL = SetHumid - tolh;
+
+  CyWdtClear();
 }
 
 /* [] END OF FILE */
