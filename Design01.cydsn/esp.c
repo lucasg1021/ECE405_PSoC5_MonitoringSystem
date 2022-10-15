@@ -15,17 +15,20 @@
 #include "ESP_RST.h"
 #include "circbuf.h"
 #include "esprx_int.h"
+#include "EEPROM.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #define ESP_CIRCBUF_LEN 64  //esp.h
 
-extern volatile int connection, keyFlag, BASE, PRIV, timeoutCount;
+extern volatile int connection, keyFlag, BASE, PRIV, timeoutCount, SetTemp, SetHumid;
 extern volatile long long MOD;
 extern volatile unsigned KEY;
 extern uint8_t espStringData[ESP_CIRCBUF_LEN];
 extern circBufESP espBuf;
+extern volatile char * wifi_ssid;
+extern volatile char * wifi_pwd;
 
 void initESP(char* sESP){
     char s[80];  
@@ -46,7 +49,7 @@ void initESP(char* sESP){
     ESPUART_PutString("AT+CWDHCP=1,1\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
     
-    joinWifiESP(WIFI_SSID, WIfI_PWD, sESP);
+    joinWifiESP((char *)wifi_ssid, (char *)wifi_pwd, sESP);
 
 //  show device's current IP
 //    ESPUART_PutString("AT+CIFSR\r\n\n");
@@ -59,7 +62,7 @@ void initESP(char* sESP){
     
 }
 
-void joinWifiESP(char ssid[], char pwd[], char* sESP){
+void joinWifiESP(char *ssid, char *pwd, char* sESP){
     char s[80];
     
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
@@ -70,12 +73,16 @@ void joinWifiESP(char ssid[], char pwd[], char* sESP){
 
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     uint8_t c;
-    char ERROR[] = "ERROR\r\n";
+    uint8_t key8b = KEY & 0xFF;
+
+    char str[80], s[30];
+    
     int i = 0;
     int time = 0;
     int time2 = 0;
     
     memset(sESP, '\0', 80);
+    memset(str, '\0', 80);
     while(strstr(sESP, returnStr) == NULL){
         while(circBufPop(&espBuf, &c) != 0){
             time++;
@@ -97,8 +104,14 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             }
             CyWdtClear();
         }
+        
         sESP[i] = c;
         UART_PutChar(c);
+        
+        if(keyFlag){
+            str[i] = c ^ key8b;   
+        }
+                
         i++;
         time = 0;
         
@@ -114,7 +127,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             CyDelay(100);
             CySoftwareReset();
         }
-        else if(strstr(sESP, "Android\r\n") != NULL){
+        else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
                 connection = 1;
             }
@@ -123,6 +136,28 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             }
             return -1;   
         }
+        else if(strstr(str, "SETPOINTS") != NULL){
+            waitForResponseESP("DONE", sESP, 1000);
+            return -1;   
+        }
+        else if(strstr(str, "DONE") != NULL){
+                SetTemp = atoi(str);
+                str[0] = ' '; str[1] = ' '; str[2] = ' ';
+                SetHumid = atoi(str);
+                
+                sprintf(s, "ACK");
+                encryptESP(s, KEY, 3);
+                                
+                ESPUART_PutString("AT+CIPSEND=0,3\r\n\n");
+                waitForResponseESP(">", sESP, 5000);
+
+                // send to connected device
+                ESPUART_PutString(s);
+                waitForResponseESP("OK\r\n", sESP, 1000);
+                
+                //write to i2c
+            return 1;
+        }
         else if(strstr(sESP, "STARTUP\r\n") != NULL){
             getEncryptStartupESP(sESP); 
 
@@ -130,6 +165,9 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         }
         else if(strstr(sESP, "ALREADY CONNECTED\r\n") != NULL){
             return 0;   
+        }
+        else if(strstr(sESP, "IPD,0,11") != NULL && !keyFlag){
+            requestStartup(sESP);   
         }
         CyWdtClear();
         
@@ -230,19 +268,13 @@ void closeConnectionESP(char* sESP){
 // encrypt sESP string using XOR
 void encryptESP(char* s, unsigned key, int len){
     uint8_t key8b = key & 0xFF; // lower 8 bits of key
-    char c;
-    char sIn[30];
-    
-//    strcpy(sIn, s);
-//    UART_PutString(sIn);
-//    memset(sESP, '\0', len);
+
     for(int i = 0; i < len; i++){
         s[i] = s[i] ^ key8b;
-//        s[i] = c;
         CyWdtClear();
     }
-//    UART_PutString(sESP);
 }
+
 
 void requestStartup(char* sESP){
     ESPUART_PutString("AT+CIPSEND=0,10\r\n\n");
@@ -253,5 +285,20 @@ void requestStartup(char* sESP){
     waitForResponseESP("OK\r\n", sESP, 1000);
 
     closeConnectionESP(sESP);
+}
+
+void changeSetPointsESP(char* sESP, char* str){
+    char s[30];
+    waitForResponseESP("DONE", sESP, 1000);
+    
+    SetTemp = atoi(sESP);
+    sESP += 2;
+    SetHumid = atoi(sESP);
+    
+    sprintf(s, "%d\r\n%d", SetTemp, SetHumid);
+    UART_PutString(s);
+    
+    CyDelay(10000);
+    
 }
 /* [] END OF FILE */

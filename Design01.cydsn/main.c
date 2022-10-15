@@ -9,7 +9,11 @@
 #include "project.h"
 #include "aht.h"
 #include "esp.h"
+<<<<<<< HEAD
 #include "menu.h"
+=======
+#include "EEPROM.h"
+>>>>>>> Lucas-Edits
 #include "circbuf.h"
 #include "ssd1306.h"
 #include "Tout.h"
@@ -42,6 +46,9 @@ volatile int ENC_Flag = 0;
 volatile int SW1_Flag = 0;
 volatile int SW2_Flag = 0;
 
+volatile char * wifi_ssid;
+volatile char * wifi_pwd;
+
 // declare circular buffer data array and variable
 uint8_t espStringData[ESP_CIRCBUF_LEN];
 circBufESP espBuf = {
@@ -65,22 +72,77 @@ int main(void)
     ESPUART_ClearRxBuffer();
     ESPUART_ClearTxBuffer();
     UART_Start();
+<<<<<<< HEAD
 //    rx_int_StartEx(uart_int_Handler);
     esprx_int_StartEx(esp_int_Handler);
     TOUT_ISR_Start();
+=======
+    esprx_int_StartEx(esp_int_Handler);  
+>>>>>>> Lucas-Edits
     I2C_Start();
     SW1_ISR_Start();
     SW2_ISR_Start();
     ENC_ISR_Start();
         
-    char s[80], sESP[80];
-    char baseS;
-    uint8 i2cWrBuf[3], i2cRdBuf[7], cESP;
+    char s[80], sESP[80], eepromS[30];
+    char* str;
+    uint8 i2cWrBuf[3], i2cRdBuf[7];
+    volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
     int baseESP, modESP;
     float tempF, humidity;
 
     CyDelay(1000);
     ESP_RST_Write(1);
+    
+//    uint8_t string[11] = "";
+//    string[10] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//    
+//    uint8_t string2[4] = "";
+//    string2[3] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//    
+//    uint8_t string3[3] = "70";
+//    string3[2] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//    
+//    uint8_t string4[3] = "50";
+//    string4[2] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//
+//    // write/read wifi ssid
+//    writeEEPROM(0x00, string2, 4);
+//    writeEEPROM(0x1E, string, 11);
+//    writeEEPROM(0x3D, string3, 3);
+//    writeEEPROM(0x42, string4, 3);
+    
+    // get intial values from EEPROM
+    readEEPROM(0, eepromS, 4);
+    wifi_ssid = strdup(strtok(eepromS, "\n"));
+    
+    readEEPROM(0x1E, eepromS, 11);
+    wifi_pwd = strdup(strtok(eepromS, "\n"));
+    
+    readEEPROM(0x3D, eepromS, 3);
+    char* setTS = strdup(strtok(eepromS, "\n"));
+    SetTemp = atoi(setTS);
+    
+    readEEPROM(0x42, eepromS, 3);
+    char* setHS = strdup(strtok(eepromS, "\n"));
+    SetHumid = atoi(setHS);
+
+    UART_PutString((char*)wifi_ssid);
+    UART_PutString((char*)wifi_pwd);
+    UART_PutString((char*)setTS);
+    UART_PutString((char*)setHS);
+    
+    
+//    UART_PutString(str);
+    CyDelay(10000);
     
     // initialize wifi settings and join network
     initESP(sESP);
@@ -150,7 +212,13 @@ int main(void)
         checkParam();
         
         // print to OLED
+<<<<<<< HEAD
         printTempHumid(tempF, humid);
+=======
+        printTempHumid(tempF, humidity);
+        
+        
+>>>>>>> Lucas-Edits
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
@@ -165,6 +233,8 @@ int main(void)
             if(keyFlag){
                 encryptESP(s, KEY, 16);
             }
+            CyWdtClear();
+            CyDelay(100);
             CyWdtClear();
 
             // send 11 bytes of data

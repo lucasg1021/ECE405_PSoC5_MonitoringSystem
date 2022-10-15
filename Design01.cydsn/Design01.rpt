@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Loading plugins phase: Elapsed time ==> 0s.104ms
 <CYPRESSTAG name="CyDsfit arguments...">
 cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -d CY8C5888LTI-LP097 -s C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
@@ -8,6 +9,18 @@ Elaboration phase: Elapsed time ==> 0s.977ms
 <CYPRESSTAG name="HDL generation results...">
 </CYPRESSTAG>
 HDL generation phase: Elapsed time ==> 0s.030ms
+=======
+Loading plugins phase: Elapsed time ==> 0s.095ms
+<CYPRESSTAG name="CyDsfit arguments...">
+cydsfit arguments: -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -.fdsreffile=referenced_files.txt -p C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -d CY8C5888LTI-LP097 -s C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+</CYPRESSTAG>
+<CYPRESSTAG name="Design elaboration results...">
+</CYPRESSTAG>
+Elaboration phase: Elapsed time ==> 0s.914ms
+<CYPRESSTAG name="HDL generation results...">
+</CYPRESSTAG>
+HDL generation phase: Elapsed time ==> 0s.056ms
+>>>>>>> Lucas-Edits
 <CYPRESSTAG name="Synthesis results...">
 
      | | | | | | |
@@ -25,23 +38,39 @@ HDL generation phase: Elapsed time ==> 0s.030ms
 ======================================================================
 Compiling:  Design01.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\bin\warp.exe
+<<<<<<< HEAD
 Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 Design01.v -verilog
+=======
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 Design01.v -verilog
+>>>>>>> Lucas-Edits
 ======================================================================
 
 ======================================================================
 Compiling:  Design01.v
 Program  :   C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\bin\warp.exe
+<<<<<<< HEAD
 Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 Design01.v -verilog
+=======
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 Design01.v -verilog
+>>>>>>> Lucas-Edits
 ======================================================================
 
 ======================================================================
 Compiling:  Design01.v
 Program  :   vlogfe
+<<<<<<< HEAD
 Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
 ======================================================================
 
 vlogfe V6.3 IR 41:  Verilog parser
 Sat Oct 15 00:16:24 2022
+=======
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
+======================================================================
+
+vlogfe V6.3 IR 41:  Verilog parser
+Wed Oct 12 18:59:51 2022
+>>>>>>> Lucas-Edits
 
 
 ======================================================================
@@ -51,7 +80,11 @@ Options  :    -yv2 -q10 Design01.v
 ======================================================================
 
 vpp V6.3 IR 41:  Verilog Pre-Processor
+<<<<<<< HEAD
 Sat Oct 15 00:16:24 2022
+=======
+Wed Oct 12 18:59:51 2022
+>>>>>>> Lucas-Edits
 
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'
 Flattening file 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\B_UART_v2_50\B_UART_v2_50.v'
@@ -93,11 +126,19 @@ vlogfe:  No errors.
 ======================================================================
 Compiling:  Design01.v
 Program  :   tovif
+<<<<<<< HEAD
 Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
 ======================================================================
 
 tovif V6.3 IR 41:  High-level synthesis
 Sat Oct 15 00:16:24 2022
+=======
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
+======================================================================
+
+tovif V6.3 IR 41:  High-level synthesis
+Wed Oct 12 18:59:51 2022
+>>>>>>> Lucas-Edits
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -108,9 +149,15 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
+<<<<<<< HEAD
 Linking 'C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.v'.
+=======
+Linking 'C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.ctl'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
+Linking 'C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.v'.
+>>>>>>> Lucas-Edits
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\B_UART_v2_50\B_UART_v2_50.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cypress.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cy_psoc3_inc.v'.
@@ -128,11 +175,19 @@ tovif:  No errors.
 ======================================================================
 Compiling:  Design01.v
 Program  :   topld
+<<<<<<< HEAD
 Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
 ======================================================================
 
 topld V6.3 IR 41:  Synthesis and optimization
 Sat Oct 15 00:16:24 2022
+=======
+Options  :    -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -dcpsoc3 -verilog Design01.v
+======================================================================
+
+topld V6.3 IR 41:  Synthesis and optimization
+Wed Oct 12 18:59:51 2022
+>>>>>>> Lucas-Edits
 
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\std.vhd'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cypress.vhd'.
@@ -143,9 +198,15 @@ Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\c
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_cnst.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_mthv.vif'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\stdlogic\mod_genv.vif'.
+<<<<<<< HEAD
 Linking 'C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.ctl'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
 Linking 'C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.v'.
+=======
+Linking 'C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.ctl'.
+Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyPrimitives\cyprimitives.cylib\cy_virtualmux_v1_0\cy_virtualmux_v1_0.v'.
+Linking 'C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\codegentemp\Design01.v'.
+>>>>>>> Lucas-Edits
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\CyComponentLibrary\CyComponentLibrary.cylib\B_UART_v2_50\B_UART_v2_50.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cypress.v'.
 Linking 'C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\lib\common\cy_psoc3_inc.v'.
@@ -311,8 +372,11 @@ Aliasing tmpOE__LED_T_R_net_0 to one
 Aliasing tmpOE__LED_H_G_net_0 to one
 Aliasing tmpOE__LED_H_R_net_0 to one
 Aliasing tmpOE__SW1_net_0 to one
+<<<<<<< HEAD
 Aliasing tmpOE__LED_T_Y_net_0 to one
 Aliasing tmpOE__LED_H_Y_net_0 to one
+=======
+>>>>>>> Lucas-Edits
 Aliasing \UART:BUART:reset_reg\\D\ to \UART:BUART:tx_hd_send_break\
 Aliasing \UART:BUART:rx_break_status\\D\ to \UART:BUART:tx_hd_send_break\
 Aliasing \ESPUART:BUART:reset_reg\\D\ to \UART:BUART:tx_hd_send_break\
@@ -532,6 +596,7 @@ Removing Lhs of wire tmpOE__LED_T_R_net_0[700] = one[8]
 Removing Lhs of wire tmpOE__LED_H_G_net_0[706] = one[8]
 Removing Lhs of wire tmpOE__LED_H_R_net_0[712] = one[8]
 Removing Lhs of wire tmpOE__SW1_net_0[719] = one[8]
+<<<<<<< HEAD
 Removing Lhs of wire tmpOE__LED_T_Y_net_0[727] = one[8]
 Removing Lhs of wire tmpOE__LED_H_Y_net_0[734] = one[8]
 Removing Lhs of wire \UART:BUART:reset_reg\\D\[740] = zero[29]
@@ -541,6 +606,15 @@ Removing Lhs of wire \UART:BUART:rx_break_status\\D\[765] = zero[29]
 Removing Lhs of wire \ESPUART:BUART:reset_reg\\D\[769] = zero[29]
 Removing Lhs of wire \ESPUART:BUART:rx_bitclk\\D\[784] = \ESPUART:BUART:rx_bitclk_pre\[483]
 Removing Lhs of wire \ESPUART:BUART:rx_break_status\\D\[794] = zero[29]
+=======
+Removing Lhs of wire \UART:BUART:reset_reg\\D\[726] = zero[29]
+Removing Lhs of wire \UART:BUART:rx_bitclk\\D\[741] = \UART:BUART:rx_bitclk_pre\[131]
+Removing Lhs of wire \UART:BUART:rx_parity_error_pre\\D\[750] = \UART:BUART:rx_parity_error_pre\[208]
+Removing Lhs of wire \UART:BUART:rx_break_status\\D\[751] = zero[29]
+Removing Lhs of wire \ESPUART:BUART:reset_reg\\D\[755] = zero[29]
+Removing Lhs of wire \ESPUART:BUART:rx_bitclk\\D\[770] = \ESPUART:BUART:rx_bitclk_pre\[483]
+Removing Lhs of wire \ESPUART:BUART:rx_break_status\\D\[780] = zero[29]
+>>>>>>> Lucas-Edits
 
 ------------------------------------------------------
 Aliased 0 equations, 224 wires.
@@ -801,6 +875,7 @@ Removing Lhs of wire \UART:BUART:rx_status_6\[203] = zero[29]
 Removing Rhs of wire \ESPUART:BUART:rx_bitclk_enable\[447] = \ESPUART:BUART:rx_bitclk\[495]
 Removing Lhs of wire \ESPUART:BUART:rx_status_0\[546] = zero[29]
 Removing Lhs of wire \ESPUART:BUART:rx_status_6\[555] = zero[29]
+<<<<<<< HEAD
 Removing Lhs of wire \UART:BUART:tx_ctrl_mark_last\\D\[747] = \UART:BUART:tx_ctrl_mark_last\[86]
 Removing Lhs of wire \UART:BUART:rx_markspace_status\\D\[759] = zero[29]
 Removing Lhs of wire \UART:BUART:rx_parity_error_status\\D\[760] = zero[29]
@@ -808,6 +883,15 @@ Removing Lhs of wire \UART:BUART:rx_addr_match_status\\D\[762] = zero[29]
 Removing Lhs of wire \UART:BUART:rx_markspace_pre\\D\[763] = \UART:BUART:rx_markspace_pre\[207]
 Removing Lhs of wire \UART:BUART:rx_parity_bit\\D\[768] = \UART:BUART:rx_parity_bit\[213]
 Removing Lhs of wire \ESPUART:BUART:rx_addr_match_status\\D\[791] = zero[29]
+=======
+Removing Lhs of wire \UART:BUART:tx_ctrl_mark_last\\D\[733] = \UART:BUART:tx_ctrl_mark_last\[86]
+Removing Lhs of wire \UART:BUART:rx_markspace_status\\D\[745] = zero[29]
+Removing Lhs of wire \UART:BUART:rx_parity_error_status\\D\[746] = zero[29]
+Removing Lhs of wire \UART:BUART:rx_addr_match_status\\D\[748] = zero[29]
+Removing Lhs of wire \UART:BUART:rx_markspace_pre\\D\[749] = \UART:BUART:rx_markspace_pre\[207]
+Removing Lhs of wire \UART:BUART:rx_parity_bit\\D\[754] = \UART:BUART:rx_parity_bit\[213]
+Removing Lhs of wire \ESPUART:BUART:rx_addr_match_status\\D\[777] = zero[29]
+>>>>>>> Lucas-Edits
 
 ------------------------------------------------------
 Aliased 0 equations, 13 wires.
@@ -844,6 +928,7 @@ topld:  No errors.
 
 CYPRESS_DIR    : C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp
 Warp Program   : C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\warp\bin\warp.exe
+<<<<<<< HEAD
 Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya "-.fftprj=C:\Users\kelse\OneDrive\Documents\PSoC Creator\New folder\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj" -dcpsoc3 Design01.v -verilog
 </CYPRESSTAG>
 Warp synthesis phase: Elapsed time ==> 0s.754ms
@@ -854,6 +939,18 @@ Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\kelse\OneD
 </CYPRESSTAG>
 <CYPRESSTAG name="Design parsing">
 Design parsing phase: Elapsed time ==> 0s.013ms
+=======
+Warp Arguments : -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya "-.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj" -dcpsoc3 Design01.v -verilog
+</CYPRESSTAG>
+Warp synthesis phase: Elapsed time ==> 1s.422ms
+<CYPRESSTAG name="Fitter results...">
+<CYPRESSTAG name="Fitter startup details...">
+cyp3fit: V4.4.0.80, Family: PSoC3, Started at: Wednesday, 12 October 2022 18:59:52
+Options: -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE -ya -.fftprj=C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cyprj -d CY8C5888LTI-LP097 Design01.v -verilog
+</CYPRESSTAG>
+<CYPRESSTAG name="Design parsing">
+Design parsing phase: Elapsed time ==> 0s.019ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Tech Mapping">
 <CYPRESSTAG name="Initial Mapping" icon="FILE_RPT_TECHM">
@@ -1297,7 +1394,11 @@ Design Equations
             Out Sync Option: AUTO
             Interrupt generated: True
             Interrupt mode: FALLING
+<<<<<<< HEAD
             Drive mode: RES_PULL_UP
+=======
+            Drive mode: RES_PULL_DOWN
+>>>>>>> Lucas-Edits
             VTrip: CMOS
             Slew: FAST
             Input Sync needed: False
@@ -1325,9 +1426,12 @@ Design Equations
         PORT MAP (
             pa_out => SW2(0)__PA ,
             pad => SW2(0)_PAD );
+<<<<<<< HEAD
         Properties:
         {
         }
+=======
+>>>>>>> Lucas-Edits
 
     Pin : Name = ENC(0)
         Attributes:
@@ -1337,7 +1441,11 @@ Design Equations
             Out Sync Option: AUTO
             Interrupt generated: True
             Interrupt mode: ON_CHANGE
+<<<<<<< HEAD
             Drive mode: RES_PULL_DOWN
+=======
+            Drive mode: RES_PULL_UP
+>>>>>>> Lucas-Edits
             VTrip: CMOS
             Slew: FAST
             Input Sync needed: False
@@ -1360,14 +1468,17 @@ Design Equations
             SIO Multiplier Index: 0
             SIO RefSel: VCC_IO
             Required Capabilities: DIGITAL, PORT_INTERRUPT
-            Initial Value: 0
+            Initial Value: 1
             IO Voltage: 0
         PORT MAP (
             pa_out => ENC(0)__PA ,
             pad => ENC(0)_PAD );
+<<<<<<< HEAD
         Properties:
         {
         }
+=======
+>>>>>>> Lucas-Edits
 
     Pin : Name = ENC(1)
         Attributes:
@@ -1405,9 +1516,12 @@ Design Equations
         PORT MAP (
             pa_out => ENC(1)__PA ,
             pad => ENC(1)_PAD );
+<<<<<<< HEAD
         Properties:
         {
         }
+=======
+>>>>>>> Lucas-Edits
 
     Pin : Name = Tout(0)
         Attributes:
@@ -1484,9 +1598,12 @@ Design Equations
             pa_out => LED_T_G(0)__PA ,
             annotation => Net_183 ,
             pad => LED_T_G(0)_PAD );
+<<<<<<< HEAD
         Properties:
         {
         }
+=======
+>>>>>>> Lucas-Edits
 
     Pin : Name = LED_T_R(0)
         Attributes:
@@ -1524,9 +1641,12 @@ Design Equations
             pa_out => LED_T_R(0)__PA ,
             annotation => Net_180 ,
             pad => LED_T_R(0)_PAD );
+<<<<<<< HEAD
         Properties:
         {
         }
+=======
+>>>>>>> Lucas-Edits
 
     Pin : Name = LED_H_G(0)
         Attributes:
@@ -1609,6 +1729,7 @@ Design Equations
         }
 
     Pin : Name = SW1(0)
+<<<<<<< HEAD
         Attributes:
             In Group/Port: True
             In Sync Option: NOSYNC
@@ -1648,14 +1769,16 @@ Design Equations
         }
 
     Pin : Name = LED_T_Y(0)
+=======
+>>>>>>> Lucas-Edits
         Attributes:
             In Group/Port: True
-            In Sync Option: AUTO
-            Out Sync Option: NOSYNC
-            Interrupt generated: False
-            Interrupt mode: NONE
+            In Sync Option: NOSYNC
+            Out Sync Option: AUTO
+            Interrupt generated: True
+            Interrupt mode: FALLING
             Drive mode: RES_PULL_DOWN
-            VTrip: EITHER
+            VTrip: CMOS
             Slew: FAST
             Input Sync needed: False
             Output Sync needed: False
@@ -1664,7 +1787,7 @@ Design Equations
             LCD Mode: COMMON
             Register Mode: RegComb
             CaSense Mode: NEITHER
-            Treat as pin: True
+            Treat as pin: False
             Is OE Registered: False
             Uses Analog: False
             Can contain Digital: True
@@ -1676,10 +1799,11 @@ Design Equations
             SIO Vtrip: MULTIPLIER_0_5
             SIO Multiplier Index: 0
             SIO RefSel: VCC_IO
-            Required Capabilities: DIGITAL
+            Required Capabilities: DIGITAL, PORT_INTERRUPT
             Initial Value: 0
             IO Voltage: 0
         PORT MAP (
+<<<<<<< HEAD
             pa_out => LED_T_Y(0)__PA ,
             pad => LED_T_Y(0)_PAD );
         Properties:
@@ -1724,6 +1848,10 @@ Design Equations
         Properties:
         {
         }
+=======
+            pa_out => SW1(0)__PA ,
+            pad => SW1(0)_PAD );
+>>>>>>> Lucas-Edits
     </CYPRESSTAG>
     <CYPRESSTAG name="Macrocell listing" icon="FILE_RPT_EQUATION">
 
@@ -3211,8 +3339,13 @@ Analog (SC/CT) Blocks         :    0 :    4 :    4 :  0.00 %
 DAC                           :      :      :      :        
   VIDAC                       :    0 :    4 :    4 :  0.00 %
 </CYPRESSTAG>
+<<<<<<< HEAD
 Technology Mapping: Elapsed time ==> 0s.151ms
 Tech Mapping phase: Elapsed time ==> 0s.193ms
+=======
+Technology Mapping: Elapsed time ==> 0s.108ms
+Tech Mapping phase: Elapsed time ==> 0s.159ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Placement">
 Initial Analog Placement Results:
@@ -3234,7 +3367,11 @@ IO_0@[IOP=(2)][IoId=(0)] : SW2(0) (fixed)
 IO_0@[IOP=(3)][IoId=(0)] : Tout(0) (fixed)
 IO_7@[IOP=(12)][IoId=(7)] : Tx_1(0) (fixed)
 IO_7@[IOP=(1)][IoId=(7)] : Tx_2(0) (fixed)
+<<<<<<< HEAD
 Analog Placement phase: Elapsed time ==> 0s.018ms
+=======
+Analog Placement phase: Elapsed time ==> 0s.039ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Analog Routing">
 Analog Routing phase: Elapsed time ==> 0s.000ms
@@ -3252,7 +3389,11 @@ Dump of CyP35AnalogRoutingResultsDB
 IsVddaHalfUsedForComp = False
 IsVddaHalfUsedForSar0 = False
 IsVddaHalfUsedForSar1 = False
+<<<<<<< HEAD
 Analog Code Generation phase: Elapsed time ==> 0s.194ms
+=======
+Analog Code Generation phase: Elapsed time ==> 0s.143ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Placement">
 <CYPRESSTAG name="Detailed placement messages">
@@ -3280,14 +3421,22 @@ PLD Packing Summary
 <CYPRESSTAG name="Packed PLD Contents">
 Packed PLD Contents not displayed at this verbose level.</CYPRESSTAG>
 </CYPRESSTAG>
+<<<<<<< HEAD
 PLD Packing: Elapsed time ==> 0s.000ms
+=======
+PLD Packing: Elapsed time ==> 0s.003ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Partitioning">
 <CYPRESSTAG name="Initial Partitioning Summary">
 Initial Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
 <CYPRESSTAG name="Final Partitioning Summary">
 Final Partitioning Summary not displayed at this verbose level.</CYPRESSTAG>
+<<<<<<< HEAD
 Partitioning: Elapsed time ==> 0s.038ms
+=======
+Partitioning: Elapsed time ==> 0s.041ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Final Placement Summary">
 
@@ -5000,10 +5149,17 @@ Port 0 generates interrupt for logical port:
             interrupt => Net_110 );
         Properties:
         {
+<<<<<<< HEAD
             drive_mode = "011011"
             ibuf_enabled = "11"
             id = "0b6990bf-7a40-4472-b7a4-6abbdfd7e30b"
             init_dr_st = "00"
+=======
+            drive_mode = "010011"
+            ibuf_enabled = "11"
+            id = "0b6990bf-7a40-4472-b7a4-6abbdfd7e30b"
+            init_dr_st = "10"
+>>>>>>> Lucas-Edits
             input_buffer_sel = "0000"
             input_clk_en = 0
             input_sync = "00"
@@ -5066,7 +5222,11 @@ Pin : Name = ENC(0)
         Out Sync Option: AUTO
         Interrupt generated: True
         Interrupt mode: ON_CHANGE
+<<<<<<< HEAD
         Drive mode: RES_PULL_DOWN
+=======
+        Drive mode: RES_PULL_UP
+>>>>>>> Lucas-Edits
         VTrip: CMOS
         Slew: FAST
         Input Sync needed: False
@@ -5089,7 +5249,7 @@ Pin : Name = ENC(0)
         SIO Multiplier Index: 0
         SIO RefSel: VCC_IO
         Required Capabilities: DIGITAL, PORT_INTERRUPT
-        Initial Value: 0
+        Initial Value: 1
         IO Voltage: 0
     PORT MAP (
         pa_out => ENC(0)__PA ,
@@ -5182,6 +5342,7 @@ Pin : Name = LED_T_G(0)
 
 [IoId=3]: 
 Pin : Name = LED_T_R(0)
+<<<<<<< HEAD
     Attributes:
         In Group/Port: True
         In Sync Option: AUTO
@@ -5223,6 +5384,8 @@ Pin : Name = LED_T_R(0)
 
 [IoId=4]: 
 Pin : Name = LED_H_G(0)
+=======
+>>>>>>> Lucas-Edits
     Attributes:
         In Group/Port: True
         In Sync Option: AUTO
@@ -5255,15 +5418,26 @@ Pin : Name = LED_H_G(0)
         Initial Value: 0
         IO Voltage: 0
     PORT MAP (
+<<<<<<< HEAD
         pa_out => LED_H_G(0)__PA ,
         annotation => Net_128 ,
         pad => LED_H_G(0)_PAD );
+=======
+        pa_out => LED_T_R(0)__PA ,
+        annotation => Net_180 ,
+        pad => LED_T_R(0)_PAD );
+>>>>>>> Lucas-Edits
     Properties:
     {
     }
 
+<<<<<<< HEAD
 [IoId=5]: 
 Pin : Name = LED_H_R(0)
+=======
+[IoId=4]: 
+Pin : Name = LED_H_G(0)
+>>>>>>> Lucas-Edits
     Attributes:
         In Group/Port: True
         In Sync Option: AUTO
@@ -5296,15 +5470,26 @@ Pin : Name = LED_H_R(0)
         Initial Value: 0
         IO Voltage: 0
     PORT MAP (
+<<<<<<< HEAD
         pa_out => LED_H_R(0)__PA ,
         annotation => Net_184 ,
         pad => LED_H_R(0)_PAD );
+=======
+        pa_out => LED_H_G(0)__PA ,
+        annotation => Net_128 ,
+        pad => LED_H_G(0)_PAD );
+>>>>>>> Lucas-Edits
     Properties:
     {
     }
 
+<<<<<<< HEAD
 [IoId=6]: 
 Pin : Name = LED_H_Y(0)
+=======
+[IoId=5]: 
+Pin : Name = LED_H_R(0)
+>>>>>>> Lucas-Edits
     Attributes:
         In Group/Port: True
         In Sync Option: AUTO
@@ -5337,6 +5522,7 @@ Pin : Name = LED_H_Y(0)
         Initial Value: 0
         IO Voltage: 0
     PORT MAP (
+<<<<<<< HEAD
         pa_out => LED_H_Y(0)__PA ,
         pad => LED_H_Y(0)_PAD );
     Properties:
@@ -5379,6 +5565,11 @@ Pin : Name = LED_T_Y(0)
     PORT MAP (
         pa_out => LED_T_Y(0)__PA ,
         pad => LED_T_Y(0)_PAD );
+=======
+        pa_out => LED_H_R(0)__PA ,
+        annotation => Net_184 ,
+        pad => LED_H_R(0)_PAD );
+>>>>>>> Lucas-Edits
     Properties:
     {
     }
@@ -5396,7 +5587,11 @@ Port 1 generates interrupt for logical port:
             drive_mode = "010"
             ibuf_enabled = "1"
             id = "56fadd4e-3820-46a3-a1f9-ee0853321843"
+<<<<<<< HEAD
             init_dr_st = "1"
+=======
+            init_dr_st = "0"
+>>>>>>> Lucas-Edits
             input_buffer_sel = "00"
             input_clk_en = 0
             input_sync = "0"
@@ -5582,10 +5777,14 @@ Port 2 generates interrupt for logical port:
             interrupt => Net_111 );
         Properties:
         {
-            drive_mode = "010"
+            drive_mode = "011"
             ibuf_enabled = "1"
             id = "0acba406-d608-4fdd-962f-7f081b1d20ea"
+<<<<<<< HEAD
             init_dr_st = "1"
+=======
+            init_dr_st = "0"
+>>>>>>> Lucas-Edits
             input_buffer_sel = "00"
             input_clk_en = 0
             input_sync = "0"
@@ -5647,7 +5846,7 @@ Pin : Name = SW2(0)
         Out Sync Option: AUTO
         Interrupt generated: True
         Interrupt mode: FALLING
-        Drive mode: RES_PULL_UP
+        Drive mode: RES_PULL_DOWN
         VTrip: CMOS
         Slew: FAST
         Input Sync needed: False
@@ -5670,7 +5869,7 @@ Pin : Name = SW2(0)
         SIO Multiplier Index: 0
         SIO RefSel: VCC_IO
         Required Capabilities: DIGITAL, PORT_INTERRUPT
-        Initial Value: 1
+        Initial Value: 0
         IO Voltage: 0
     PORT MAP (
         pa_out => SW2(0)__PA ,
@@ -6065,6 +6264,7 @@ Port Configuration report
      |     |       | Interrupt |                  |            | 
 Port | Pin | Fixed |      Type |       Drive Mode |       Name | Connections
 -----+-----+-------+-----------+------------------+------------+-------------------------------------------
+<<<<<<< HEAD
    0 |   0 |     * | ON_CHANGE |    RES_PULL_DOWN |     ENC(0) | 
      |   1 |     * | ON_CHANGE |    RES_PULL_DOWN |     ENC(1) | 
      |   2 |     * |      NONE |    RES_PULL_DOWN | LED_T_G(0) | 
@@ -6073,15 +6273,30 @@ Port | Pin | Fixed |      Type |       Drive Mode |       Name | Connections
      |   5 |     * |      NONE |    RES_PULL_DOWN | LED_H_R(0) | 
      |   6 |     * |      NONE |    RES_PULL_DOWN | LED_H_Y(0) | 
      |   7 |     * |      NONE |    RES_PULL_DOWN | LED_T_Y(0) | 
+=======
+   0 |   0 |       | ON_CHANGE |      RES_PULL_UP |     ENC(0) | 
+     |   1 |       | ON_CHANGE |    RES_PULL_DOWN |     ENC(1) | 
+     |   2 |       |      NONE |    RES_PULL_DOWN | LED_T_G(0) | 
+     |   3 |       |      NONE |    RES_PULL_DOWN | LED_T_R(0) | 
+     |   4 |       |      NONE |    RES_PULL_DOWN | LED_H_G(0) | 
+     |   5 |       |      NONE |    RES_PULL_DOWN | LED_H_R(0) | 
+>>>>>>> Lucas-Edits
 -----+-----+-------+-----------+------------------+------------+-------------------------------------------
    1 |   2 |     * |   FALLING |      RES_PULL_UP |     SW1(0) | 
      |   6 |     * |      NONE |     HI_Z_DIGITAL |    Rx_2(0) | FB(Net_57)
      |   7 |     * |      NONE |         CMOS_OUT |    Tx_2(0) | In(Net_61)
 -----+-----+-------+-----------+------------------+------------+-------------------------------------------
+<<<<<<< HEAD
    2 |   0 |     * |   FALLING |      RES_PULL_UP |     SW2(0) | 
      |   2 |     * |      NONE |    RES_PULL_DOWN | ESP_RST(0) | 
 -----+-----+-------+-----------+------------------+------------+-------------------------------------------
    3 |   0 |     * | ON_CHANGE |         CMOS_OUT |    Tout(0) | 
+=======
+   2 |   0 |       |   FALLING |    RES_PULL_DOWN |     SW2(0) | 
+     |   2 |     * |      NONE |    RES_PULL_DOWN | ESP_RST(0) | 
+-----+-----+-------+-----------+------------------+------------+-------------------------------------------
+   3 |   0 |       | ON_CHANGE |         CMOS_OUT |    Tout(0) | 
+>>>>>>> Lucas-Edits
 -----+-----+-------+-----------+------------------+------------+-------------------------------------------
   12 |   0 |     * |      NONE |    OPEN_DRAIN_LO |     SCL(0) | FB(\I2C:Net_1109_0\), In(\I2C:Net_643_0\)
      |   1 |     * |      NONE |    OPEN_DRAIN_LO |     SDA(0) | FB(\I2C:Net_1109_1\), In(\I2C:sda_x_wire\)
@@ -6091,12 +6306,18 @@ Port | Pin | Fixed |      Type |       Drive Mode |       Name | Connections
 </CYPRESSTAG>
 </CYPRESSTAG>
 </CYPRESSTAG>
+<<<<<<< HEAD
 Digital component placer commit/Report: Elapsed time ==> 0s.089ms
 Digital Placement phase: Elapsed time ==> 1s.126ms
+=======
+Digital component placer commit/Report: Elapsed time ==> 0s.051ms
+Digital Placement phase: Elapsed time ==> 1s.190ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Digital Routing">
 "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\bin/sjrouter.exe" --xml-path "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\dev\psoc5/psoc5lp/route_arch-rrg.cydata" --vh2-path "Design01_r.vh2" --pcf-path "Design01.pco" --des-name "Design01" --dsf-path "Design01.dsf" --sdc-path "Design01.sdc" --lib-path "Design01_r.lib"
 Routing successful.
+<<<<<<< HEAD
 Digital Routing phase: Elapsed time ==> 1s.265ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Bitstream Generation">
@@ -6108,11 +6329,25 @@ Bitstream Verification phase: Elapsed time ==> 0s.022ms
 <CYPRESSTAG name="Static timing analysis">
 Timing report is in Design01_timing.html.
 Static timing analysis phase: Elapsed time ==> 0s.276ms
+=======
+Digital Routing phase: Elapsed time ==> 1s.475ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Bitstream Generation">
+Bitstream Generation phase: Elapsed time ==> 0s.101ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Bitstream Verification">
+Bitstream Verification phase: Elapsed time ==> 0s.019ms
+</CYPRESSTAG>
+<CYPRESSTAG name="Static timing analysis">
+Timing report is in Design01_timing.html.
+Static timing analysis phase: Elapsed time ==> 0s.272ms
+>>>>>>> Lucas-Edits
 </CYPRESSTAG>
 <CYPRESSTAG name="Data reporting">
 Data reporting phase: Elapsed time ==> 0s.000ms
 </CYPRESSTAG>
 <CYPRESSTAG name="Database update...">
+<<<<<<< HEAD
 Design database save phase: Elapsed time ==> 0s.144ms
 </CYPRESSTAG>
 cydsfit: Elapsed time ==> 3s.397ms
@@ -6121,3 +6356,13 @@ Fitter phase: Elapsed time ==> 3s.398ms
 API generation phase: Elapsed time ==> 0s.851ms
 Dependency generation phase: Elapsed time ==> 0s.006ms
 Cleanup phase: Elapsed time ==> 0s.002ms
+=======
+Design database save phase: Elapsed time ==> 0s.135ms
+</CYPRESSTAG>
+cydsfit: Elapsed time ==> 3s.588ms
+</CYPRESSTAG>
+Fitter phase: Elapsed time ==> 3s.599ms
+API generation phase: Elapsed time ==> 0s.895ms
+Dependency generation phase: Elapsed time ==> 0s.007ms
+Cleanup phase: Elapsed time ==> 0s.000ms
+>>>>>>> Lucas-Edits
