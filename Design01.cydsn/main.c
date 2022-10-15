@@ -194,6 +194,8 @@ int main(void)
         
         // print to OLED
         printTempHumid(tempF, humidity);
+        
+        
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
