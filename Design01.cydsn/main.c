@@ -24,24 +24,26 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag = 1; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag =1; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
-volatile int timeoutCount = 0;
 volatile long long MOD = 2147483647;
 volatile unsigned KEY = 123;
 
-volatile int SetTemp = 80;
-volatile int SetHumid = 50;
+volatile int SetTemp;
+volatile int SetHumid;
 volatile int TH, HH;
 volatile int TL, HL;
 volatile int tol = 2;
 volatile int tolh = 2;
 volatile float tempF, humid;
 volatile int Select = 0;
+
 volatile int ENC_Flag = 0;
 volatile int SW1_Flag = 0;
 volatile int SW2_Flag = 0;
+volatile int alertFlag = 0;
+volatile int noticeFlag = 0;
 
 volatile char * wifi_ssid;
 volatile char * wifi_pwd;
@@ -71,12 +73,12 @@ int main(void)
     UART_Start();
 
     esprx_int_StartEx(esp_int_Handler);
-    TOUT_ISR_Start();
+//    TOUT_ISR_Start();
 
     I2C_Start();
-    SW1_ISR_Start();
-    SW2_ISR_Start();
-    ENC_ISR_Start();
+//    SW1_ISR_Start();
+//    SW2_ISR_Start();
+//    ENC_ISR_Start();
         
     char s[80], sESP[80], eepromS[30];
     char* str;
@@ -98,21 +100,21 @@ int main(void)
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //    
-//    uint8_t string3[3] = "70";
-//    string3[2] = '\n';
+//    uint8_t string3[1];
+//    string3[0] = 70;
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //    
-//    uint8_t string4[3] = "50";
-//    string4[2] = '\n';
+//    uint8_t string4[1];
+//    string4[0] = 70;
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //
 //    // write/read wifi ssid
 //    writeEEPROM(0x00, string2, 4);
 //    writeEEPROM(0x1E, string, 11);
-//    writeEEPROM(0x3D, string3, 3);
-//    writeEEPROM(0x42, string4, 3);
+//    writeEEPROM(0x3D, string3, 1);
+//    writeEEPROM(0x42, string4, 1);
     
     // get intial values from EEPROM
     readEEPROM(0, eepromS, 4);
@@ -121,22 +123,20 @@ int main(void)
     readEEPROM(0x1E, eepromS, 11);
     wifi_pwd = strdup(strtok(eepromS, "\n"));
     
-    readEEPROM(0x3D, eepromS, 3);
-    char* setTS = strdup(strtok(eepromS, "\n"));
-    SetTemp = atoi(setTS);
+    readEEPROM(0x3D, eepromS, 1);
+//    char* setTS = strdup(strtok(eepromS, "\n"));
+    SetTemp = eepromS[0];
     
-    readEEPROM(0x42, eepromS, 3);
-    char* setHS = strdup(strtok(eepromS, "\n"));
-    SetHumid = atoi(setHS);
+    readEEPROM(0x42, eepromS, 1);
+//    char* setHS = strdup(strtok(eepromS, "\n"));
+    SetHumid = eepromS[0];
 
+    sprintf(s, "%d", SetTemp);
     UART_PutString((char*)wifi_ssid);
     UART_PutString((char*)wifi_pwd);
-    UART_PutString((char*)setTS);
-    UART_PutString((char*)setHS);
-    
-    
-//    UART_PutString(str);
-    CyDelay(10000);
+    UART_PutString(s);
+    sprintf(s, "%d", SetHumid);
+    UART_PutString(s);
     
     // initialize wifi settings and join network
     initESP(sESP);
@@ -156,8 +156,10 @@ int main(void)
     I2C_MasterClearStatus();
     
     // start WDT
-    // CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
+    
+    setTol();
     
     for(;;)
     {            
@@ -203,7 +205,7 @@ int main(void)
         // convert readings to temp and humidity
         humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
         tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
-        checkParam();
+        checkParam(tempF, humid);
         
         // print to OLED
         printTempHumid(tempF, humid);
@@ -216,17 +218,24 @@ int main(void)
         // if connected to app, send temp and humidity information
         if(connection){
             
-            sprintf(s,"%.2f %.2f DATA", tempF, humid);
-
+            // check if an alert has been triggered, send corresponding alarm code
+            if(alertFlag){
+                sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+                alertFlag = 0;
+            }
+            else{
+                sprintf(s,"%.2f %.2f DATA", tempF, humid);
+            }
+            
             if(keyFlag){
-                encryptESP(s, KEY, 16);
+                encryptESP(s, KEY, strlen(s));
             }
             CyWdtClear();
             CyDelay(100);
             CyWdtClear();
 
             // send 11 bytes of data
-            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", 16);
+            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
             ESPUART_PutString(sESP);
             waitForResponseESP(">", sESP, 2000);
             CyWdtClear();
@@ -244,7 +253,9 @@ int main(void)
         CyWdtClear();
         CyDelay(1000);
         CyWdtClear();
-        timeoutCount = 0;
+        
+        setTol();
+
 //        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
     }
 }
