@@ -10,12 +10,8 @@
  * ========================================
 */
 #include "project.h"
+#include "aht.h"
 
-extern volatile int TH, HH;
-extern volatile int TL, HL;
-extern volatile int tol, tolh;
-extern volatile int SetTemp, SetHumid;
-extern volatile float tempF, humid;
 extern uint8 i2cBuffer[17];
 
 
@@ -43,25 +39,25 @@ CY_ISR(sw2_int_Handler){
 
 
 CY_ISR(tout_int_Handler){
-    if(tempF > TH){
-         //Turn off lamp
-          // Alarm high
-        }
-        else if(tempF < TL){
-            //Turn on lamp  
-            // Alarm low
-        }
-        if(humid > HH){
-            // Alarm High
-        }
-        else if(humid < HL){
-            //Turn on mister for X min
-            // Alarm low
-        }
-        else{
-         //Alarms OK   
-        }
-        Tout_ClearInterrupt();
+//    if(tempF > TH){
+//         //Turn off lamp
+//          // Alarm high
+//        }
+//        else if(tempF < TL){
+//            //Turn on lamp  
+//            // Alarm low
+//        }
+//        if(humid > HH){
+//            // Alarm High
+//        }
+//        else if(humid < HL){
+//            //Turn on mister for X min
+//            // Alarm low
+//        }
+//        else{
+//         //Alarms OK   
+//        }
+//        Tout_ClearInterrupt();
     
 }
 

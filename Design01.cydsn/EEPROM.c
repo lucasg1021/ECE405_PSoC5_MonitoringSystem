@@ -48,4 +48,14 @@ void readEEPROM(uint8_t eepromAddr, char *eepromS, int len){
         eepromAddr++;
     }
 }
+
+void changeSetPointsEEPROM(uint8_t setT, uint8_t setH){
+    uint8_t wr[1];
+    
+    wr[0] = setT;
+    writeEEPROM(SETTEMP_STARTADDR, wr, 1);
+    
+    wr[0] = setH;
+    writeEEPROM(SETHUMID_STARTADDR, wr, 1);
+}
 /* [] END OF FILE */

@@ -16,19 +16,16 @@
 #include "circbuf.h"
 #include "esprx_int.h"
 #include "EEPROM.h"
+#include "aht.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #define ESP_CIRCBUF_LEN 64  //esp.h
 
-extern volatile int connection, keyFlag, BASE, PRIV, timeoutCount, SetTemp, SetHumid;
-extern volatile long long MOD;
-extern volatile unsigned KEY;
 extern uint8_t espStringData[ESP_CIRCBUF_LEN];
 extern circBufESP espBuf;
-extern volatile char * wifi_ssid;
-extern volatile char * wifi_pwd;
 
 void initESP(char* sESP){
     char s[80];  
@@ -90,16 +87,15 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             
             if(time == Timeout){
             UART_PutString("Timed out waiting for response\r\n");
-            timeoutCount++;
-            
-            if(timeoutCount == 10){
-                esprx_int_Disable();
-                ESP_RST_Write(0);
-                CyDelay(100);
-                ESP_RST_Write(1);
-                CyDelay(100);
-                CySoftwareReset();
-            }
+//            
+//            if(timeoutCount == 10){
+//                esprx_int_Disable();
+//                ESP_RST_Write(0);
+//                CyDelay(100);
+//                ESP_RST_Write(1);
+//                CyDelay(100);
+//                CySoftwareReset();
+//            }
             return -1;
             }
             CyWdtClear();
@@ -114,22 +110,19 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 
         i++;
         time = 0;
-        
-//        if(strstr(s, "ERROR\r\n") != NULL){
-//            return -1;   
-//        }
 
        if(strstr(sESP, "CONNECT FAIL\r\n") != NULL){
-            esprx_int_Disable();
-            ESP_RST_Write(0);
-            CyDelay(100);
-            ESP_RST_Write(1);
-            CyDelay(100);
-            CySoftwareReset();
+//            esprx_int_Disable();
+//            ESP_RST_Write(0);
+//            CyDelay(100);
+//            ESP_RST_Write(1);
+//            CyDelay(100);
+//            CySoftwareReset();
         }
         else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
                 connection = 1;
+                    
             }
             else{
                 requestStartup(sESP);
@@ -145,15 +138,19 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 str[0] = ' '; str[1] = ' '; str[2] = ' ';
                 SetHumid = atoi(str);
                 
-                sprintf(s, "ACK");
-                encryptESP(s, KEY, 3);
+                changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid);
+                
+                sprintf(s, "ACK %d %d", SetTemp, SetHumid);
+                encryptESP(s, KEY, 9);
                                 
-                ESPUART_PutString("AT+CIPSEND=0,3\r\n\n");
+                ESPUART_PutString("AT+CIPSEND=0,9\r\n\n");
                 waitForResponseESP(">", sESP, 5000);
 
                 // send to connected device
                 ESPUART_PutString(s);
                 waitForResponseESP("OK\r\n", sESP, 1000);
+                
+                setTol();
                 
                 //write to i2c
             return 1;
@@ -198,12 +195,13 @@ void getEncryptStartupESP(char* sESP){
 //    BASE = baseESP;
 //    MOD = modESP;
         
-    // send ACK
-    ESPUART_PutString("AT+CIPSEND=0,3\r\n\n");
+    // send ACK and start points
+    ESPUART_PutString("AT+CIPSEND=0,9\r\n\n");
     waitForResponseESP(">", sESP, 5000);
     
     // send to connected device
-    ESPUART_PutString("ACK");
+    sprintf(s, "ACK %d %d", SetTemp, SetHumid);
+    ESPUART_PutString(s);
     waitForResponseESP("OK\r\n", sESP, 1000);
     
     closeConnectionESP(sESP);
@@ -300,5 +298,20 @@ void changeSetPointsESP(char* sESP, char* str){
     
     CyDelay(10000);
     
+}
+
+void sendAlertESP(int alertFlag, char* sESP){
+    char s[80];
+    
+    ESPUART_PutString("AT+CIPSEND=0,7\r\n\n");
+    waitForResponseESP(">", sESP, 2000);
+    
+    sprintf(s, "ALERT %d", alertFlag);
+    
+    encryptESP(s, KEY, 7);   
+    
+    ESPUART_PutString(s);
+    
+    alertFlag = 0;
 }
 /* [] END OF FILE */

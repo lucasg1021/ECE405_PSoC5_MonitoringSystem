@@ -19,11 +19,17 @@
 
 #define AHT_ADDR (uint8)(0x38)
 #define DISPLAY_ADDRESS (0x3C)
+    
+extern volatile int alertFlag, noticeFlag;
+extern volatile int TH, HH;
+extern volatile int TL, HL;
+extern volatile int tol, tolh;
+extern volatile int SetTemp, SetHumid;
 
 void initializeAHT();
 void takeMeasurementAHT();
 void restartAHT();
-void checkParam();
+void checkParam(float tempF, float humid);
 void setTol();
 void printTempHumid(float temp, float humid);
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
