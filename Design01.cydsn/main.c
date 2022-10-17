@@ -90,6 +90,10 @@ int main(void)
     CyDelay(1000);
     ESP_RST_Write(1);
     
+    LED_T_G_Write(1);
+    LED_H_G_Write(1);
+    LED_T_Y_Write(1);
+    
 //    uint8_t string[11] = "";
 //    string[10] = '\n';
 //    I2C_MasterSendStop();
@@ -159,6 +163,8 @@ int main(void)
 //    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
     
+    SetTemp = 80;
+    SetHumid = 30;
     setTol();
     
     for(;;)
