@@ -9,7 +9,7 @@
 #include "project.h"
 #include "aht.h"
 #include "esp.h"
-//#include "menu.h"
+#include "menu.h"
 #include "EEPROM.h"
 #include "circbuf.h"
 #include "ssd1306.h"
@@ -89,6 +89,8 @@ int main(void)
 
     CyDelay(1000);
     ESP_RST_Write(1);
+    
+    LED_T_R_Write(1);
     
 //    uint8_t string[11] = "";
 //    string[10] = '\n';
