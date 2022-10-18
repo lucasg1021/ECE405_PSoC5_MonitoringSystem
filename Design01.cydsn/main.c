@@ -90,14 +90,15 @@ int main(void)
     CyDelay(1000);
     ESP_RST_Write(1);
     
-    LED_T_R_Write(1);
-    
-//    uint8_t string[11] = "";
+    LED_T_G_Write(1);
+    LED_H_G_Write(1);
+
+//    uint8_t string[11] = "baseball10";
 //    string[10] = '\n';
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //    
-//    uint8_t string2[4] = "";
+//    uint8_t string2[4] = "LRG";
 //    string2[3] = '\n';
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
@@ -108,7 +109,7 @@ int main(void)
 //    I2C_MasterClearStatus();
 //    
 //    uint8_t string4[1];
-//    string4[0] = 70;
+//    string4[0] = 50;
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //
@@ -139,6 +140,7 @@ int main(void)
     UART_PutString(s);
     sprintf(s, "%d", SetHumid);
     UART_PutString(s);
+    UART_PutString("HELLO");
     
     // initialize wifi settings and join network
     initESP(sESP);
@@ -160,7 +162,7 @@ int main(void)
     // start WDT
 //    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
-    
+
     setTol();
     
     for(;;)
@@ -184,6 +186,7 @@ int main(void)
             }
             CyWdtClear();
         }
+        
         
         takeMeasurementAHT();   // measure temp and humid
 
@@ -222,8 +225,18 @@ int main(void)
             
             // check if an alert has been triggered, send corresponding alarm code
             if(alertFlag){
-                sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+                //check if notice has also been triggered
+                if(noticeFlag){
+                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f DATA", alertFlag, noticeFlag, tempF, humid);
+                }
+                else{
+                    sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+                }
                 alertFlag = 0;
+                noticeFlag = 0;
+            }
+            else if(noticeFlag){
+                sprintf(s,"NOTICE %d %.2f %.2f DATA", noticeFlag, tempF, humid);
             }
             else{
                 sprintf(s,"%.2f %.2f DATA", tempF, humid);
@@ -257,6 +270,8 @@ int main(void)
         CyWdtClear();
         
         setTol();
+        
+        memset(sESP, '\0', 80);
 
 //        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
     }

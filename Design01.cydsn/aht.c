@@ -15,6 +15,10 @@
 #include "Tout.h"
 #include "LED_T_Y.h"
 #include "LED_H_Y.h"
+#include "LED_T_G.h"
+#include "LED_T_R.h"
+#include "LED_H_G.h"
+#include "LED_H_R.h"
 #include "esp.h"
 
 #include <stdio.h>
@@ -136,27 +140,62 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
 
 void checkParam(float tempF, float humid){
 
-    // check if any params are in alert range to make sure alert and notice don't both trip
+    // check if any params are in alert range
     if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){
         Tout_Write(1); 
     
         // temp high alert
         if(tempF > TH){
+            LED_T_G_Write(0);
+            LED_T_Y_Write(0);
+            LED_T_R_Write(1);
+            
+            Tout_Write(0);
             alertFlag = 1;  // flag = 1 for high temp alert
+           
         }
         // temp low alert
         else if(tempF < TL){
+            LED_T_G_Write(0);
+            LED_T_Y_Write(0);
+            LED_T_R_Write(1);
+            
+            Tout_Write(1);
             alertFlag = 2;  // flag = 2 for low temp alert
+        }
+        else{
+            LED_T_R_Write(0);
+            LED_T_Y_Write(0);
+            LED_T_G_Write(1);
+            
+            Tout_Write(0);
         }
         // humid high alert
         if(humid > HH){
             if(alertFlag == 1){
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+
+                LED_H_R_Write(1);
+                
+                Tout_Write(0);
                 alertFlag = 5;   //flag = 5 for T high and H high   
             }
             else if(alertFlag == 2){
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+
+                LED_H_R_Write(1);
+                
+                Tout_Write(1);
                 alertFlag = 6;  //flag = 6 for T low and H high   
             }
             else{
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+                
+                LED_H_R_Write(1);
+
                 alertFlag = 3;  // flag = 3 for high humidity alert
             }
            
@@ -164,35 +203,127 @@ void checkParam(float tempF, float humid){
         // humid low alert
         else if(humid < HL){
             if(alertFlag == 1){
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+
+                LED_H_R_Write(1);
+                
+                Tout_Write(0);
+                
                 alertFlag = 7;   //flag = 7 for T high and H low 
             }
             else if(alertFlag == 2){
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+
+                LED_H_R_Write(1);
+                
+                Tout_Write(1);
+                
                 alertFlag = 8;  //flag = 6 for T low and H low  
             }
             else{
+                LED_H_G_Write(0);
+                LED_H_Y_Write(0);
+                
+                LED_H_R_Write(1);
                 alertFlag = 4; // flag = 4 for H low
             }
            
         }
+        else{
+            LED_H_R_Write(0);
+            LED_H_Y_Write(0);
+            LED_H_G_Write(1);
+        }
     }
-    else if(tempF > (TH - tol/2) || tempF < (TL + tol/2) || humid > (HH - tolh/2) || humid < (HL + tolh/2)){    
+    else{
+        
+    }
+    if((tempF > (TH - tol/2) && tempF < TH) || (tempF < (TL + tol/2) && tempF > TL)|| (humid > (HH - tolh/2) && humid < HH) || (humid < (HL + tolh/2) && humid > HL)){    
         
         // temp high notice
-        if(tempF > (TH - tol/2)){
+        if(tempF > (TH - tol/2) && tempF < TH){
+            noticeFlag = 1;
+            
+            LED_T_G_Write(0);
+            LED_T_R_Write(0);
             LED_T_Y_Write(1);
         }
         // temp low notice
-        else if(tempF < (TL + tol/2)){
+        else if(tempF < (TL + tol/2) && tempF > TL){
+            noticeFlag = 2;
+            
+            LED_T_G_Write(0);
+            LED_T_R_Write(0);
             LED_T_Y_Write(1);
         }
         // humid high notice
-        if(humid > (HH - tolh/2)){
-            LED_H_Y_Write(1);
+        if(humid > (HH - tolh/2) && humid > HH){
+            // temp high and humid high notice
+            if(noticeFlag == 1){
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 5;
+            }
+            else if(noticeFlag == 2){
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 6;
+            }
+            else{
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 3;
+            }
+
+            
         }
         // humid low notice
-        else if(humid < (HL + tolh/2)){
+        else if(humid < (HL + tolh/2) && humid > HL){
+            // temp high and humid high notice
+            if(noticeFlag == 1){
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
             LED_H_Y_Write(1);
+
+            noticeFlag = 7;
+            }
+            else if(noticeFlag == 2){
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
+            LED_H_Y_Write(1);
+
+            noticeFlag = 8;
+            }
+            else{
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
+            LED_H_Y_Write(1);
+
+            noticeFlag = 4;
+            }
         }
+    }
+    if((tempF < (TH - tol/2) && tempF > (TL + tol/2)) ||  (humid < (HH - tolh/2) && humid > (HL + tolh/2))){
+        if((tempF < (TH - tol/2) && tempF > (TL + tol/2))){
+            LED_T_Y_Write(0);
+            LED_T_R_Write(0);
+            LED_T_G_Write(1);
+        }
+        if(humid < (HH - tolh/2) && humid > (HL + tolh/2)){
+            LED_H_R_Write(0);       
+            LED_H_Y_Write(0);            
+            LED_H_G_Write(1);
+        }
+        
+
     }
     CyWdtClear();
 }
@@ -205,5 +336,6 @@ void setTol(){
 
   CyWdtClear();
 }
+
 
 /* [] END OF FILE */

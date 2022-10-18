@@ -30,7 +30,7 @@ void initUDPConnectionESP(char* sESP);
 void closeConnectionESP(char* sESP);
 void encryptESP(char* s, unsigned key, int len);
 void requestStartup(char* sESP);
-void changeSetPointsESP(char* sESP, char* str);
+void changeSetPointsESP(char* sESP);
 
 void sendAlertESP(int alertFlag, char* sESP);
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout);
