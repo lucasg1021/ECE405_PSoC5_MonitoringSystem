@@ -259,7 +259,7 @@ void checkParam(float tempF, float humid){
             LED_T_Y_Write(1);
         }
         // humid high notice
-        if(humid > (HH - tolh/2) && humid > HH){
+        if(humid > (HH - tolh/2) && humid < HH){
             // temp high and humid high notice
             if(noticeFlag == 1){
                 LED_H_G_Write(0);
