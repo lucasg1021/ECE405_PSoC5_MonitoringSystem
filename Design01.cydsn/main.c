@@ -9,7 +9,7 @@
 #include "project.h"
 #include "aht.h"
 #include "esp.h"
-//#include "menu.h"
+#include "menu.h"
 #include "EEPROM.h"
 #include "circbuf.h"
 #include "ssd1306.h"
@@ -76,20 +76,20 @@ int main(void)
 //    TOUT_ISR_Start();
 
     I2C_Start();
-//    SW1_ISR_Start();
-//    SW2_ISR_Start();
-//    ENC_ISR_Start();
+
         
     char s[80], sESP[80], eepromS[30];
     char* str;
     uint8 i2cWrBuf[3], i2cRdBuf[7];
     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
     int baseESP, modESP;
-    float tempF, humidity;
+    //float tempF, humid;
 
     CyDelay(1000);
     ESP_RST_Write(1);
     
+    
+    //** Manual Write EEPROM ** // 
 //    uint8_t string[11] = "";
 //    string[10] = '\n';
 //    I2C_MasterSendStop();
@@ -101,12 +101,12 @@ int main(void)
 //    I2C_MasterClearStatus();
 //    
 //    uint8_t string3[1];
-//    string3[0] = 70;
+//    string3[0] = 0x4A;                //Temp
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //    
 //    uint8_t string4[1];
-//    string4[0] = 70;
+//    string4[0] = 0x83;                //Humidity 
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //
@@ -116,6 +116,8 @@ int main(void)
 //    writeEEPROM(0x3D, string3, 1);
 //    writeEEPROM(0x42, string4, 1);
     
+  //***************************************//  
+    
     // get intial values from EEPROM
     readEEPROM(0, eepromS, 4);
     wifi_ssid = strdup(strtok(eepromS, "\n"));
@@ -124,11 +126,11 @@ int main(void)
     wifi_pwd = strdup(strtok(eepromS, "\n"));
     
     readEEPROM(0x3D, eepromS, 1);
-//    char* setTS = strdup(strtok(eepromS, "\n"));
+    //char* setTS = strdup(strtok(eepromS, "\n"));
     SetTemp = eepromS[0];
     
     readEEPROM(0x42, eepromS, 1);
-//    char* setHS = strdup(strtok(eepromS, "\n"));
+    //char* setHS = strdup(strtok(eepromS, "\n"));
     SetHumid = eepromS[0];
 
     sprintf(s, "%d", SetTemp);
@@ -158,6 +160,13 @@ int main(void)
     // start WDT
 //    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
+    SW1_ISR_Start();
+    SW2_ISR_Start();
+    ENC_ISR_Start();
+    
+    
+        SetTemp = 72;
+    SetHumid = 30;
     
     setTol();
     
@@ -254,9 +263,9 @@ int main(void)
         CyDelay(1000);
         CyWdtClear();
         
-        setTol();
+        //setTol();
 
-//        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
+        if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
     }
 }
 /* [] END OF FILE */
