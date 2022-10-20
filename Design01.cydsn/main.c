@@ -67,57 +67,72 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    ESPUART_Start();
-    ESPUART_ClearRxBuffer();
-    ESPUART_ClearTxBuffer();
+    //ESPUART_Start();
+    //ESPUART_ClearRxBuffer();
+    //ESPUART_ClearTxBuffer();
     UART_Start();
 
-    esprx_int_StartEx(esp_int_Handler);
+    //esprx_int_StartEx(esp_int_Handler);
 //    TOUT_ISR_Start();
 
     I2C_Start();
-//    SW1_ISR_Start();
-//    SW2_ISR_Start();
-//    ENC_ISR_Start();
+
         
     char s[80], sESP[80], eepromS[30];
     char* str;
     uint8 i2cWrBuf[3], i2cRdBuf[7];
     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
     int baseESP, modESP;
-    float tempF, humidity;
+    //float tempF, humid;
 
     CyDelay(1000);
-    ESP_RST_Write(1);
+    //ESP_RST_Write(1);
     
+    
+    //** Manual Write EEPROM ** // 
+
     LED_T_G_Write(1);
     LED_H_G_Write(1);
 
-    uint8_t string[11] = "baseball10";
-    string[10] = '\n';
-    I2C_MasterSendStop();
-    I2C_MasterClearStatus();
+ //   uint8_t string[11] = "";
+ //   string[10] = '\n';
+ //   I2C_MasterSendStop();
+ //   I2C_MasterClearStatus();
     
-    uint8_t string2[4] = "LRG";
-    string2[3] = '\n';
-    I2C_MasterSendStop();
-    I2C_MasterClearStatus();
+ //   uint8_t string2[4] = "";
+ //   string2[3] = '\n';
+ //   I2C_MasterSendStop();
+ //   I2C_MasterClearStatus();
     
+
+//    uint8_t string[11] = "";
+//    string[10] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//    
+//    uint8_t string2[4] = "";
+//    string2[3] = '\n';
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+//    
 //    uint8_t string3[1];
-//    string3[0] = 70;
+//    string3[0] = 0x4A;                //Temp
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //    
 //    uint8_t string4[1];
 //    string4[0] = 50;
+//    string4[0] = 0x83;                //Humidity 
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
 //
 //    // write/read wifi ssid
-    writeEEPROM(0x00, string2, 4);
-    writeEEPROM(0x1E, string, 11);
+//    writeEEPROM(0x00, string2, 4);
+//    writeEEPROM(0x1E, string, 11);
 //    writeEEPROM(0x3D, string3, 1);
 //    writeEEPROM(0x3E, string4, 1);
+    
+  //***************************************//  
     
     // get intial values from EEPROM
     readEEPROM(0, eepromS, 4);
@@ -127,7 +142,7 @@ int main(void)
     wifi_pwd = strdup(strtok(eepromS, "\n"));
     
     readEEPROM(0x3D, eepromS, 1);
-//    char* setTS = strdup(strtok(eepromS, "\n"));
+    //char* setTS = strdup(strtok(eepromS, "\n"));
     SetTemp = eepromS[0];
     
     readEEPROM(0x3E, eepromS, 1);
@@ -143,7 +158,7 @@ int main(void)
     UART_PutString("HELLO");
     
     // initialize wifi settings and join network
-    initESP(sESP);
+    //initESP(sESP);
 
     // restart and initialize temp/humid sensor
     restartAHT();
@@ -163,29 +178,35 @@ int main(void)
 //    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
+    SW1_ISR_Start();
+    SW2_ISR_Start();
+    ENC_ISR_Start();
+
     setTol();
     
     for(;;)
     {            
         // every loop check for connection, if none listen on port 54321
-        if(connection == 0){
-            initUDPConnectionESP(sESP);
-            if(!waitForResponseESP("OK", sESP, 1000)){
-                CyWdtClear();
-                waitForResponseESP("OK", sESP, 1000);
-                CyWdtClear();
-              
-            }
-            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
-                CyWdtClear();
-                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
-                    CyWdtClear();
-                    waitForResponseESP("OK", sESP, 1000);
-                    CyWdtClear();
-                }
-            }
-            CyWdtClear();
-        }
+        if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
+        
+//        if(connection == 0){
+//            initUDPConnectionESP(sESP);
+//            if(!waitForResponseESP("OK", sESP, 1000)){
+//                CyWdtClear();
+//                waitForResponseESP("OK", sESP, 1000);
+//                CyWdtClear();
+//              
+//            }
+//            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
+//                CyWdtClear();
+//                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
+//                    CyWdtClear();
+//                    waitForResponseESP("OK", sESP, 1000);
+//                    CyWdtClear();
+//                }
+//            }
+//            CyWdtClear();
+//        }
         
         
         takeMeasurementAHT();   // measure temp and humid
@@ -220,6 +241,7 @@ int main(void)
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
 
         CyWdtClear();
+
         // if connected to app, send temp and humidity information
         if(connection){
             
@@ -264,7 +286,6 @@ int main(void)
                                     
             connection = 0;           
         }
-
         CyWdtClear();
         CyDelay(1000);
         CyWdtClear();
@@ -273,7 +294,6 @@ int main(void)
         
         memset(sESP, '\0', 80);
 
-//        if(SW1_Flag == 1 | SW2_Flag == 1){ menu(); }
     }
 }
 /* [] END OF FILE */
