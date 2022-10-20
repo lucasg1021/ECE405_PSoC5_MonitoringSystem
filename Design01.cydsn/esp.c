@@ -64,7 +64,10 @@ void joinWifiESP(char *ssid, char *pwd, char* sESP){
     
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
     ESPUART_PutString(s);
-    waitForResponseESP("OK\r\n", sESP, 10000);
+    while(waitForResponseESP("OK\r\n", sESP, 10000)){
+        sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
+        ESPUART_PutString(s);
+    }
     CyDelay(1000);
 }
 
@@ -136,6 +139,10 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 SetTemp = atoi(str);
                 str[0] = ' '; str[1] = ' '; str[2] = ' ';
                 SetHumid = atoi(str);
+                str[3] = ' '; str[4] = ' '; str[5] = ' ';
+                tolT = atoi(str);
+                str[6] = ' '; str[7] = ' ';
+                tolH = atoi(str);
                 
                 changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid);
                 

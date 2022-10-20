@@ -240,10 +240,10 @@ void checkParam(float tempF, float humid){
     else{
         
     }
-    if((tempF > (TH - tol/2) && tempF < TH) || (tempF < (TL + tol/2) && tempF > TL)|| (humid > (HH - tolh/2) && humid < HH) || (humid < (HL + tolh/2) && humid > HL)){    
+    if((tempF > (TH - tolT/2) && tempF < TH) || (tempF < (TL + tolT/2) && tempF > TL)|| (humid > (HH - tolH/2) && humid < HH) || (humid < (HL + tolH/2) && humid > HL)){    
         
         // temp high notice
-        if(tempF > (TH - tol/2) && tempF < TH){
+        if(tempF > (TH - tolT/2) && tempF < TH){
             noticeFlag = 1;
             
             LED_T_G_Write(0);
@@ -251,7 +251,7 @@ void checkParam(float tempF, float humid){
             LED_T_Y_Write(1);
         }
         // temp low notice
-        else if(tempF < (TL + tol/2) && tempF > TL){
+        else if(tempF < (TL + tolT/2) && tempF > TL){
             noticeFlag = 2;
             
             LED_T_G_Write(0);
@@ -259,7 +259,7 @@ void checkParam(float tempF, float humid){
             LED_T_Y_Write(1);
         }
         // humid high notice
-        if(humid > (HH - tolh/2) && humid < HH){
+        if(humid > (HH - tolH/2) && humid < HH){
             // temp high and humid high notice
             if(noticeFlag == 1){
                 LED_H_G_Write(0);
@@ -286,7 +286,7 @@ void checkParam(float tempF, float humid){
             
         }
         // humid low notice
-        else if(humid < (HL + tolh/2) && humid > HL){
+        else if(humid < (HL + tolH/2) && humid > HL){
             // temp high and humid high notice
             if(noticeFlag == 1){
             LED_H_G_Write(0);
@@ -311,13 +311,13 @@ void checkParam(float tempF, float humid){
             }
         }
     }
-    if((tempF < (TH - tol/2) && tempF > (TL + tol/2)) ||  (humid < (HH - tolh/2) && humid > (HL + tolh/2))){
-        if((tempF < (TH - tol/2) && tempF > (TL + tol/2))){
+    if((tempF < (TH - tolT/2) && tempF > (TL + tolT/2)) ||  (humid < (HH - tolH/2) && humid > (HL + tolH/2))){
+        if((tempF < (TH - tolT/2) && tempF > (TL + tolT/2))){
             LED_T_Y_Write(0);
             LED_T_R_Write(0);
             LED_T_G_Write(1);
         }
-        if(humid < (HH - tolh/2) && humid > (HL + tolh/2)){
+        if(humid < (HH - tolH/2) && humid > (HL + tolH/2)){
             LED_H_R_Write(0);       
             LED_H_Y_Write(0);            
             LED_H_G_Write(1);
@@ -329,10 +329,10 @@ void checkParam(float tempF, float humid){
 }
 
 void setTol(){
-  TH = SetTemp + tol;
-  TL = SetTemp - tol;
-  HH = SetHumid + tolh;
-  HL = SetHumid - tolh;
+  TH = SetTemp + tolT;
+  TL = SetTemp - tolT;
+  HH = SetHumid + tolH;
+  HL = SetHumid - tolH;
 
   CyWdtClear();
 }

@@ -23,7 +23,7 @@
 extern volatile int alertFlag, noticeFlag;
 extern volatile int TH, HH;
 extern volatile int TL, HL;
-extern volatile int tol, tolh;
+extern volatile int tolT, tolH;
 extern volatile int SetTemp, SetHumid;
 
 void initializeAHT();

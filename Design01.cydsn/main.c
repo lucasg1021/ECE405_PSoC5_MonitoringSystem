@@ -34,8 +34,8 @@ volatile int SetTemp;
 volatile int SetHumid;
 volatile int TH, HH;
 volatile int TL, HL;
-volatile int tol = 2;
-volatile int tolh = 2;
+volatile int tolT = 2;
+volatile int tolH = 2;
 volatile float tempF, humid;
 volatile int Select = 0;
 
@@ -93,16 +93,16 @@ int main(void)
     LED_T_G_Write(1);
     LED_H_G_Write(1);
 
-//    uint8_t string[11] = "baseball10";
-//    string[10] = '\n';
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
-//    
-//    uint8_t string2[4] = "LRG";
-//    string2[3] = '\n';
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
-//    
+    uint8_t string[11] = "baseball10";
+    string[10] = '\n';
+    I2C_MasterSendStop();
+    I2C_MasterClearStatus();
+    
+    uint8_t string2[4] = "LRG";
+    string2[3] = '\n';
+    I2C_MasterSendStop();
+    I2C_MasterClearStatus();
+    
 //    uint8_t string3[1];
 //    string3[0] = 70;
 //    I2C_MasterSendStop();
@@ -114,10 +114,10 @@ int main(void)
 //    I2C_MasterClearStatus();
 //
 //    // write/read wifi ssid
-//    writeEEPROM(0x00, string2, 4);
-//    writeEEPROM(0x1E, string, 11);
+    writeEEPROM(0x00, string2, 4);
+    writeEEPROM(0x1E, string, 11);
 //    writeEEPROM(0x3D, string3, 1);
-//    writeEEPROM(0x42, string4, 1);
+//    writeEEPROM(0x3E, string4, 1);
     
     // get intial values from EEPROM
     readEEPROM(0, eepromS, 4);
@@ -130,7 +130,7 @@ int main(void)
 //    char* setTS = strdup(strtok(eepromS, "\n"));
     SetTemp = eepromS[0];
     
-    readEEPROM(0x42, eepromS, 1);
+    readEEPROM(0x3E, eepromS, 1);
 //    char* setHS = strdup(strtok(eepromS, "\n"));
     SetHumid = eepromS[0];
 
