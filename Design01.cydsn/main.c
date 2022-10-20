@@ -153,7 +153,9 @@ int main(void)
     UART_PutString(s);
     sprintf(s, "%d", SetHumid);
     UART_PutString(s);
-    UART_PutString("HELLO");
+    
+    wifi_ssid = "Welcome to SIUE";
+    wifi_pwd = "";
     
     // initialize wifi settings and join network
     //initESP(sESP);

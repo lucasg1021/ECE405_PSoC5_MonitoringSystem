@@ -202,7 +202,7 @@ void checkParam(float tempF, float humid){
                 alertFlag = 3;  // flag = 3 for high humidity alert
             }
 
-            HoutWrite(0);
+            Hout_Write(0);
            
         }
         // humid low alert
@@ -238,7 +238,7 @@ void checkParam(float tempF, float humid){
             LED_H_G_Write(1);
         }
 
-        CyWdyClear();
+        CyWdtClear();
 
     }
     if((tempF > (TH - tolT/2) && tempF < TH) || (tempF < (TL + tolT/2) && tempF > TL)|| (humid > (HH - tolH/2) && humid < HH) || (humid < (HL + tolH/2) && humid > HL)){    
