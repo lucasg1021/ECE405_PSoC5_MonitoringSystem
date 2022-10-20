@@ -67,12 +67,12 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    ESPUART_Start();
-    ESPUART_ClearRxBuffer();
-    ESPUART_ClearTxBuffer();
+   // ESPUART_Start();
+    //ESPUART_ClearRxBuffer();
+    //ESPUART_ClearTxBuffer();
     UART_Start();
 
-    esprx_int_StartEx(esp_int_Handler);
+    //esprx_int_StartEx(esp_int_Handler);
 //    TOUT_ISR_Start();
 
     I2C_Start();
@@ -158,7 +158,7 @@ int main(void)
     wifi_pwd = "";
     
     // initialize wifi settings and join network
-    initESP(sESP);
+    //initESP(sESP);
 
     // restart and initialize temp/humid sensor
     restartAHT();
