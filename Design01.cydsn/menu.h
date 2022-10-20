@@ -39,7 +39,6 @@ extern volatile int SW1_Flag;
 extern volatile int SW2_Flag;
 
 void menu();
-void printNew(int Select);
 
 #endif
 /* [] END OF FILE */

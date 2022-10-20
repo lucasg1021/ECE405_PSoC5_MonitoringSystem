@@ -26,20 +26,53 @@ int flag = 0;
 int min = 0;
 int max = 100;
 
+  
+
+
 void menu(){
-    
-    while(flag == 0){        // If a button is pressed
+    char s[50];
+    CyWdtClear();
+    display_clear(); 
+    SW1_Flag = 0;
+    SW2_Flag = 0;
+    while(flag == 0){
+        sprintf(s, "Press [L] for Temp \n [R] for Humidity");  
+        display_update();    
+        gfx_setTextSize(1);
+        gfx_setTextColor(WHITE);
+        gfx_setCursor(2, 40);
+        gfx_println(s);
+        CyWdtClear();
+        if((SW1_Flag == 1) || (SW2_Flag == 1)){
+            flag = 1;
+            display_clear();
+           
+        }
+    } 
+    while(flag == 1){        // If a button is pressed
+        
         if ((SW1_Flag == 1) && (SW2_Flag == 0)){     // If user selects Temperature settings
            if((ENC_Flag == 1) && (SetTemp < 100)){                       // Increase temperature
                 SetTemp = SetTemp + 1;
                 ENC_Flag = 0;
+           
             }
             else if((ENC_Flag == -1) && (SetTemp > 0)){                   // Decrease temperature
                 SetTemp = SetTemp - 1;
                 ENC_Flag = 0;
+               
             }
             Select = 1;
-                printNew(Select);                      // Print to screen
+                if(Select == 1){
+                            //print new temp to uart
+                    sprintf(s, "Set Temperature: %d F\r\nPress Both Buttons to Confirm Changes", SetTemp);  
+                    display_update();
+                    gfx_setCursor(2, 20);
+                    gfx_println(s);
+                    //I2C_MasterSendStop();
+                    //I2C_MasterClearStatus();
+                }
+               
         }
         else if((SW2_Flag == 1) && (SW1_Flag == 0)){    // If user selects Humidity settings
            if((ENC_Flag == 1) && (SetHumid < 100)){                          // Increase humidity
@@ -51,54 +84,36 @@ void menu(){
                 ENC_Flag = 0;
             } 
             Select = 2;
-            printNew(Select);
+            if(Select == 2){
+                    sprintf(s, "Set Humidity: %d F\r\n Press Both Buttons to Confirm Changes", SetHumid);
+                    display_update();
+                    gfx_setCursor(2, 20);
+                    gfx_println(s); 
+                    //I2C_MasterSendStop();
+                    //I2C_MasterClearStatus();
+            }
         }
-        setTol();
-        CyWdtClear();
-    }
-}
-
-void printNew(int Select){
-    CyWdtClear();
-    char s[50];
-    
-    if(Select == 1){
-        //print new temp to uart
-        sprintf(s, "Set Temperature: %d F\r\nPress Both Buttons to Confirm Changes", SetTemp);  
-        gfx_setCursor(2, 40);
-        gfx_println(s);
-        display_clear();
-        display_update(); 
-        I2C_MasterSendStop();
-        I2C_MasterClearStatus();
-    }
-    else if(Select == 2){
-        //print temp to uart
-        sprintf(s, "Set Humidity: %d F\r\n Press Both Buttons to Confirm Changes", SetHumid);   
-        gfx_setCursor(2, 40);
-        gfx_println(s);
-        display_clear();
-        display_update(); 
-        I2C_MasterSendStop();
-        I2C_MasterClearStatus();
-    } 
-    if((SW1_Flag == 1) && (SW2_Flag == 1)){
+        if((SW1_Flag == 1) && (SW2_Flag == 1)){
             sprintf(s, "Changes Confirmed");
-    
-             //clear and set up OLED settings, print temp   
-             gfx_setCursor(50, 50);
+             display_clear();
+             display_update();
+             gfx_setCursor(10, 30);
              gfx_println(s);
              display_update(); 
              I2C_MasterSendStop();
              I2C_MasterClearStatus();
+            
              SW1_Flag = 0;
              SW2_Flag = 0;
              ENC_Flag = 0;
              Select = 0;
-             flag = 1;
+             flag = 2;
+        }
     }
-    CyWdtClear();
-    return;
+        setTol();
+        flag = 0;
+        CyWdtClear();
+    
 }
 /* [] END OF FILE */
 // Can clear watchdogs here as well.

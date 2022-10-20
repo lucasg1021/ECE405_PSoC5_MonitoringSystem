@@ -67,12 +67,12 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    ESPUART_Start();
-    ESPUART_ClearRxBuffer();
-    ESPUART_ClearTxBuffer();
+    //ESPUART_Start();
+    //ESPUART_ClearRxBuffer();
+    //ESPUART_ClearTxBuffer();
     UART_Start();
 
-    esprx_int_StartEx(esp_int_Handler);
+    //esprx_int_StartEx(esp_int_Handler);
 //    TOUT_ISR_Start();
 
     I2C_Start();
@@ -86,7 +86,7 @@ int main(void)
     //float tempF, humid;
 
     CyDelay(1000);
-    ESP_RST_Write(1);
+    //ESP_RST_Write(1);
     
     
     //** Manual Write EEPROM ** // 
@@ -141,7 +141,7 @@ int main(void)
     UART_PutString(s);
     
     // initialize wifi settings and join network
-    initESP(sESP);
+    //initESP(sESP);
 
     // restart and initialize temp/humid sensor
     restartAHT();
@@ -166,31 +166,33 @@ int main(void)
     
     
         SetTemp = 72;
-    SetHumid = 30;
+        SetHumid = 48;
     
     setTol();
     
     for(;;)
     {            
         // every loop check for connection, if none listen on port 54321
-        if(connection == 0){
-            initUDPConnectionESP(sESP);
-            if(!waitForResponseESP("OK", sESP, 1000)){
-                CyWdtClear();
-                waitForResponseESP("OK", sESP, 1000);
-                CyWdtClear();
-              
-            }
-            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
-                CyWdtClear();
-                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
-                    CyWdtClear();
-                    waitForResponseESP("OK", sESP, 1000);
-                    CyWdtClear();
-                }
-            }
-            CyWdtClear();
-        }
+        if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
+        
+//        if(connection == 0){
+//            initUDPConnectionESP(sESP);
+//            if(!waitForResponseESP("OK", sESP, 1000)){
+//                CyWdtClear();
+//                waitForResponseESP("OK", sESP, 1000);
+//                CyWdtClear();
+//              
+//            }
+//            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
+//                CyWdtClear();
+//                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
+//                    CyWdtClear();
+//                    waitForResponseESP("OK", sESP, 1000);
+//                    CyWdtClear();
+//                }
+//            }
+//            CyWdtClear();
+//        }
         
         takeMeasurementAHT();   // measure temp and humid
 
@@ -225,39 +227,39 @@ int main(void)
 
         CyWdtClear();
         // if connected to app, send temp and humidity information
-        if(connection){
-            
-            // check if an alert has been triggered, send corresponding alarm code
-            if(alertFlag){
-                sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
-                alertFlag = 0;
-            }
-            else{
-                sprintf(s,"%.2f %.2f DATA", tempF, humid);
-            }
-            
-            if(keyFlag){
-                encryptESP(s, KEY, strlen(s));
-            }
-            CyWdtClear();
-            CyDelay(100);
-            CyWdtClear();
-
-            // send 11 bytes of data
-            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
-            ESPUART_PutString(sESP);
-            waitForResponseESP(">", sESP, 2000);
-            CyWdtClear();
-            
-            // send to connected device
-            ESPUART_PutString(s);
-            waitForResponseESP("OK\r\n", sESP, 1000);
-           
-            closeConnectionESP(sESP);
-            CyWdtClear();
-                                    
-            connection = 0;           
-        }
+//        if(connection){
+//            
+//            // check if an alert has been triggered, send corresponding alarm code
+//            if(alertFlag){
+//                sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+//                alertFlag = 0;
+//            }
+//            else{
+//                sprintf(s,"%.2f %.2f DATA", tempF, humid);
+//            }
+//            
+//            if(keyFlag){
+//                encryptESP(s, KEY, strlen(s));
+//            }
+//            CyWdtClear();
+//            CyDelay(100);
+//            CyWdtClear();
+//
+//            // send 11 bytes of data
+//            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
+//            ESPUART_PutString(sESP);
+//            waitForResponseESP(">", sESP, 2000);
+//            CyWdtClear();
+//            
+//            // send to connected device
+//            ESPUART_PutString(s);
+//            waitForResponseESP("OK\r\n", sESP, 1000);
+//           
+//            closeConnectionESP(sESP);
+//            CyWdtClear();
+//                                    
+//            connection = 0;           
+//        }
 
         CyWdtClear();
         CyDelay(1000);
@@ -265,7 +267,6 @@ int main(void)
         
         //setTol();
 
-        if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
     }
 }
 /* [] END OF FILE */

@@ -262,6 +262,7 @@
       <Data key="b0162966-0060-4af5-82d1-fcb491ad7619/0758f7e0-b58c-4a6b-bb59-e7d003cac7de" value="UART_TXInternalInterrupt" />
       <Data key="b7571537-b448-4254-a4cb-a06b5cbb5c54" value="TOUT_ISR" />
       <Data key="c3f3e035-aa22-4ffa-a239-841cfc8b4a6a" value="SW1_ISR" />
+      <Data key="d781ac6c-6201-41ae-bba3-cee7729104d5" value="HOUT_ISR" />
     </Group>
     <Group key="Pin">
       <Data key="0acba406-d608-4fdd-962f-7f081b1d20ea" value="SW2" />
@@ -279,6 +280,7 @@
       <Data key="22576979-9925-41c7-9327-d7c9a8b1502e" value="Tout" />
       <Data key="c89a083c-1600-42d4-9dcd-4b114898d706" value="LED_T_Y" />
       <Data key="cd5e2765-5eb9-483e-8633-7cbdb3de1aec" value="LED_H_R" />
+      <Data key="d54804ed-7abd-4fe0-84fe-1132bed689d2" value="Hout" />
       <Data key="e2f55905-c0fe-4811-aece-a38358762a29" value="SCL_OLED" />
       <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="ESP_RST" />
       <Data key="ed092b9b-d398-4703-be89-cebf998501f6" value="Tx_1" />
@@ -3386,21 +3388,28 @@
     <Group key="6710315c-818e-4fe6-bca7-9e895171201d">
       <Group key="CortexM3">
         <Data key="Assigned" value="True" />
-        <Data key="Priority" value="3" />
+        <Data key="Priority" value="4" />
         <Data key="Vector" value="-1" />
       </Group>
     </Group>
     <Group key="b7571537-b448-4254-a4cb-a06b5cbb5c54">
       <Group key="CortexM3">
         <Data key="Assigned" value="True" />
-        <Data key="Priority" value="7" />
+        <Data key="Priority" value="0" />
         <Data key="Vector" value="-1" />
       </Group>
     </Group>
     <Group key="c3f3e035-aa22-4ffa-a239-841cfc8b4a6a">
       <Group key="CortexM3">
         <Data key="Assigned" value="True" />
-        <Data key="Priority" value="3" />
+        <Data key="Priority" value="4" />
+        <Data key="Vector" value="-1" />
+      </Group>
+    </Group>
+    <Group key="d781ac6c-6201-41ae-bba3-cee7729104d5">
+      <Group key="CortexM3">
+        <Data key="Assigned" value="True" />
+        <Data key="Priority" value="0" />
         <Data key="Vector" value="-1" />
       </Group>
     </Group>
@@ -3482,6 +3491,11 @@
     <Group key="cd5e2765-5eb9-483e-8633-7cbdb3de1aec">
       <Group key="0">
         <Data key="Port Format" value="0,5" />
+      </Group>
+    </Group>
+    <Group key="d54804ed-7abd-4fe0-84fe-1132bed689d2">
+      <Group key="0">
+        <Data key="Port Format" value="1,4" />
       </Group>
     </Group>
     <Group key="e2f55905-c0fe-4811-aece-a38358762a29">
