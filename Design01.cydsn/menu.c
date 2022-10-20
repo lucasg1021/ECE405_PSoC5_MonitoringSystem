@@ -40,7 +40,7 @@ void menu(){
         display_update();    
         gfx_setTextSize(1);
         gfx_setTextColor(WHITE);
-        gfx_setCursor(2, 40);
+        gfx_setCursor(2, 20);
         gfx_println(s);
         CyWdtClear();
         if((SW1_Flag == 1) || (SW2_Flag == 1)){
@@ -50,27 +50,30 @@ void menu(){
         }
     } 
     while(flag == 1){        // If a button is pressed
-        
         if ((SW1_Flag == 1) && (SW2_Flag == 0)){     // If user selects Temperature settings
            if((ENC_Flag == 1) && (SetTemp < 100)){                       // Increase temperature
                 SetTemp = SetTemp + 1;
                 ENC_Flag = 0;
+            display_clear();
            
             }
             else if((ENC_Flag == -1) && (SetTemp > 0)){                   // Decrease temperature
                 SetTemp = SetTemp - 1;
                 ENC_Flag = 0;
+                display_clear();
                
             }
             Select = 1;
                 if(Select == 1){
+                    
                             //print new temp to uart
                     sprintf(s, "Set Temperature: %d F\r\nPress Both Buttons to Confirm Changes", SetTemp);  
                     display_update();
                     gfx_setCursor(2, 20);
                     gfx_println(s);
-                    //I2C_MasterSendStop();
-                    //I2C_MasterClearStatus();
+                    I2C_MasterSendStop();
+                    I2C_MasterClearStatus();
+                    
                 }
                
         }
@@ -78,19 +81,21 @@ void menu(){
            if((ENC_Flag == 1) && (SetHumid < 100)){                          // Increase humidity
                 SetHumid = SetHumid + 1;
                 ENC_Flag = 0;
+            display_clear();
             }           
            else if((ENC_Flag == -1) && (SetHumid > 0)){             //Decrease humidity
                 SetHumid = SetHumid - 1;
                 ENC_Flag = 0;
+            display_clear();
             } 
             Select = 2;
             if(Select == 2){
-                    sprintf(s, "Set Humidity: %d F\r\n Press Both Buttons to Confirm Changes", SetHumid);
+                    sprintf(s, "Set Humidity: %d \%%\r\nPress Both Buttons to Confirm Changes", SetHumid);
                     display_update();
                     gfx_setCursor(2, 20);
                     gfx_println(s); 
-                    //I2C_MasterSendStop();
-                    //I2C_MasterClearStatus();
+                    I2C_MasterSendStop();
+                    I2C_MasterClearStatus();
             }
         }
         if((SW1_Flag == 1) && (SW2_Flag == 1)){
@@ -109,6 +114,7 @@ void menu(){
              Select = 0;
              flag = 2;
         }
+        
     }
         setTol();
         flag = 0;
