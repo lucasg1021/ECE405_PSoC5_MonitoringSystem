@@ -20,13 +20,17 @@
 #define EEPROM_ADDR (uint8) 0x50
 #define WIFISSID_MAXLEN 30  //memory locations 0x00-0x1D
 #define WIFIPWD_MAXLEN 30   //memory locations 0x1E-0x3C
-#define SETTEMP_MAXLEN 5    //memory locations 0x3D-0x41
-#define SETHUMID_MAXLEN 5   //memory locations 0x42-0x47
+#define SETTEMP_MAXLEN 1    //memory locations 0x3D
+#define SETHUMID_MAXLEN 1   //memory locations 0x3E
+#define TOLT_MAXLEN 1       //memory location 0x3F
+#define TOLH_MAXLEN 1       //memory location 0x40
     
 #define WIFISSID_STARTADDR (uint8) 0x00
 #define WIFIPWD_STARTADDR (uint8) 0x1E
 #define SETTEMP_STARTADDR (uint8) 0x3D
-#define SETHUMID_STARTADDR (uint8) 0x42
+#define SETHUMID_STARTADDR (uint8) 0x3E
+#define TOLT_STARTADDR (uint8) 0x3F
+#define TOLH_STARTADDR (uint8) 0x40
     
 void writeEEPROM(uint8_t eepromAddr, uint8_t writeEEPROM[], int len);
 void readEEPROM(uint8_t eepromAddr, char *eepromS, int len);

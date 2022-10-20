@@ -48,10 +48,10 @@ void initESP(char* sESP){
     
     joinWifiESP((char *)wifi_ssid, (char *)wifi_pwd, sESP);
 
-//  show device's current IP
+////  show device's current IP
 //    ESPUART_PutString("AT+CIFSR\r\n\n");
 //    CyDelay(1000);
-//    waitForResponseESP("OK", 5000);
+//    waitForResponseESP("OK", sESP, 5000);
     
 //    enable multiple connections
     ESPUART_PutString("AT+CIPMUX=1\r\n\n");
@@ -64,7 +64,10 @@ void joinWifiESP(char *ssid, char *pwd, char* sESP){
     
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
     ESPUART_PutString(s);
-    waitForResponseESP("OK\r\n", sESP, 10000);
+    while(waitForResponseESP("OK\r\n", sESP, 10000)){
+        sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
+        ESPUART_PutString(s);
+    }
     CyDelay(1000);
 }
 
@@ -121,8 +124,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         }
         else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
-                connection = 1;
-                    
+                connection = 1;                
             }
             else{
                 requestStartup(sESP);
@@ -137,6 +139,10 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 SetTemp = atoi(str);
                 str[0] = ' '; str[1] = ' '; str[2] = ' ';
                 SetHumid = atoi(str);
+                str[3] = ' '; str[4] = ' '; str[5] = ' ';
+                tolT = atoi(str);
+                str[6] = ' '; str[7] = ' ';
+                tolH = atoi(str);
                 
                 changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid);
                 
@@ -285,7 +291,7 @@ void requestStartup(char* sESP){
     closeConnectionESP(sESP);
 }
 
-void changeSetPointsESP(char* sESP, char* str){
+void changeSetPointsESP(char* sESP){
     char s[30];
     waitForResponseESP("DONE", sESP, 1000);
     
