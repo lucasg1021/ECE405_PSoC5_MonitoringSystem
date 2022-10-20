@@ -85,14 +85,12 @@ int main(void)
     int baseESP, modESP;
     //float tempF, humid;
 
-    CyDelay(1000);
     //ESP_RST_Write(1);
     
-    
-    //** Manual Write EEPROM ** // 
-
     LED_T_G_Write(1);
     LED_H_G_Write(1);
+    
+    //** Manual Write EEPROM ** // 
 
  //   uint8_t string[11] = "";
  //   string[10] = '\n';
@@ -186,27 +184,29 @@ int main(void)
     
     for(;;)
     {            
-        // every loop check for connection, if none listen on port 54321
+
+        // check if user hit button
         if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
         
-//        if(connection == 0){
-//            initUDPConnectionESP(sESP);
-//            if(!waitForResponseESP("OK", sESP, 1000)){
-//                CyWdtClear();
-//                waitForResponseESP("OK", sESP, 1000);
-//                CyWdtClear();
-//              
-//            }
-//            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
-//                CyWdtClear();
-//                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
-//                    CyWdtClear();
-//                    waitForResponseESP("OK", sESP, 1000);
-//                    CyWdtClear();
-//                }
-//            }
-//            CyWdtClear();
-//        }
+        // every loop check for connection, if none listen on port 54321
+        if(connection == 0){
+            initUDPConnectionESP(sESP);
+            if(!waitForResponseESP("OK", sESP, 1000)){
+                CyWdtClear();
+                waitForResponseESP("OK", sESP, 1000);
+                CyWdtClear();
+              
+            }
+            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
+                CyWdtClear();
+                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
+                    CyWdtClear();
+                    waitForResponseESP("OK", sESP, 1000);
+                    CyWdtClear();
+                }
+            }
+            CyWdtClear();
+        }
         
         
         takeMeasurementAHT();   // measure temp and humid
