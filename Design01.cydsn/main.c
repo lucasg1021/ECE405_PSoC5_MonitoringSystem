@@ -90,6 +90,12 @@ int main(void)
     
     
     //** Manual Write EEPROM ** // 
+
+    LED_T_G_Write(1);
+    LED_H_G_Write(1);
+    LED_T_Y_Write(1);
+    
+
 //    uint8_t string[11] = "";
 //    string[10] = '\n';
 //    I2C_MasterSendStop();
@@ -168,6 +174,8 @@ int main(void)
         SetTemp = 72;
         SetHumid = 48;
     
+    SetTemp = 80;
+    SetHumid = 30;
     setTol();
     
     for(;;)
