@@ -149,9 +149,8 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
 
 void checkParam(float tempF, float humid){
 
-    // check if any params are in alert range to make sure alert and notice don't both trip
-    if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){
-        //Tout_Write(1); 
+    // check if any params are in alert range
+    if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){ 
     
         // temp high alert
         if(tempF > TH){
@@ -183,66 +182,69 @@ void checkParam(float tempF, float humid){
         if(humid > HH){
             if(alertFlag == 1){
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
                 
-      
                 alertFlag = 5;   //flag = 5 for T high and H high   
             }
             else if(alertFlag == 2){
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
-                
-                Hout_Write(0);
+               
                 alertFlag = 6;  //flag = 6 for T low and H high   
             }
             else{
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
 
-                Hout_Write(0);
                 alertFlag = 3;  // flag = 3 for high humidity alert
             }
+
+            HoutWrite(0);
            
         }
         // humid low alert
-        if(humid < HL){
+        else if(humid < HL){
             if(alertFlag == 1){
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
-                
-                Hout_Write(1);
                 
                 alertFlag = 7;   //flag = 7 for T high and H low 
             }
             else if(alertFlag == 2){
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
-                
-               Hout_Write(1);
                 
                 alertFlag = 8;  //flag = 6 for T low and H low  
             }
             else{
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);          
+                LED_H_Y_Write(0);
                 LED_H_R_Write(1);
-                
-                Hout_Write(1);
+
                 alertFlag = 4; // flag = 4 for H low
             }
+
+            Hout_Write(1);
            
         }
-          CyWdtClear();
+        else{
+            LED_H_R_Write(0);
+            LED_H_Y_Write(0);
+            LED_H_G_Write(1);
+        }
+
+        CyWdyClear();
+
     }
-    if((tempF > (TH - tol/2)) || (tempF < (TL + tol/2)) || (humid > (HH - tolh/2)) || (humid < (HL + tolh/2))){    
+    if((tempF > (TH - tolT/2) && tempF < TH) || (tempF < (TL + tolT/2) && tempF > TL)|| (humid > (HH - tolH/2) && humid < HH) || (humid < (HL + tolH/2) && humid > HL)){    
         
         // temp high notice
-        if((tempF > (TH - tol/2)) && (tempF < TH)){
+        if(tempF > (TH - tolT/2) && tempF < TH){
             noticeFlag = 1;
             
             LED_T_G_Write(0);
@@ -250,47 +252,91 @@ void checkParam(float tempF, float humid){
             LED_T_Y_Write(1);
         }
         // temp low notice
-        if((tempF < (TL + tol/2)) && (tempF > TL)){
+        else if(tempF < (TL + tolT/2) && tempF > TL){
             noticeFlag = 2;
+            
             LED_T_G_Write(0);
             LED_T_R_Write(0);
             LED_T_Y_Write(1);
         }
         // humid high notice
-        if((humid > (HH - tolh/2)) && (humid < HH)){
-            LED_H_G_Write(0);
-            LED_H_R_Write(0);
-            LED_H_Y_Write(1);
+        if(humid > (HH - tolH/2) && humid < HH){
+            // temp high and humid high notice
+            if(noticeFlag == 1){
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 5;
+            }
+            else if(noticeFlag == 2){
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 6;
+            }
+            else{
+                LED_H_G_Write(0);
+                LED_H_R_Write(0);
+                LED_H_Y_Write(1);
+                
+                noticeFlag = 3;
+            }
+
             
         }
         // humid low notice
-        if((humid < (HL + tolh/2)) && (humid > HL)){
+        else if(humid < (HL + tolH/2) && humid > HL){
+            // temp high and humid high notice
+            if(noticeFlag == 1){
             LED_H_G_Write(0);
             LED_H_R_Write(0);
             LED_H_Y_Write(1);
+
+            noticeFlag = 7;
+            }
+            else if(noticeFlag == 2){
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
+            LED_H_Y_Write(1);
+
+            noticeFlag = 8;
+            }
+            else{
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
+            LED_H_Y_Write(1);
+
+            noticeFlag = 4;
+            }
         }
-          CyWdtClear();
     }
-    
-    else{
-        LED_T_R_Write(0);
-        LED_H_R_Write(0);
-        LED_H_Y_Write(0);
-        LED_T_Y_Write(0);
+    if((tempF < (TH - tolT/2) && tempF > (TL + tolT/2)) ||  (humid < (HH - tolH/2) && humid > (HL + tolH/2))){
+        if((tempF < (TH - tolT/2) && tempF > (TL + tolT/2))){
+            LED_T_Y_Write(0);
+            LED_T_R_Write(0);
+            LED_T_G_Write(1);
+        }
+        if(humid < (HH - tolH/2) && humid > (HL + tolH/2)){
+            LED_H_R_Write(0);       
+            LED_H_Y_Write(0);            
+            LED_H_G_Write(1);
+        }
         
-        LED_T_G_Write(1);
-        LED_H_G_Write(1);
+
     }
     CyWdtClear();
 }
 
 void setTol(){
-  TH = SetTemp + tol;
-  TL = SetTemp - tol;
-  HH = SetHumid + tolh;
-  HL = SetHumid - tolh;
+  TH = SetTemp + tolT;
+  TL = SetTemp - tolT;
+  HH = SetHumid + tolH;
+  HL = SetHumid - tolH;
 
   CyWdtClear();
 }
+
 
 /* [] END OF FILE */
