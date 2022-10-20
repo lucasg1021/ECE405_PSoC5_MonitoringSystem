@@ -13,11 +13,12 @@
 #include "I2C.h"
 #include "ssd1306.h"
 #include "Tout.h"
-#include "LED_T_Y.h"
-#include "LED_H_Y.h"
+#include "Hout.h"
 #include "LED_T_G.h"
+#include "LED_T_Y.h"
 #include "LED_T_R.h"
 #include "LED_H_G.h"
+#include "LED_H_Y.h"
 #include "LED_H_R.h"
 #include "esp.h"
 
@@ -106,6 +107,14 @@ void printTempHumid(float temp, float humid){
     gfx_setCursor(2, 20);
     gfx_println(s);
     display_update(); 
+//    I2C_MasterSendStop();
+//    I2C_MasterClearStatus();
+   
+    //print menu to uart
+    sprintf(s, "Menu");   
+    gfx_setCursor(50,50);
+    gfx_println(s);
+    display_update(); 
     I2C_MasterSendStop();
     I2C_MasterClearStatus();
 }
@@ -142,7 +151,7 @@ void checkParam(float tempF, float humid){
 
     // check if any params are in alert range to make sure alert and notice don't both trip
     if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){
-        Tout_Write(1); 
+        //Tout_Write(1); 
     
         // temp high alert
         if(tempF > TH){
@@ -173,77 +182,67 @@ void checkParam(float tempF, float humid){
         // humid high alert
         if(humid > HH){
             if(alertFlag == 1){
-                LED_T_G_Write(0);
-                LED_T_Y_Write(0);
                 LED_H_G_Write(0);
-                LED_H_Y_Write(0);
-                
-                LED_T_R_Write(1);
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
                 
-                Tout_Write(0);
+      
                 alertFlag = 5;   //flag = 5 for T high and H high   
             }
             else if(alertFlag == 2){
-                LED_T_G_Write(0);
                 LED_H_G_Write(0);
-                
-                LED_T_R_Write(1);
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
                 
-                Tout_Write(1);
+                Hout_Write(0);
                 alertFlag = 6;  //flag = 6 for T low and H high   
             }
             else{
                 LED_H_G_Write(0);
-                
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
 
+                Hout_Write(0);
                 alertFlag = 3;  // flag = 3 for high humidity alert
             }
            
         }
         // humid low alert
-        else if(humid < HL){
+        if(humid < HL){
             if(alertFlag == 1){
-                LED_T_G_Write(0);
                 LED_H_G_Write(0);
-                
-                LED_T_R_Write(1);
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
                 
-                Tout_Write(0);
+                Hout_Write(1);
                 
                 alertFlag = 7;   //flag = 7 for T high and H low 
             }
             else if(alertFlag == 2){
-                LED_T_G_Write(0);
                 LED_H_G_Write(0);
-                
-                LED_T_R_Write(1);
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
                 
-                Tout_Write(1);
+               Hout_Write(1);
                 
                 alertFlag = 8;  //flag = 6 for T low and H low  
             }
             else{
                 LED_H_G_Write(0);
-                
+                LED_H_Y_Write(0);          
                 LED_H_R_Write(1);
+                
+                Hout_Write(1);
                 alertFlag = 4; // flag = 4 for H low
             }
            
         }
-        else{
-            LED_H_R_Write(0);
-            LED_H_G_Write(1);
-        }
+          CyWdtClear();
     }
-    else if(tempF > (TH - tol/2) || tempF < (TL + tol/2) || humid > (HH - tolh/2) || humid < (HL + tolh/2)){    
+    if((tempF > (TH - tol/2)) || (tempF < (TL + tol/2)) || (humid > (HH - tolh/2)) || (humid < (HL + tolh/2))){    
         
         // temp high notice
-        if(tempF > (TH - tol/2)){
+        if((tempF > (TH - tol/2)) && (tempF < TH)){
             noticeFlag = 1;
             
             LED_T_G_Write(0);
@@ -251,23 +250,33 @@ void checkParam(float tempF, float humid){
             LED_T_Y_Write(1);
         }
         // temp low notice
-        else if(tempF < (TL + tol/2)){
+        if((tempF < (TL + tol/2)) && (tempF > TL)){
             noticeFlag = 2;
+            LED_T_G_Write(0);
+            LED_T_R_Write(0);
             LED_T_Y_Write(1);
         }
         // humid high notice
-        if(humid > (HH - tolh/2)){
+        if((humid > (HH - tolh/2)) && (humid < HH)){
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
             LED_H_Y_Write(1);
             
         }
         // humid low notice
-        else if(humid < (HL + tolh/2)){
+        if((humid < (HL + tolh/2)) && (humid > HL)){
+            LED_H_G_Write(0);
+            LED_H_R_Write(0);
             LED_H_Y_Write(1);
         }
+          CyWdtClear();
     }
+    
     else{
         LED_T_R_Write(0);
         LED_H_R_Write(0);
+        LED_H_Y_Write(0);
+        LED_T_Y_Write(0);
         
         LED_T_G_Write(1);
         LED_H_G_Write(1);
