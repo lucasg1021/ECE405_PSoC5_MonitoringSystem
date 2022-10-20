@@ -34,8 +34,8 @@ volatile int SetTemp;
 volatile int SetHumid;
 volatile int TH, HH;
 volatile int TL, HL;
-volatile int tol = 2;
-volatile int tolh = 2;
+volatile int tolT = 2;
+volatile int tolH = 2;
 volatile float tempF, humid;
 volatile int Select = 0;
 
@@ -85,15 +85,22 @@ int main(void)
     int baseESP, modESP;
     //float tempF, humid;
 
-    CyDelay(1000);
     //ESP_RST_Write(1);
     
+    LED_T_G_Write(1);
+    LED_H_G_Write(1);
     
     //** Manual Write EEPROM ** // 
 
-    LED_T_G_Write(1);
-    LED_H_G_Write(1);
-    LED_T_Y_Write(1);
+ //   uint8_t string[11] = "";
+ //   string[10] = '\n';
+ //   I2C_MasterSendStop();
+ //   I2C_MasterClearStatus();
+    
+ //   uint8_t string2[4] = "";
+ //   string2[3] = '\n';
+ //   I2C_MasterSendStop();
+ //   I2C_MasterClearStatus();
     
 
 //    uint8_t string[11] = "";
@@ -112,6 +119,7 @@ int main(void)
 //    I2C_MasterClearStatus();
 //    
 //    uint8_t string4[1];
+//    string4[0] = 50;
 //    string4[0] = 0x83;                //Humidity 
 //    I2C_MasterSendStop();
 //    I2C_MasterClearStatus();
@@ -120,7 +128,7 @@ int main(void)
 //    writeEEPROM(0x00, string2, 4);
 //    writeEEPROM(0x1E, string, 11);
 //    writeEEPROM(0x3D, string3, 1);
-//    writeEEPROM(0x42, string4, 1);
+//    writeEEPROM(0x3E, string4, 1);
     
   //***************************************//  
     
@@ -135,8 +143,8 @@ int main(void)
     //char* setTS = strdup(strtok(eepromS, "\n"));
     SetTemp = eepromS[0];
     
-    readEEPROM(0x42, eepromS, 1);
-    //char* setHS = strdup(strtok(eepromS, "\n"));
+    readEEPROM(0x3E, eepromS, 1);
+//    char* setHS = strdup(strtok(eepromS, "\n"));
     SetHumid = eepromS[0];
 
     sprintf(s, "%d", SetTemp);
@@ -145,6 +153,9 @@ int main(void)
     UART_PutString(s);
     sprintf(s, "%d", SetHumid);
     UART_PutString(s);
+    
+    wifi_ssid = "Welcome to SIUE";
+    wifi_pwd = "";
     
     // initialize wifi settings and join network
     //initESP(sESP);
@@ -166,41 +177,39 @@ int main(void)
     // start WDT
 //    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
+
     SW1_ISR_Start();
     SW2_ISR_Start();
     ENC_ISR_Start();
-    
-    
-        SetTemp = 72;
-        SetHumid = 48;
-    
-    SetTemp = 80;
-    SetHumid = 30;
+
     setTol();
     
     for(;;)
     {            
-        // every loop check for connection, if none listen on port 54321
+
+        // check if user hit button
         if((SW1_Flag == 1) || (SW2_Flag == 1)){ menu(); }
         
-//        if(connection == 0){
-//            initUDPConnectionESP(sESP);
-//            if(!waitForResponseESP("OK", sESP, 1000)){
-//                CyWdtClear();
-//                waitForResponseESP("OK", sESP, 1000);
-//                CyWdtClear();
-//              
-//            }
-//            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
-//                CyWdtClear();
-//                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
-//                    CyWdtClear();
-//                    waitForResponseESP("OK", sESP, 1000);
-//                    CyWdtClear();
-//                }
-//            }
-//            CyWdtClear();
-//        }
+        // every loop check for connection, if none listen on port 54321
+        if(connection == 0){
+            initUDPConnectionESP(sESP);
+            if(!waitForResponseESP("OK", sESP, 1000)){
+                CyWdtClear();
+                waitForResponseESP("OK", sESP, 1000);
+                CyWdtClear();
+              
+            }
+            else if(!waitForResponseESP("ALREADY CONNECTED\r\n\n", sESP, 1000)){
+                CyWdtClear();
+                if(!waitForResponseESP("ERROR\r\n", sESP, 1000)){
+                    CyWdtClear();
+                    waitForResponseESP("OK", sESP, 1000);
+                    CyWdtClear();
+                }
+            }
+            CyWdtClear();
+        }
+        
         
         takeMeasurementAHT();   // measure temp and humid
 
@@ -234,46 +243,58 @@ int main(void)
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
 
         CyWdtClear();
-        // if connected to app, send temp and humidity information
-//        if(connection){
-//            
-//            // check if an alert has been triggered, send corresponding alarm code
-//            if(alertFlag){
-//                sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
-//                alertFlag = 0;
-//            }
-//            else{
-//                sprintf(s,"%.2f %.2f DATA", tempF, humid);
-//            }
-//            
-//            if(keyFlag){
-//                encryptESP(s, KEY, strlen(s));
-//            }
-//            CyWdtClear();
-//            CyDelay(100);
-//            CyWdtClear();
-//
-//            // send 11 bytes of data
-//            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
-//            ESPUART_PutString(sESP);
-//            waitForResponseESP(">", sESP, 2000);
-//            CyWdtClear();
-//            
-//            // send to connected device
-//            ESPUART_PutString(s);
-//            waitForResponseESP("OK\r\n", sESP, 1000);
-//           
-//            closeConnectionESP(sESP);
-//            CyWdtClear();
-//                                    
-//            connection = 0;           
-//        }
 
+        // if connected to app, send temp and humidity information
+        if(connection){
+            
+            // check if an alert has been triggered, send corresponding alarm code
+            if(alertFlag){
+                //check if notice has also been triggered
+                if(noticeFlag){
+                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f DATA", alertFlag, noticeFlag, tempF, humid);
+                }
+                else{
+                    sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+                }
+                alertFlag = 0;
+                noticeFlag = 0;
+            }
+            else if(noticeFlag){
+                sprintf(s,"NOTICE %d %.2f %.2f DATA", noticeFlag, tempF, humid);
+            }
+            else{
+                sprintf(s,"%.2f %.2f DATA", tempF, humid);
+            }
+            
+            if(keyFlag){
+                encryptESP(s, KEY, strlen(s));
+            }
+            CyWdtClear();
+            CyDelay(100);
+            CyWdtClear();
+
+            // send 11 bytes of data
+            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
+            ESPUART_PutString(sESP);
+            waitForResponseESP(">", sESP, 2000);
+            CyWdtClear();
+            
+            // send to connected device
+            ESPUART_PutString(s);
+            waitForResponseESP("OK\r\n", sESP, 1000);
+           
+            closeConnectionESP(sESP);
+            CyWdtClear();
+                                    
+            connection = 0;           
+        }
         CyWdtClear();
         CyDelay(1000);
         CyWdtClear();
         
-        //setTol();
+        setTol();
+        
+        memset(sESP, '\0', 80);
 
     }
 }
