@@ -67,7 +67,7 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    //ESPUART_Start();
+   // ESPUART_Start();
     //ESPUART_ClearRxBuffer();
     //ESPUART_ClearTxBuffer();
     UART_Start();
