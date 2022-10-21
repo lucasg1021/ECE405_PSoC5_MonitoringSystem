@@ -24,11 +24,11 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag = 1; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 0;
+volatile unsigned KEY = 123;
 
 volatile int SetTemp;
 volatile int SetHumid;
@@ -43,6 +43,7 @@ volatile int SW1_Flag = 0;
 volatile int SW2_Flag = 0;
 volatile int alertFlag = 0;
 volatile int noticeFlag = 0;
+volatile int mistFlag = 2;
 
 volatile char * wifi_ssid;
 volatile char * wifi_pwd;
@@ -66,8 +67,6 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-    mistISR_Start();
-    mistTimer_Start();
     ESPUART_Start();
     ESPUART_ClearRxBuffer();
     ESPUART_ClearTxBuffer();
@@ -77,6 +76,11 @@ int main(void)
 //    TOUT_ISR_Start();
 
     I2C_Start();
+    
+    mistISR_Start();
+    mistTimer_WriteCounter(0);
+    mistTimer_WritePeriod(6000);     // 6000/(100Hz CLK) = 1 minute period before misting can begin
+    mistTimer_Enable();
         
     char s[80], sESP[80], eepromS[30];
     char* str;
@@ -89,7 +93,6 @@ int main(void)
     
     LED_T_G_Write(1);
     LED_H_G_Write(1);
-    mistTimer_Start();
     
     //** Manual Write EEPROM ** //     
 

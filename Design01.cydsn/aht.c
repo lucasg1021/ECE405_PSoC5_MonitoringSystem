@@ -9,6 +9,7 @@
  *
  * ========================================
 */
+#include "project.h"
 #include "aht.h"
 #include "I2C.h"
 #include "ssd1306.h"
@@ -229,7 +230,18 @@ void checkParam(float tempF, float humid){
                 alertFlag = 4; // flag = 4 for H low
             }
 
-            Hout_Write(1);
+            if(!mistFlag){
+                // turn mister on for 10 seconds
+                UART_PutString("MISTING...");
+                Hout_Write(1);
+                mistTimer_Stop();
+                mistTimer_WriteCounter(0);
+                mistTimer_WritePeriod(1000);
+                mistFlag = 1;       //mistFlag = 1 for currently misting
+                
+                mistTimer_Enable();
+            }
+
            
         }
         else{

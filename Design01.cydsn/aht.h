@@ -20,7 +20,7 @@
 #define AHT_ADDR (uint8)(0x38)
 #define DISPLAY_ADDRESS (0x3C)
     
-extern volatile int alertFlag, noticeFlag;
+extern volatile int alertFlag, noticeFlag, mistFlag;
 extern volatile int TH, HH;
 extern volatile int TL, HL;
 extern volatile int tolT, tolH;
