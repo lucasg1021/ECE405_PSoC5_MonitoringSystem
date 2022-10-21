@@ -283,8 +283,7 @@ void checkParam(float tempF, float humid){
                 
                 noticeFlag = 3;
             }
-
-            
+          
         }
         // humid low notice
         else if(humid < (HL + tolH/2) && humid > HL){
@@ -322,8 +321,7 @@ void checkParam(float tempF, float humid){
             LED_H_R_Write(0);       
             LED_H_Y_Write(0);            
             LED_H_G_Write(1);
-        }
-        
+        }       
 
     }
     CyWdtClear();

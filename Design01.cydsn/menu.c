@@ -11,14 +11,8 @@
  * ========================================
 */
 #include "menu.h"
+#include "aht.h"
 
-extern volatile int SetTemp;
-extern volatile int SetHumid;
-extern volatile int TH, HH;
-extern volatile int TL, HL;
-extern volatile int tol;
-extern volatile int tolh;
-extern volatile float tempF, humid;
 extern volatile int Select;
 extern volatile int ENC_Flag;
 extern volatile int SW1_Flag;

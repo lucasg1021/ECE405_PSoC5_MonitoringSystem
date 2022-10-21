@@ -24,11 +24,11 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag =1; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 123;
+volatile unsigned KEY = 0;
 
 volatile int SetTemp;
 volatile int SetHumid;
@@ -36,7 +36,6 @@ volatile int TH, HH;
 volatile int TL, HL;
 volatile int tolT = 2;
 volatile int tolH = 2;
-volatile float tempF, humid;
 volatile int Select = 0;
 
 volatile int ENC_Flag = 0;
@@ -67,98 +66,89 @@ int main(void)
 {
     CyGlobalIntEnable; /* Enable global interrupts. */
     
-   // ESPUART_Start();
-    //ESPUART_ClearRxBuffer();
-    //ESPUART_ClearTxBuffer();
+    mistISR_Start();
+    mistTimer_Start();
+    ESPUART_Start();
+    ESPUART_ClearRxBuffer();
+    ESPUART_ClearTxBuffer();
     UART_Start();
 
-    //esprx_int_StartEx(esp_int_Handler);
+    esprx_int_StartEx(esp_int_Handler);
 //    TOUT_ISR_Start();
 
     I2C_Start();
-
         
     char s[80], sESP[80], eepromS[30];
     char* str;
     uint8 i2cWrBuf[3], i2cRdBuf[7];
     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
     int baseESP, modESP;
-    //float tempF, humid;
+    float tempF, humid;
 
-    //ESP_RST_Write(1);
+    ESP_RST_Write(1);
     
     LED_T_G_Write(1);
     LED_H_G_Write(1);
+    mistTimer_Start();
     
-    //** Manual Write EEPROM ** // 
-
- //   uint8_t string[11] = "";
- //   string[10] = '\n';
- //   I2C_MasterSendStop();
- //   I2C_MasterClearStatus();
-    
- //   uint8_t string2[4] = "";
- //   string2[3] = '\n';
- //   I2C_MasterSendStop();
- //   I2C_MasterClearStatus();
-    
+    //** Manual Write EEPROM ** //     
 
 //    uint8_t string[11] = "";
 //    string[10] = '\n';
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
 //    
 //    uint8_t string2[4] = "";
 //    string2[3] = '\n';
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
 //    
 //    uint8_t string3[1];
 //    string3[0] = 0x4A;                //Temp
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
 //    
 //    uint8_t string4[1];
-//    string4[0] = 50;
-//    string4[0] = 0x83;                //Humidity 
-//    I2C_MasterSendStop();
-//    I2C_MasterClearStatus();
+//    string4[0] = 50;               //Humidity 
+    
+//    uint8_t string5[1];
+//    string5[0] = 2;           // tolT
+//    uint8_t string6[1];
+//    string6[0] = 2;// tolH
 //
 //    // write/read wifi ssid
-//    writeEEPROM(0x00, string2, 4);
-//    writeEEPROM(0x1E, string, 11);
-//    writeEEPROM(0x3D, string3, 1);
-//    writeEEPROM(0x3E, string4, 1);
+//    writeEEPROM(WIFISSID_STARTADDR, string2, 4);
+//    writeEEPROM(WIFIPWD_STARTADDR, string, 11);
+//    writeEEPROM(SETTEMP_STARTADDR, string3, 1);
+//    writeEEPROM(SETHUMID_STARTADDR, string4, 1);
+//    writeEEPROM(TOLT_STARTADDR, string5, 1);
+//    writeEEPROM(TOLH_STARTADDR, string6, 1);
     
   //***************************************//  
     
     // get intial values from EEPROM
-    readEEPROM(0, eepromS, 4);
+    readEEPROM(WIFISSID_STARTADDR, eepromS, 4);
     wifi_ssid = strdup(strtok(eepromS, "\n"));
     
-    readEEPROM(0x1E, eepromS, 11);
+    readEEPROM(WIFIPWD_STARTADDR, eepromS, 11);
     wifi_pwd = strdup(strtok(eepromS, "\n"));
     
-    readEEPROM(0x3D, eepromS, 1);
-    //char* setTS = strdup(strtok(eepromS, "\n"));
+    readEEPROM(SETTEMP_STARTADDR, eepromS, 1);
     SetTemp = eepromS[0];
     
-    readEEPROM(0x3E, eepromS, 1);
-//    char* setHS = strdup(strtok(eepromS, "\n"));
+    readEEPROM(SETHUMID_STARTADDR, eepromS, 1);
     SetHumid = eepromS[0];
+    
+    readEEPROM(TOLT_STARTADDR, eepromS, 1);
+    tolT = eepromS[0];
+    
+    readEEPROM(TOLH_STARTADDR, eepromS, 1);
+    tolH = eepromS[0];
 
     sprintf(s, "%d", SetTemp);
     UART_PutString((char*)wifi_ssid);
     UART_PutString((char*)wifi_pwd);
     UART_PutString(s);
-    sprintf(s, "%d", SetHumid);
+    sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
     UART_PutString(s);
-    
-    wifi_ssid = "Welcome to SIUE";
-    wifi_pwd = "";
+    CyDelay(2000);
     
     // initialize wifi settings and join network
-    //initESP(sESP);
+    initESP(sESP);
 
     // restart and initialize temp/humid sensor
     restartAHT();
@@ -175,7 +165,7 @@ int main(void)
     I2C_MasterClearStatus();
     
     // start WDT
-//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
