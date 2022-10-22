@@ -27,11 +27,13 @@ extern volatile int tolT, tolH;
 extern volatile int SetTemp, SetHumid;
 
 void initializeAHT();
-void takeMeasurementAHT();
+void takeMeasurementAHT(float* tempF, float* humid);
 void restartAHT();
 void checkParam(float tempF, float humid);
 void setTol();
 void printTempHumid(float temp, float humid);
+void changeI2CDevice(int dev);
+
 float convertTempF(uint8 num1, uint8 num2, uint8 num3);
 float convertHumidity(uint8 num1, uint8 num2, uint8 num3);
 

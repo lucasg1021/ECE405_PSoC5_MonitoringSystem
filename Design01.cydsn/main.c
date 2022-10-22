@@ -77,6 +77,9 @@ int main(void)
 
     I2C_Start();
     
+    // set which i2c to use
+    changeI2CDevice(0);
+    
     mistISR_Start();
     mistTimer_WriteCounter(0);
     mistTimer_WritePeriod(6000);     // 6000/(100Hz CLK) = 1 minute period before misting can begin
@@ -148,12 +151,19 @@ int main(void)
     UART_PutString(s);
     sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
     UART_PutString(s);
-    CyDelay(2000);
+   
     
     // initialize wifi settings and join network
     initESP(sESP);
 
     // restart and initialize temp/humid sensor
+    restartAHT();
+    I2C_MasterSendStop();
+    I2C_MasterClearStatus();
+    CyDelay(100); // wait 40ms after AHT power on
+    initializeAHT();
+    CyDelay(80); // wait 80ms for measurement to complete
+    changeI2CDevice(0);
     restartAHT();
     I2C_MasterSendStop();
     I2C_MasterClearStatus();
@@ -168,7 +178,7 @@ int main(void)
     I2C_MasterClearStatus();
     
     // start WDT
-    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
@@ -203,32 +213,34 @@ int main(void)
             CyWdtClear();
         }
         
-        
-        takeMeasurementAHT();   // measure temp and humid
+        changeI2CDevice(1);
+        takeMeasurementAHT(&tempF, &humid);   // measure temp and humid
 
-        // read AHT measurement
-        i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
-        I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
-        while(SDA_Read());
-        while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
-        I2C_MasterClearStatus();
-        CyDelay(10);
-        
-        I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
-        while (!I2C_MSTAT_RD_CMPLT);
-        I2C_MasterClearStatus();
-        CyDelay(10);
-        
-        while(i2cRdBuf[0] & (1 << 7)); //check that bit 7 (busy) is low
-        
-        CyWdtClear();
-        
-        // convert readings to temp and humidity
-        humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
-        tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
+
+//        // read AHT measurement
+//        i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
+//        I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
+//        while(SDA0_Read());
+//        while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+//        I2C_MasterClearStatus();
+//        CyDelay(10);
+//        
+//        I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
+//        while (!I2C_MSTAT_RD_CMPLT);
+//        I2C_MasterClearStatus();
+//        CyDelay(10);
+//        
+//        while(i2cRdBuf[0] & (1 << 7)); //check that bit 7 (busy) is low
+//        
+//        CyWdtClear();
+//        
+//        // convert readings to temp and humidity
+//        humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
+//        tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
         checkParam(tempF, humid);
         
         // print to OLED
+        changeI2CDevice(0);
         printTempHumid(tempF, humid);
                 
         //clear I2C buffer

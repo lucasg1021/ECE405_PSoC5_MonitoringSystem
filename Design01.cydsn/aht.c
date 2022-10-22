@@ -57,13 +57,12 @@ void initializeAHT(){
         CyDelay(10);
     }
     
-    takeMeasurementAHT();
     setTol();
    
 }
 
-void takeMeasurementAHT(){
-    uint8 i2cWrBuf[4];
+void takeMeasurementAHT(float* tempF, float* humid){
+    uint8 i2cWrBuf[7], i2cRdBuf[7];
     
     i2cWrBuf[0] = 0b01110000; // slave addr ; b[0] = 0 for write mode
     i2cWrBuf[1] = 0xAC; // start measurement cmd
@@ -75,6 +74,26 @@ void takeMeasurementAHT(){
     
     //datasheet recommends 80 second delay for measurement to take place
     CyDelay(80);
+    
+    // read AHT measurement
+    i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
+    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
+    while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+    I2C_MasterClearStatus();
+    CyDelay(10);
+
+    I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
+    while (!I2C_MSTAT_RD_CMPLT);
+    I2C_MasterClearStatus();
+    CyDelay(10);
+
+    while(i2cRdBuf[0] & (1 << 7)); //check that bit 7 (busy) is low
+
+    CyWdtClear();
+
+    // convert readings to temp and humidity
+    *humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
+    *tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
 }
 
 void restartAHT(){
@@ -348,5 +367,23 @@ void setTol(){
   CyWdtClear();
 }
 
-
+void changeI2CDevice(int dev){
+    switch(dev){
+        case 0:
+            SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(0u);
+            SDA0_SetDriveMode(PIN_DM_OD_LO);
+            SCL0_SetDriveMode(PIN_DM_OD_LO);
+            break;
+            
+        case 1:
+            SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(1u);
+            SDA1_SetDriveMode(PIN_DM_OD_LO);
+            SCL1_SetDriveMode(PIN_DM_OD_LO);
+            break;
+    }
+}
 /* [] END OF FILE */

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <blockRegMap version="1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cypress.com/xsd/cyblockregmap cyblockregmap.xsd" xmlns="http://cypress.com/xsd/cyblockregmap">
-  <block name="LED_T_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="TOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="LED_H_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SW2_Debouncer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SW1_Debouncer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Yellow_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Yellow" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="HOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Hout" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="DEBOUNCE_CLK" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="TOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="SW1_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="LED_H_G" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="LED_T_R" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="LED_H_R" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="SW1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ENC_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Yellow" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_H_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_T_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="mistISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="demux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="demux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="mux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Em_EEPROM_Dynamic" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="cy_boot" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SCL1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Clock_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="mistTimer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="VirtualMux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -69,26 +78,30 @@
     <register name="mistTimer_COUNTER" address="0x40004F06" bitWidth="16" desc="TMRx.CNT_CMP0 - Current Down Counter Value" hidden="false" />
   </block>
   <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Clock_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Em_EEPROM_Dynamic" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="cy_boot" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="mistISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SW2_Debouncer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SW1_Debouncer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="DEBOUNCE_CLK" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="HOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Hout" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA_CTL" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
+    <register name="SDA_CTL_CONTROL_REG" address="0x4000647C" bitWidth="8" desc="" hidden="false" />
+  </block>
+  <block name="mux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ENC_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Rx_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ESPUART" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
-    <block name="TXInternalInterrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="RXInternalInterrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="TXInternalInterrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="RX_ESPUART_RX_ADDRESS1" address="0x4000642E" bitWidth="8" desc="RX Address1 Register" hidden="false" />
-    <register name="RX_ESPUART_RX_ADDRESS2" address="0x4000643E" bitWidth="8" desc="RX Address2 Register" hidden="false" />
-    <register name="TX_ESPUART_TX_DATA" address="0x4000644B" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="RX_ESPUART_RX_DATA" address="0x4000644E" bitWidth="8" desc="RX Data Register" hidden="false" />
-    <register name="RX_ESPUART_RX_STATUS" address="0x4000646A" bitWidth="8" desc="RX status register" hidden="false">
+    <register name="RX_ESPUART_RX_ADDRESS1" address="0x40006428" bitWidth="8" desc="RX Address1 Register" hidden="false" />
+    <register name="RX_ESPUART_RX_ADDRESS2" address="0x40006438" bitWidth="8" desc="RX Address2 Register" hidden="false" />
+    <register name="RX_ESPUART_RX_DATA" address="0x40006448" bitWidth="8" desc="RX Data Register" hidden="false" />
+    <register name="TX_ESPUART_TX_DATA" address="0x4000644F" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="TX_ESPUART_TX_STATUS" address="0x4000646F" bitWidth="8" desc="TX status register" hidden="false">
+      <field name="ESPUART_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
+      <field name="ESPUART_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
+      <field name="ESPUART_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
+      <field name="ESPUART_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
+    </register>
+    <register name="RX_ESPUART_RX_STATUS" address="0x4000656B" bitWidth="8" desc="RX status register" hidden="false">
       <field name="ESPUART_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="ESPUART_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="ESPUART_RX_STS_PAR_ERROR" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
@@ -97,33 +110,25 @@
       <field name="ESPUART_RX_STS_FIFO_NOTEMPTY" from="5" to="5" access="R" resetVal="" desc="" hidden="false" />
       <field name="ESPUART_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
     </register>
-    <register name="TX_ESPUART_TX_STATUS" address="0x4000646B" bitWidth="8" desc="TX status register" hidden="false">
-      <field name="ESPUART_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
-      <field name="ESPUART_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
-      <field name="ESPUART_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
-      <field name="ESPUART_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
-    </register>
   </block>
   <block name="I2C" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
+    <block name="Vmux_clock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BusClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="or_ff" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Vmux_clock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="OneTerminal_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="Vmux_interrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="Vmux_scl_out" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="OneTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="OneTerminal_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="or_udb" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Bufoe_sda" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="Vmux_sda_in" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="Vmux_timeout_clock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="or_udb_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Bufoe_scl" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="ZeroTerminal_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="Vmux_scl_in" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Vmux_sda_in" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="or_udb" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="ZeroTerminal_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="ZeroTerminal_3" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Vmux_sda_out" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <block name="Vmux_interrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="I2C_FF" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+    <block name="Vmux_sda_out" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="I2C_IRQ" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <register name="I2C_FF_XCFG" address="0x400049C8" bitWidth="8" desc="I2C Extended Configuration Register" hidden="false">
       <field name="csr_clk_en" from="7" to="7" access="RW" resetVal="" desc="This bit is used for gating system clock for the blocks core logic that is not associated with AHB interface. Clock is made available to the core logic only when this bit is set to 1 and the input pin ext_clk_en is also active. If either of them is not active, the blocks core logic does not receive the system clock." hidden="false" />
@@ -188,10 +193,10 @@
       <field name="timeout_period_highnibble" from="3" to="0" access="RW" resetVal="" desc="The configuration of this register along with that in register TMOUT_CFG1 to define the number units before SCL or SDA stuck low timeout triggers the I2C interrupt. The one unit is equal to SYSCLK/1024. The TMOUT_CFG1 defines higher octet of the period." hidden="false" />
     </register>
   </block>
-  <block name="Rx_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="ESP_RST" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="esprx_int" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Tx_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SCL" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Tx_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Rx_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="UART" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
     <block name="IntClock" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -199,17 +204,17 @@
     <block name="RXInternalInterrupt" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="BUART" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="VirtualMux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-    <register name="TX_UART_TX_DATA" address="0x40006449" bitWidth="8" desc="TX Data Register" hidden="false" />
-    <register name="RX_UART_RX_ADDRESS1" address="0x40006528" bitWidth="8" desc="RX Address1 Register" hidden="false" />
-    <register name="RX_UART_RX_ADDRESS2" address="0x40006538" bitWidth="8" desc="RX Address2 Register" hidden="false" />
-    <register name="RX_UART_RX_DATA" address="0x40006548" bitWidth="8" desc="RX Data Register" hidden="false" />
-    <register name="TX_UART_TX_STATUS" address="0x40006569" bitWidth="8" desc="TX status register" hidden="false">
+    <register name="TX_UART_TX_DATA" address="0x40006447" bitWidth="8" desc="TX Data Register" hidden="false" />
+    <register name="TX_UART_TX_STATUS" address="0x40006467" bitWidth="8" desc="TX status register" hidden="false">
       <field name="UART_TX_STS_COMPLETE" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_TX_STS_FIFO_EMPTY" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_TX_STS_FIFO_FULL" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_TX_STS_FIFO_NOT_FULL" from="3" to="3" access="R" resetVal="" desc="" hidden="false" />
     </register>
-    <register name="RX_UART_RX_STATUS" address="0x4000656B" bitWidth="8" desc="RX status register" hidden="false">
+    <register name="RX_UART_RX_ADDRESS1" address="0x40006529" bitWidth="8" desc="RX Address1 Register" hidden="false" />
+    <register name="RX_UART_RX_ADDRESS2" address="0x40006539" bitWidth="8" desc="RX Address2 Register" hidden="false" />
+    <register name="RX_UART_RX_DATA" address="0x40006549" bitWidth="8" desc="RX Data Register" hidden="false" />
+    <register name="RX_UART_RX_STATUS" address="0x40006569" bitWidth="8" desc="RX status register" hidden="false">
       <field name="UART_RX_STS_MRKSPC" from="0" to="0" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RX_STS_BREAK" from="1" to="1" access="R" resetVal="" desc="" hidden="false" />
       <field name="UART_RX_STS_PAR_ERROR" from="2" to="2" access="R" resetVal="" desc="" hidden="false" />
@@ -219,18 +224,20 @@
       <field name="UART_RX_STS_ADDR_MATCH" from="6" to="6" access="R" resetVal="" desc="" hidden="false" />
     </register>
   </block>
-  <block name="Tx_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SDA" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SCL0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA0" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="rx_int" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Red" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Green" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="Green2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SW2_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="GND_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Red2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="LED_T_G" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SW2_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ESP_RST" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SW2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Green2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_H_R" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_H_G" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_T_R" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Tout" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ENC" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SW2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Red" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="Green" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="LED_T_G" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
 </blockRegMap>
