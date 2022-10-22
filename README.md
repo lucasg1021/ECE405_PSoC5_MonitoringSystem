@@ -2,7 +2,7 @@
 
 ## ECE405 Senior Design Project Fall 2022
 
-Written by Kelsey Haines & Lucas Gillette
+Written by Kelsey Haines & Lucas Gillette  
 Last updated 10/22/2022
 
 
