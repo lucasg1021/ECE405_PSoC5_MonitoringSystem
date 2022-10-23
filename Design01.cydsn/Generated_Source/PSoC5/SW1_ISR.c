@@ -27,7 +27,9 @@
 *  Place your includes, defines and code here 
 ********************************************************************************/
 /* `#START SW1_ISR_intc` */
-
+    #include "SW1.h"
+    #include "menu.h"
+    extern volatile int SW1_Flag;
 /* `#END` */
 
 #ifndef CYINT_IRQ_BASE
@@ -165,7 +167,9 @@ CY_ISR(SW1_ISR_Interrupt)
 
     /*  Place your Interrupt code here. */
     /* `#START SW1_ISR_Interrupt` */
-
+        if(SW1_Read() == 1){
+            SW1_Flag = 1;
+        }
     /* `#END` */
 }
 

@@ -27,7 +27,9 @@
 *  Place your includes, defines and code here 
 ********************************************************************************/
 /* `#START ENC_ISR_intc` */
-
+    #include "ENC.h"
+    #include "cypins.h"
+    extern volatile int ENC_Flag;
 /* `#END` */
 
 #ifndef CYINT_IRQ_BASE
@@ -165,7 +167,13 @@ CY_ISR(ENC_ISR_Interrupt)
 
     /*  Place your Interrupt code here. */
     /* `#START ENC_ISR_Interrupt` */
-
+       CyDelay(2);
+ 
+    if(ENC_Read() == ENC_INTR_FALLING){
+        ENC_Flag = 1;}
+    else if(ENC_Read() == ENC_INTR_RISING){
+        ENC_Flag = -1; }
+    ENC_ClearInterrupt(); 
     /* `#END` */
 }
 
