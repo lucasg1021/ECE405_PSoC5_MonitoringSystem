@@ -12,6 +12,7 @@
 */
 #include "menu.h"
 #include "aht.h"
+#include "EEPROM.h"
 
 extern volatile int Select;
 extern volatile int ENC_Flag;
@@ -103,11 +104,14 @@ void menu(){
              I2C_MasterSendStop();
              I2C_MasterClearStatus();
             
-             SW1_Flag = 0;
-             SW2_Flag = 0;
-             ENC_Flag = 0;
-             Select = 0;
-             flag = 2;
+            // write to EEPROM
+            changeSetPointsEEPROM(SetTemp, SetHumid, tolT, tolH);
+
+            SW1_Flag = 0;
+            SW2_Flag = 0;
+            ENC_Flag = 0;
+            Select = 0;
+            flag = 2;
         }
         
     }

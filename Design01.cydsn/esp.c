@@ -127,7 +127,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         }
         else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
-                connection = 1;                
+                connection = 1;   
             }
             else{
                 requestStartup(sESP);
@@ -265,9 +265,9 @@ void initUDPConnectionESP(char* sESP){
 void closeConnectionESP(char* sESP){
     //close connection
     ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
-    waitForResponseESP("OK\r\n", sESP, 5000);
+    waitForResponseESP("OK\r\n", sESP, 500);
     ESPUART_PutString("AT+CIPCLOSE=0\r\n\n");
-    waitForResponseESP("OK\r\n", sESP, 5000);
+    waitForResponseESP("OK\r\n", sESP, 500);
     CyWdtClear();
 }
 

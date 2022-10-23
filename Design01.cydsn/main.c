@@ -89,7 +89,7 @@ int main(void)
     char* str;
     uint8 i2cWrBuf[3], i2cRdBuf[7];
     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
-    int baseESP, modESP;
+    int listening = 0;
     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
 
     ESP_RST_Write(1);
@@ -237,19 +237,19 @@ int main(void)
             if(alertFlag){
                 //check if notice has also been triggered
                 if(noticeFlag){
-                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f DATA", alertFlag, noticeFlag, tempF, humid);
+                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
                 }
                 else{
-                    sprintf(s,"ALERT %d %.2f %.2f DATA", alertFlag, tempF, humid);
+                    sprintf(s,"ALERT %d %.2f %.2f %d %d %d %d DATA", alertFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
                 }
                 alertFlag = 0;
                 noticeFlag = 0;
             }
             else if(noticeFlag){
-                sprintf(s,"NOTICE %d %.2f %.2f DATA", noticeFlag, tempF, humid);
+                sprintf(s,"NOTICE %d %.2f %.2f %d %d %d %d DATA", noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
             }
             else{
-                sprintf(s,"%.2f %.2f DATA", tempF, humid);
+                sprintf(s,"%.2f %.2f %d %d %d %d DATA", tempF, humid, SetTemp, SetHumid, tolT, tolH);
             }
             
             if(keyFlag){
@@ -272,7 +272,8 @@ int main(void)
             closeConnectionESP(sESP);
             CyWdtClear();
                                     
-            connection = 0;           
+            connection = 0;
+            listening = 0;
         }
         CyWdtClear();
         CyDelay(1000);

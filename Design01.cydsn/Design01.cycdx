@@ -12,19 +12,11 @@
   <block name="LED_H_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="LED_T_Y" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="TOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="demux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="mux_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SDA1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Em_EEPROM_Dynamic" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="cy_boot" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SDA2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="mistISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="HOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
-  <block name="SDA_CTL" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
-    <register name="SDA_CTL_CONTROL_REG" address="0x4000647A" bitWidth="8" desc="" hidden="false" />
-  </block>
-  <block name="Clock_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="mistTimer" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
     <block name="VirtualMux_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
     <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
@@ -82,6 +74,14 @@
     <register name="mistTimer_PERIOD" address="0x40004F04" bitWidth="16" desc="TMRx.PER0 - Assigned Period" hidden="false" />
     <register name="mistTimer_COUNTER" address="0x40004F06" bitWidth="16" desc="TMRx.CNT_CMP0 - Current Down Counter Value" hidden="false" />
   </block>
+  <block name="ZeroTerminal_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="mistISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="HOUT_ISR" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
+  <block name="SDA_CTL" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false">
+    <register name="SDA_CTL_CONTROL_REG" address="0x4000647A" bitWidth="8" desc="" hidden="false" />
+  </block>
+  <block name="Clock_1" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="LED_H_R" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="Rx_2" BASE="0x0" SIZE="0x0" desc="" visible="true" hidden="false" />
   <block name="ESPUART" BASE="0x0" SIZE="0x0" desc="UART" visible="true" hidden="false">
