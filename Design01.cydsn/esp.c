@@ -161,7 +161,6 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 
                 setTol();
                 
-                //write to i2c
             return 1;
         }
         else if(strstr(sESP, "STARTUP\r\n") != NULL){

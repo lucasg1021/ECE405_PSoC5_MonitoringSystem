@@ -371,18 +371,29 @@ void changeI2CDevice(int dev){
     switch(dev){
         case 0:
             SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
-            SCL1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA_CTL_Write(0u);
             SDA0_SetDriveMode(PIN_DM_OD_LO);
-            SCL0_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
             
         case 1:
             SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
-            SCL0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA_CTL_Write(1u);
             SDA1_SetDriveMode(PIN_DM_OD_LO);
-            SCL1_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
+            break;
+            
+        case 2:
+            SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(2u);
+            SDA2_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
     }
 }
