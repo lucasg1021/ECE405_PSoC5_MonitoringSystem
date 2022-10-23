@@ -9,6 +9,7 @@
  *
  * ========================================
 */
+#include "project.h"
 #include "aht.h"
 #include "I2C.h"
 #include "ssd1306.h"
@@ -56,13 +57,12 @@ void initializeAHT(){
         CyDelay(10);
     }
     
-    takeMeasurementAHT();
     setTol();
    
 }
 
-void takeMeasurementAHT(){
-    uint8 i2cWrBuf[4];
+void takeMeasurementAHT(float* tempF, float* humid){
+    uint8 i2cWrBuf[7], i2cRdBuf[7];
     
     i2cWrBuf[0] = 0b01110000; // slave addr ; b[0] = 0 for write mode
     i2cWrBuf[1] = 0xAC; // start measurement cmd
@@ -74,6 +74,26 @@ void takeMeasurementAHT(){
     
     //datasheet recommends 80 second delay for measurement to take place
     CyDelay(80);
+    
+    // read AHT measurement
+    i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
+    I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
+    while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+    I2C_MasterClearStatus();
+    CyDelay(10);
+
+    I2C_MasterReadBuf(AHT_ADDR, (uint8 *)i2cRdBuf, 7, I2C_MODE_COMPLETE_XFER); // get status
+    while (!I2C_MSTAT_RD_CMPLT);
+    I2C_MasterClearStatus();
+    CyDelay(10);
+
+    while(i2cRdBuf[0] & (1 << 7)); //check that bit 7 (busy) is low
+
+    CyWdtClear();
+
+    // convert readings to temp and humidity
+    *humid = convertHumidity(i2cRdBuf[1], i2cRdBuf[2], i2cRdBuf[3]);
+    *tempF = convertTempF(i2cRdBuf[5], i2cRdBuf[4], i2cRdBuf[3]);
 }
 
 void restartAHT(){
@@ -229,7 +249,18 @@ void checkParam(float tempF, float humid){
                 alertFlag = 4; // flag = 4 for H low
             }
 
-            Hout_Write(1);
+            if(!mistFlag){
+                // turn mister on for 10 seconds
+                UART_PutString("MISTING...");
+                Hout_Write(1);
+                mistTimer_Stop();
+                mistTimer_WriteCounter(0);
+                mistTimer_WritePeriod(1000);
+                mistFlag = 1;       //mistFlag = 1 for currently misting
+                
+                mistTimer_Enable();
+            }
+
            
         }
         else{
@@ -283,8 +314,7 @@ void checkParam(float tempF, float humid){
                 
                 noticeFlag = 3;
             }
-
-            
+          
         }
         // humid low notice
         else if(humid < (HL + tolH/2) && humid > HL){
@@ -322,8 +352,7 @@ void checkParam(float tempF, float humid){
             LED_H_R_Write(0);       
             LED_H_Y_Write(0);            
             LED_H_G_Write(1);
-        }
-        
+        }       
 
     }
     CyWdtClear();
@@ -338,5 +367,34 @@ void setTol(){
   CyWdtClear();
 }
 
-
+void changeI2CDevice(int dev){
+    switch(dev){
+        case 0:
+            SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(0u);
+            SDA0_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
+            break;
+            
+        case 1:
+            SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(1u);
+            SDA1_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
+            break;
+            
+        case 2:
+            SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
+            SCL_SetDriveMode(PIN_DM_DIG_HIZ);
+            SDA_CTL_Write(2u);
+            SDA2_SetDriveMode(PIN_DM_OD_LO);
+            SCL_SetDriveMode(PIN_DM_OD_LO);
+            break;
+    }
+}
 /* [] END OF FILE */
