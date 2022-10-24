@@ -11,6 +11,7 @@
 */
 #include "project.h"
 #include "aht.h"
+#include "UART.h"
 
 extern uint8 i2cBuffer[17];
 
@@ -37,6 +38,9 @@ CY_ISR(sw2_int_Handler){
     
 }
 
+CY_ISR(mist_int_Handler){
+
+}
 
 CY_ISR(tout_int_Handler){
 //    if(tempF > TH){

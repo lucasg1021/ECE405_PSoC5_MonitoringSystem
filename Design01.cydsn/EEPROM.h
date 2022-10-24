@@ -34,7 +34,7 @@
     
 void writeEEPROM(uint8_t eepromAddr, uint8_t writeEEPROM[], int len);
 void readEEPROM(uint8_t eepromAddr, char *eepromS, int len);
-void changeSetPointsEEPROM(uint8_t setT, uint8_t setH);
+void changeSetPointsEEPROM(uint8_t setT, uint8_t setH, uint8_t tolTemp, uint8_t tolHumid);
     
 #endif
 /* [] END OF FILE */

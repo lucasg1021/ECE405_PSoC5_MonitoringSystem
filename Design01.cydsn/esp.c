@@ -31,6 +31,9 @@ void initESP(char* sESP){
     char s[80];  
     char OK[] = "OK\r\n";
     
+    closeConnectionESP(sESP);
+    waitForResponseESP(OK, sESP, 1000);
+    
     ESPUART_PutString("AT+CSYSWDTENABLE\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
     
@@ -124,7 +127,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         }
         else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
-                connection = 1;                
+                connection = 1;   
             }
             else{
                 requestStartup(sESP);
@@ -144,12 +147,12 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 str[6] = ' '; str[7] = ' ';
                 tolH = atoi(str);
                 
-                changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid);
+                changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid, (uint8_t) tolT, (uint8_t) tolH);
                 
-                sprintf(s, "ACK %d %d", SetTemp, SetHumid);
-                encryptESP(s, KEY, 9);
+                sprintf(s, "ACK %d %d %d %d", SetTemp, SetHumid, tolT, tolH);
+                encryptESP(s, KEY, 13);
                                 
-                ESPUART_PutString("AT+CIPSEND=0,9\r\n\n");
+                ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
                 waitForResponseESP(">", sESP, 5000);
 
                 // send to connected device
@@ -158,7 +161,6 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
                 
                 setTol();
                 
-                //write to i2c
             return 1;
         }
         else if(strstr(sESP, "STARTUP\r\n") != NULL){
@@ -202,11 +204,11 @@ void getEncryptStartupESP(char* sESP){
 //    MOD = modESP;
         
     // send ACK and start points
-    ESPUART_PutString("AT+CIPSEND=0,9\r\n\n");
+    ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
     waitForResponseESP(">", sESP, 5000);
     
     // send to connected device
-    sprintf(s, "ACK %d %d", SetTemp, SetHumid);
+    sprintf(s, "ACK %d %d %d %d", SetTemp, SetHumid, tolT, tolH);
     ESPUART_PutString(s);
     waitForResponseESP("OK\r\n", sESP, 1000);
     
@@ -263,9 +265,9 @@ void initUDPConnectionESP(char* sESP){
 void closeConnectionESP(char* sESP){
     //close connection
     ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
-    waitForResponseESP("OK\r\n", sESP, 5000);
+    waitForResponseESP("OK\r\n", sESP, 500);
     ESPUART_PutString("AT+CIPCLOSE=0\r\n\n");
-    waitForResponseESP("OK\r\n", sESP, 5000);
+    waitForResponseESP("OK\r\n", sESP, 500);
     CyWdtClear();
 }
 
