@@ -222,7 +222,7 @@ int main(void)
         
         // print to OLED
         changeI2CDevice(0);
-        printTempHumid(tempF, humid);
+        printTempHumid(tempF0, humid0);
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
