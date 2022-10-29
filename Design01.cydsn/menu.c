@@ -12,7 +12,7 @@
 */
 #include "menu.h"
 #include "aht.h"
-#include "EEPROM.h"
+#include "EEPROM_functions.h"
 
 extern volatile int Select;
 extern volatile int ENC_Flag;
@@ -113,7 +113,7 @@ void menu(){
             Select = 0;
             flag = 2;
         }
-        
+        CyWdtClear();
     }
         setTol();
         flag = 0;

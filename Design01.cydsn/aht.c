@@ -70,6 +70,7 @@ void takeMeasurementAHT(float* tempF, float* humid){
     i2cWrBuf[3] = 0b00000000;
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 4, I2C_MODE_COMPLETE_XFER);
     while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+    I2C_MasterSendStop();
     I2C_MasterClearStatus();
     
     //datasheet recommends 80 second delay for measurement to take place
@@ -79,6 +80,7 @@ void takeMeasurementAHT(float* tempF, float* humid){
     i2cWrBuf[0] = 0b01110001; // slave addr ; b[0] = 1 for read mode
     I2C_MasterWriteBuf(AHT_ADDR, (uint8 *)i2cWrBuf, 1, I2C_MODE_COMPLETE_XFER);
     while(!(I2C_MasterStatus() & I2C_MSTAT_WR_CMPLT));
+    I2C_MasterSendStop();
     I2C_MasterClearStatus();
     CyDelay(10);
 
@@ -369,6 +371,7 @@ void setTol(){
 
 void changeI2CDevice(int dev){
     switch(dev){
+        // i2c device 0 - AHT 0, OLED display
         case 0:
             SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
@@ -378,6 +381,7 @@ void changeI2CDevice(int dev){
             SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
             
+        // i2c device 1 - AHT 1
         case 1:
             SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
@@ -386,7 +390,8 @@ void changeI2CDevice(int dev){
             SDA1_SetDriveMode(PIN_DM_OD_LO);
             SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
-            
+        
+        // i2c device 2 - AHT 2
         case 2:
             SDA0_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
@@ -395,6 +400,57 @@ void changeI2CDevice(int dev){
             SDA2_SetDriveMode(PIN_DM_OD_LO);
             SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
+
     }
+}
+
+void checkISwitches(){
+    // check that heat lamp and mister are in the correct state
+    // Tout & Hout will be 1 if device should be on
+    int tOut = Tout_Read();
+    int hOut = Hout_Read();
+    
+    // current switches normally open, will be 1 if device is actually on
+    int tSwitch = I_SW_T_Read();
+    int hSwitch = I_SW_H_Read();
+    
+    // if lamp should be on but isn't
+    if(tOut && !tSwitch){
+        equipFlag = 1;
+    }
+    // lamp should not be on but is
+    else if(!tOut && tSwitch){
+        equipFlag = 2;  
+    }
+    
+    // if mister should be on but isn't
+    if(hOut && !hSwitch){
+        if(equipFlag == 1){
+            // lamp and mister off
+            equipFlag = 5;
+        }
+        else if(equipFlag == 2){
+            // lamp on, mister off
+            equipFlag = 6;    
+        }
+        else{
+            equipFlag = 3;   
+        }
+    }
+    // mister should be off but is on
+    else if(!hOut && hSwitch){
+        if(equipFlag == 1){
+            // lamp off, mister on
+            equipFlag = 7;
+        }
+        else if(equipFlag == 2){
+            // lamp and mister on
+            equipFlag = 8;    
+        }
+        else{
+            equipFlag = 4;   
+        }
+    }
+    
 }
 /* [] END OF FILE */

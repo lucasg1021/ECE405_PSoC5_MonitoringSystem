@@ -10,7 +10,7 @@
 #include "aht.h"
 #include "esp.h"
 #include "menu.h"
-#include "EEPROM.h"
+#include "EEPROM_functions.h"
 #include "circbuf.h"
 #include "ssd1306.h"
 #include "Tout.h"
@@ -43,6 +43,7 @@ volatile int SW1_Flag = 0;
 volatile int SW2_Flag = 0;
 volatile int alertFlag = 0;
 volatile int noticeFlag = 0;
+volatile int equipFlag = 0;
 volatile int mistFlag = 2;
 
 volatile char * wifi_ssid;
@@ -71,6 +72,7 @@ int main(void)
     ESPUART_ClearRxBuffer();
     ESPUART_ClearTxBuffer();
     UART_Start();
+    EEPROM_1_Start();
 
     esprx_int_StartEx(esp_int_Handler);
 //    TOUT_ISR_Start();
@@ -97,12 +99,13 @@ int main(void)
     LED_T_G_Write(1);
     LED_H_G_Write(1);
     
+    
     //** Manual Write EEPROM ** //     
-
-//    uint8_t string[11] = "";
+//
+//    uint8_t string[11] = "baseball10";
 //    string[10] = '\n';
 //    
-//    uint8_t string2[4] = "";
+//    uint8_t string2[4] = "LRG";
 //    string2[3] = '\n';
 //    
 //    uint8_t string3[1];
@@ -110,23 +113,24 @@ int main(void)
 //    
 //    uint8_t string4[1];
 //    string4[0] = 50;               //Humidity 
-    
+//    
 //    uint8_t string5[1];
 //    string5[0] = 2;           // tolT
 //    uint8_t string6[1];
 //    string6[0] = 2;// tolH
 //
-//    // write/read wifi ssid
+////    // write/read wifi ssid
 //    writeEEPROM(WIFISSID_STARTADDR, string2, 4);
 //    writeEEPROM(WIFIPWD_STARTADDR, string, 11);
 //    writeEEPROM(SETTEMP_STARTADDR, string3, 1);
 //    writeEEPROM(SETHUMID_STARTADDR, string4, 1);
 //    writeEEPROM(TOLT_STARTADDR, string5, 1);
 //    writeEEPROM(TOLH_STARTADDR, string6, 1);
-    
-  //***************************************//  
-    
-    // get intial values from EEPROM
+//    
+//  //***************************************//  
+//    
+//    // get intial values from EEPROM
+//    changeI2CDevice(0);
     readEEPROM(WIFISSID_STARTADDR, eepromS, 4);
     wifi_ssid = strdup(strtok(eepromS, "\n"));
     
@@ -144,14 +148,13 @@ int main(void)
     
     readEEPROM(TOLH_STARTADDR, eepromS, 1);
     tolH = eepromS[0];
-
+//
     sprintf(s, "%d", SetTemp);
     UART_PutString((char*)wifi_ssid);
     UART_PutString((char*)wifi_pwd);
     UART_PutString(s);
     sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
     UART_PutString(s);
-   
     
     // initialize wifi settings and join network
     initESP(sESP);
@@ -160,6 +163,7 @@ int main(void)
     for(int ii = 0; ii <= 2; ii++){
         changeI2CDevice(ii);
         restartAHT();
+        initializeAHT();
         I2C_MasterSendStop();
         I2C_MasterClearStatus();
         CyDelay(100); // wait 40ms after AHT power on
@@ -171,9 +175,10 @@ int main(void)
     display_init(DISPLAY_ADDRESS);
     I2C_MasterSendStop();
     I2C_MasterClearStatus();
+    changeI2CDevice(0);
     
     // start WDT
-//    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
@@ -219,6 +224,7 @@ int main(void)
         humid = (humid0 + humid1 + humid2) / 3;
         
         checkParam(tempF, humid);
+        checkISwitches();
         
         // print to OLED
         changeI2CDevice(0);
@@ -232,48 +238,49 @@ int main(void)
 
         // if connected to app, send temp and humidity information
         if(connection){
-            
-            // check if an alert has been triggered, send corresponding alarm code
-            if(alertFlag){
-                //check if notice has also been triggered
-                if(noticeFlag){
-                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-                }
-                else{
-                    sprintf(s,"ALERT %d %.2f %.2f %d %d %d %d DATA", alertFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-                }
-                alertFlag = 0;
-                noticeFlag = 0;
-            }
-            else if(noticeFlag){
-                sprintf(s,"NOTICE %d %.2f %.2f %d %d %d %d DATA", noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-            }
-            else{
-                sprintf(s,"%.2f %.2f %d %d %d %d DATA", tempF, humid, SetTemp, SetHumid, tolT, tolH);
-            }
-            
-            if(keyFlag){
-                encryptESP(s, KEY, strlen(s));
-            }
-            CyWdtClear();
-            CyDelay(100);
-            CyWdtClear();
-
-            // send 11 bytes of data
-            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
-            ESPUART_PutString(sESP);
-            waitForResponseESP(">", sESP, 2000);
-            CyWdtClear();
-            
-            // send to connected device
-            ESPUART_PutString(s);
-            waitForResponseESP("OK\r\n", sESP, 1000);
-           
-            closeConnectionESP(sESP);
-            CyWdtClear();
-                                    
-            connection = 0;
-            listening = 0;
+            sendDataESP(sESP, tempF, humid);
+//            // check if an alert has been triggered, send corresponding alarm code
+//            if(alertFlag){
+//                //check if notice has also been triggered
+//                if(noticeFlag){
+//                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
+//                }
+//                else{
+//                    sprintf(s,"ALERT %d %.2f %.2f %d %d %d %d DATA", alertFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
+//                }
+//                alertFlag = 0;
+//                noticeFlag = 0;
+//            }
+//            else if(noticeFlag){
+//                sprintf(s,"NOTICE %d %.2f %.2f %d %d %d %d DATA", noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
+//                noticeFlag = 0;
+//            }
+//            else{
+//                sprintf(s,"%.2f %.2f %d %d %d %d DATA", tempF, humid, SetTemp, SetHumid, tolT, tolH);
+//            }
+//            
+//            if(keyFlag){
+//                encryptESP(s, KEY, strlen(s));
+//            }
+//            CyWdtClear();
+//            CyDelay(100);
+//            CyWdtClear();
+//
+//            // send data
+//            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
+//            ESPUART_PutString(sESP);
+//            waitForResponseESP(">", sESP, 2000);
+//            CyWdtClear();
+//            
+//            // send to connected device
+//            ESPUART_PutString(s);
+//            waitForResponseESP("OK\r\n", sESP, 1000);
+//           
+//            closeConnectionESP(sESP);
+//            CyWdtClear();
+//                                    
+//            connection = 0;
+//            listening = 0;
         }
         CyWdtClear();
         CyDelay(1000);
