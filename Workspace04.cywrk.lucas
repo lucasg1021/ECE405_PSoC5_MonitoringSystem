@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\TopDesign">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04\Design01\Source Files\EEPROM_functions.c">
 <ExpandedNodeIds>
 <v>Workspace04</v>
 <v>Workspace04\Design01</v>
@@ -45,7 +45,7 @@
 <v>Workspace04\Design01\Header Files\aht.h</v>
 <v>Workspace04\Design01\Header Files\circbuf.h</v>
 <v>Workspace04\Design01\Header Files\cyapicallbacks.h</v>
-<v>Workspace04\Design01\Header Files\EEPROM.h</v>
+<v>Workspace04\Design01\Header Files\EEPROM_functions.h</v>
 <v>Workspace04\Design01\Header Files\esp.h</v>
 <v>Workspace04\Design01\Header Files\font.h</v>
 <v>Workspace04\Design01\Header Files\menu.h</v>
@@ -53,7 +53,7 @@
 <v>Workspace04\Design01\Source Files</v>
 <v>Workspace04\Design01\Source Files\aht.c</v>
 <v>Workspace04\Design01\Source Files\circbuf.c</v>
-<v>Workspace04\Design01\Source Files\EEPROM.c</v>
+<v>Workspace04\Design01\Source Files\EEPROM_functions.c</v>
 <v>Workspace04\Design01\Source Files\esp.c</v>
 <v>Workspace04\Design01\Source Files\handlers.c</v>
 <v>Workspace04\Design01\Source Files\main.c</v>
@@ -64,6 +64,7 @@
 <v>Workspace04\Design01\Generated_Source\PSoC5\Clock_1</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\cy_boot</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\DEBOUNCE_CLK</v>
+<v>Workspace04\Design01\Generated_Source\PSoC5\EEPROM_1</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\Em_EEPROM_Dynamic</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\ENC</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\ENC_ISR</v>
@@ -73,9 +74,8 @@
 <v>Workspace04\Design01\Generated_Source\PSoC5\ESPUART_IntClock</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\Hout</v>
 <v>Workspace04\Design01\Generated_Source\PSoC5\HOUT_ISR</v>
-<v>Workspace04\Design01\Generated_Source\PSoC5\I2C</v>
-<v>Workspace04\Design01\Generated_Source\PSoC5\LED_H_G</v>
-<v>Workspace04\Design01\Generated_Source\PSoC5\LED_H_R</v>
+<v>Workspace04\Design01\Generated_Source\PSoC5\I_SW_H</v>
+<v>Workspace04\Design01\Generated_Source\PSoC5\I_SW_T</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 <CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Workspace04">
@@ -110,7 +110,8 @@
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\DEBOUNCE_CLK.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM_1.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM_functions.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC_ISR.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\esp.lst</v>
@@ -124,6 +125,8 @@
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\handlers.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\Hout.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\HOUT_ISR.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I_SW_H.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I_SW_T.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_BOOT.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_INT.lst</v>
@@ -187,7 +190,8 @@
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\DEBOUNCE_CLK.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM_1.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\EEPROM_functions.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\ENC_ISR.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\esp.lst</v>
@@ -201,6 +205,8 @@
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\handlers.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\Hout.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\HOUT_ISR.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I_SW_H.lst</v>
+<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I_SW_T.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_BOOT.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\I2C_INT.lst</v>
@@ -211,9 +217,6 @@
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_H_R.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_H_Y.lst</v>
 <v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_T_G.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_T_R.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\LED_T_Y.lst</v>
-<v>Workspace04\Design01\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -227,6 +230,29 @@
 <v>Workspace04\Design01\PSoC 5LP Architecture TRM</v>
 <v>Workspace04\Design01\CY8C58LP Family Datasheet</v>
 <v>Workspace04\Design01\System Reference Guides</v>
+<v>Workspace04\Design01\System Reference Guides\cy_boot_v6_10</v>
+<v>Workspace04\Design01\cy_clock_v2_20</v>
+<v>Workspace04\Design01\cy_clock_v2_20\cy_clock_v2_20.pdf</v>
+<v>Workspace04\Design01\cy_isr_v1_70</v>
+<v>Workspace04\Design01\cy_isr_v1_70\cy_isr_v1_70.pdf</v>
+<v>Workspace04\Design01\cy_isr_v1_71</v>
+<v>Workspace04\Design01\cy_isr_v1_71\cy_isr_v1_71.pdf</v>
+<v>Workspace04\Design01\cy_pins_v2_20</v>
+<v>Workspace04\Design01\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Workspace04\Design01\CyControlReg_v1_80.pdf</v>
+<v>Workspace04\Design01\Debouncer_v1_0</v>
+<v>Workspace04\Design01\Debouncer_v1_0\Debouncer_v1_0.pdf</v>
+<v>Workspace04\Design01\demux_v1_10.pdf</v>
+<v>Workspace04\Design01\EEPROM_v3_0.pdf</v>
+<v>Workspace04\Design01\Gnd_v1_0.pdf</v>
+<v>Workspace04\Design01\I2C_v3_50.pdf</v>
+<v>Workspace04\Design01\LED_v1_0</v>
+<v>Workspace04\Design01\LED_v1_0\LED_v1_0.pdf</v>
+<v>Workspace04\Design01\mux_v1_10.pdf</v>
+<v>Workspace04\Design01\Timer_v2_80.pdf</v>
+<v>Workspace04\Design01\UART_v2_50</v>
+<v>Workspace04\Design01\UART_v2_50\UART_v2_50.pdf</v>
+<v>Workspace04\Design01\ZeroTerminal.pdf</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
 <v>Workspace04</v>
@@ -253,14 +279,15 @@
 <name v=".\Design01.cydsn\esp.h" />
 <name v=".\Design01.cydsn\aht.h" />
 <name v=".\Design01.cydsn\Design01.cydwr" />
-<name v=".\Design01.cydsn\EEPROM.c" />
+<name v=".\Design01.cydsn\EEPROM_functions.c" />
 <name v=".\Design01.cydsn\menu.c" />
-<name v=".\Design01.cydsn\EEPROM.h" />
+<name v=".\Design01.cydsn\EEPROM_functions.h" />
 <name v=".\Design01.cydsn\TopDesign\TopDesign.cysch" />
 <name v=".\Design01.cydsn\handlers.c" />
 <name v=".\Design01.cydsn\Generated_Source\PSoC5\mistISR.c" />
 <name v=".\Design01.cydsn\Generated_Source\PSoC5\I2C_MASTER.c" />
 <name v=".\Design01.cydsn\Generated_Source\PSoC5\mistISR.h" />
+<name v=".\Design01.cydsn\Generated_Source\PSoC5\CyLib.c" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -268,7 +295,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="9d7aebbf-b8b6-4770-b2bd-d75d2297dc07"><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="9d7aebbf-b8b6-4770-b2bd-d75d2297dc07" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\aht.c" Guid="9de32e67-df6a-4197-ab43-1d9fc77a4497" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.c" Guid="0da50bf7-45f4-425a-a80b-00995ab5696e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.h" Guid="5f6d8818-2ee2-40f0-abd6-3c09e0cb0076" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\aht.h" Guid="c58d0af4-abe1-4c43-980e-9d7efdab0c03" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cydwr" Guid="39b021a6-5364-4160-8a24-780e65ccae97" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM.c" Guid="abb456e1-0408-4960-ab4c-93bbb4f40959" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\menu.c" Guid="b9d1f4cf-b2de-4a52-9636-cad137223058" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM.h" Guid="be9a541f-2b75-4ff5-8abe-4f47275754a6" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="75252bfb-e8f1-424a-afc2-12b89db7cf4e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\handlers.c" Guid="e7d443d3-9d4a-4d17-9dd7-9428c7d764c9" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\mistISR.c" Guid="0fefdc69-0ad2-4e7b-9683-8260691044ff" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\I2C_MASTER.c" Guid="9f01f6a6-8011-4572-9392-fd865065833e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\mistISR.h" Guid="086a9fa7-b7a4-4007-8927-9995a1f756ed" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1532, 711" SelectedTabbedMdiWindow="b9d1f4cf-b2de-4a52-9636-cad137223058"><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\main.c" Guid="9d7aebbf-b8b6-4770-b2bd-d75d2297dc07" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\aht.c" Guid="9de32e67-df6a-4197-ab43-1d9fc77a4497" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.c" Guid="0da50bf7-45f4-425a-a80b-00995ab5696e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\esp.h" Guid="5f6d8818-2ee2-40f0-abd6-3c09e0cb0076" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\aht.h" Guid="c58d0af4-abe1-4c43-980e-9d7efdab0c03" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Design01.cydwr" Guid="39b021a6-5364-4160-8a24-780e65ccae97" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM_functions.c" Guid="abb456e1-0408-4960-ab4c-93bbb4f40959" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\menu.c" Guid="b9d1f4cf-b2de-4a52-9636-cad137223058" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\EEPROM_functions.h" Guid="be9a541f-2b75-4ff5-8abe-4f47275754a6" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\TopDesign\TopDesign.cysch" Guid="75252bfb-e8f1-424a-afc2-12b89db7cf4e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\handlers.c" Guid="e7d443d3-9d4a-4d17-9dd7-9428c7d764c9" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\mistISR.c" Guid="0fefdc69-0ad2-4e7b-9683-8260691044ff" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\I2C_MASTER.c" Guid="9f01f6a6-8011-4572-9392-fd865065833e" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\mistISR.h" Guid="086a9fa7-b7a4-4007-8927-9995a1f756ed" /><DocumentWindow Key="C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\Generated_Source\PSoC5\CyLib.c" Guid="f2ca3042-bea8-4874-aace-01b5b5d0447e" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="bd1929f9-3da8-4556-9c42-9295704ca3cc" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

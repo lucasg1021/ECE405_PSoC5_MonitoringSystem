@@ -15,7 +15,7 @@
 #include "ESP_RST.h"
 #include "circbuf.h"
 #include "esprx_int.h"
-#include "EEPROM.h"
+#include "EEPROM_functions.h"
 #include "aht.h"
 
 #include <stdio.h>
@@ -308,18 +308,36 @@ void changeSetPointsESP(char* sESP){
     
 }
 
-void sendAlertESP(int alertFlag, char* sESP){
+void sendDataESP(char* sESP, float tempF, float humid){
     char s[80];
     
-    ESPUART_PutString("AT+CIPSEND=0,7\r\n\n");
+    sprintf(s, "EQUIP %d ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", equipFlag, alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
+    
+    if(keyFlag){
+        encryptESP(s, KEY, strlen(s));
+    }
+    
+    CyWdtClear();
+    CyDelay(100);
+    CyWdtClear();
+    
+    // send data
+    sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
+    ESPUART_PutString(sESP);
     waitForResponseESP(">", sESP, 2000);
-    
-    sprintf(s, "ALERT %d", alertFlag);
-    
-    encryptESP(s, KEY, 7);   
-    
+    CyWdtClear();
+
+    // send to connected device
     ESPUART_PutString(s);
-    
+    waitForResponseESP("OK\r\n", sESP, 1000);
+
+    closeConnectionESP(sESP);
+    CyWdtClear();
+
+    connection = 0;
     alertFlag = 0;
+    noticeFlag = 0;
+    equipFlag = 0;
+    
 }
 /* [] END OF FILE */

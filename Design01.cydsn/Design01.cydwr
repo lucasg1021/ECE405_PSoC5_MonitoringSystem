@@ -270,10 +270,13 @@
       <Data key="1f3ffdb7-e015-4407-9097-75daf1851d83" value="LED_H_G" />
       <Data key="02f2cf2c-2c7a-49df-9246-7a3435c21be3" value="SCL" />
       <Data key="5b632f83-8e42-484d-b96b-f42cacec211e" value="LED_T_G" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="I_SW_T" />
+      <Data key="8de57178-486b-4196-9371-dab36ccece23" value="SDA4" />
       <Data key="15d37410-8990-4b2f-9ac8-d8ec145a800f" value="Rx_2" />
       <Data key="036e13cd-60a8-49da-b8dd-d935d40debd6" value="SCL1" />
       <Data key="51c997f3-9284-433c-ace8-1b16895f2fee" value="SDA2" />
       <Data key="56fadd4e-3820-46a3-a1f9-ee0853321843" value="SW1" />
+      <Data key="253f262d-be60-4bcc-84c7-18c35fc0af90" value="I_SW_H" />
       <Data key="264be2d3-9481-494b-8d9c-c1905a45e9cc" value="SDA_OLED" />
       <Data key="5015a88f-98f1-4737-bbc1-a0face549f99" value="LED_H_Y" />
       <Data key="22863ebe-a37b-476f-b252-6e49a8c00b12" value="SDA0" />
@@ -3446,6 +3449,16 @@
         <Data key="Port Format" value="0,2" />
       </Group>
     </Group>
+    <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
+      <Group key="0">
+        <Data key="Port Format" value="15,4" />
+      </Group>
+    </Group>
+    <Group key="8de57178-486b-4196-9371-dab36ccece23">
+      <Group key="0">
+        <Data key="Port Format" value="12,2" />
+      </Group>
+    </Group>
     <Group key="15d37410-8990-4b2f-9ac8-d8ec145a800f">
       <Group key="0">
         <Data key="Port Format" value="1,6" />
@@ -3464,6 +3477,11 @@
     <Group key="56fadd4e-3820-46a3-a1f9-ee0853321843">
       <Group key="0">
         <Data key="Port Format" value="3,2" />
+      </Group>
+    </Group>
+    <Group key="253f262d-be60-4bcc-84c7-18c35fc0af90">
+      <Group key="0">
+        <Data key="Port Format" value="2,0" />
       </Group>
     </Group>
     <Group key="264be2d3-9481-494b-8d9c-c1905a45e9cc">

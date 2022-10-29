@@ -1,49 +1,14 @@
---------------- Build Started: 10/25/2022 20:23:35 Project: Design01, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
+--------------- Build Started: 10/29/2022 13:24:44 Project: Design01, Configuration: ARM GCC 5.4-2016-q2-update Debug ---------------
 The code generation step is up to date.
-arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/main.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c main.c -o .\CortexM3\ARM_GCC_541\Debug\main.o
-main.c: In function 'main':
-main.c:93:65: warning: unused variable 'humid2' [-Wunused-variable]
-     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
-                                                                 ^
-main.c:93:57: warning: unused variable 'tempF2' [-Wunused-variable]
-     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
-                                                         ^
-main.c:93:49: warning: unused variable 'humid1' [-Wunused-variable]
-     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
-                                                 ^
-main.c:93:41: warning: unused variable 'tempF1' [-Wunused-variable]
-     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
-                                         ^
-main.c:92:9: warning: variable 'listening' set but not used [-Wunused-but-set-variable]
-     int listening = 0;
-         ^
-main.c:91:56: warning: unused variable 'eepromChar' [-Wunused-variable]
-     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
-                                                        ^
-main.c:91:39: warning: unused variable 'eepromRdBuf' [-Wunused-variable]
-     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
-                                       ^
-main.c:91:22: warning: unused variable 'eepromWrBuf' [-Wunused-variable]
-     volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
-                      ^
-main.c:90:11: warning: unused variable 'i2cWrBuf' [-Wunused-variable]
-     uint8 i2cWrBuf[3], i2cRdBuf[7];
-           ^
-main.c:89:11: warning: unused variable 'str' [-Wunused-variable]
-     char* str;
-           ^
-main.c:243:21: warning: 'tempF' may be used uninitialized in this function [-Wmaybe-uninitialized]
-                     sprintf(s,"ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-                     ^
-main.c:243:21: warning: 'humid' may be used uninitialized in this function [-Wmaybe-uninitialized]
-arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\Design01.a .\CortexM3\ARM_GCC_541\Debug\UART.o .\CortexM3\ARM_GCC_541\Debug\UART_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\rx_int.o .\CortexM3\ARM_GCC_541\Debug\SCL.o .\CortexM3\ARM_GCC_541\Debug\I2C.o .\CortexM3\ARM_GCC_541\Debug\I2C_BOOT.o .\CortexM3\ARM_GCC_541\Debug\I2C_INT.o .\CortexM3\ARM_GCC_541\Debug\I2C_PM.o .\CortexM3\ARM_GCC_541\Debug\I2C_SLAVE.o .\CortexM3\ARM_GCC_541\Debug\I2C_MASTER.o .\CortexM3\ARM_GCC_541\Debug\ESPUART.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_PM.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_INT.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\esprx_int.o .\CortexM3\ARM_GCC_541\Debug\ESP_RST.o .\CortexM3\ARM_GCC_541\Debug\SW2_ISR.o .\CortexM3\ARM_GCC_541\Debug\SW2.o .\CortexM3\ARM_GCC_541\Debug\ENC.o .\CortexM3\ARM_GCC_541\Debug\Tout.o .\CortexM3\ARM_GCC_541\Debug\LED_T_G.o .\CortexM3\ARM_GCC_541\Debug\LED_T_R.o .\CortexM3\ARM_GCC_541\Debug\LED_H_G.o .\CortexM3\ARM_GCC_541\Debug\LED_H_R.o .\CortexM3\ARM_GCC_541\Debug\ENC_ISR.o .\CortexM3\ARM_GCC_541\Debug\SW1.o .\CortexM3\ARM_GCC_541\Debug\SW1_ISR.o .\CortexM3\ARM_GCC_541\Debug\TOUT_ISR.o .\CortexM3\ARM_GCC_541\Debug\LED_T_Y.o .\CortexM3\ARM_GCC_541\Debug\LED_H_Y.o .\CortexM3\ARM_GCC_541\Debug\DEBOUNCE_CLK.o .\CortexM3\ARM_GCC_541\Debug\Hout.o .\CortexM3\ARM_GCC_541\Debug\HOUT_ISR.o .\CortexM3\ARM_GCC_541\Debug\UART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\mistISR.o .\CortexM3\ARM_GCC_541\Debug\mistTimer.o .\CortexM3\ARM_GCC_541\Debug\mistTimer_PM.o .\CortexM3\ARM_GCC_541\Debug\Clock_1.o .\CortexM3\ARM_GCC_541\Debug\SDA_CTL.o .\CortexM3\ARM_GCC_541\Debug\SDA_CTL_PM.o .\CortexM3\ARM_GCC_541\Debug\SDA0.o .\CortexM3\ARM_GCC_541\Debug\SDA1.o .\CortexM3\ARM_GCC_541\Debug\SDA2.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
+arm-none-eabi-gcc.exe -mcpu=cortex-m3 -mthumb -I. -IGenerated_Source\PSoC5 -Wa,-alh=.\CortexM3\ARM_GCC_541\Debug/menu.lst -g -D DEBUG -D CY_CORE_ID=0 -Wall -ffunction-sections -ffat-lto-objects -Og -c menu.c -o .\CortexM3\ARM_GCC_541\Debug\menu.o
+arm-none-eabi-ar.exe -rs .\CortexM3\ARM_GCC_541\Debug\Design01.a .\CortexM3\ARM_GCC_541\Debug\UART.o .\CortexM3\ARM_GCC_541\Debug\UART_PM.o .\CortexM3\ARM_GCC_541\Debug\UART_INT.o .\CortexM3\ARM_GCC_541\Debug\UART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\rx_int.o .\CortexM3\ARM_GCC_541\Debug\SCL.o .\CortexM3\ARM_GCC_541\Debug\I2C.o .\CortexM3\ARM_GCC_541\Debug\I2C_BOOT.o .\CortexM3\ARM_GCC_541\Debug\I2C_INT.o .\CortexM3\ARM_GCC_541\Debug\I2C_PM.o .\CortexM3\ARM_GCC_541\Debug\I2C_SLAVE.o .\CortexM3\ARM_GCC_541\Debug\I2C_MASTER.o .\CortexM3\ARM_GCC_541\Debug\ESPUART.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_PM.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_INT.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_BOOT.o .\CortexM3\ARM_GCC_541\Debug\esprx_int.o .\CortexM3\ARM_GCC_541\Debug\ESP_RST.o .\CortexM3\ARM_GCC_541\Debug\SW2_ISR.o .\CortexM3\ARM_GCC_541\Debug\SW2.o .\CortexM3\ARM_GCC_541\Debug\ENC.o .\CortexM3\ARM_GCC_541\Debug\Tout.o .\CortexM3\ARM_GCC_541\Debug\LED_T_G.o .\CortexM3\ARM_GCC_541\Debug\LED_T_R.o .\CortexM3\ARM_GCC_541\Debug\LED_H_G.o .\CortexM3\ARM_GCC_541\Debug\LED_H_R.o .\CortexM3\ARM_GCC_541\Debug\ENC_ISR.o .\CortexM3\ARM_GCC_541\Debug\SW1.o .\CortexM3\ARM_GCC_541\Debug\SW1_ISR.o .\CortexM3\ARM_GCC_541\Debug\TOUT_ISR.o .\CortexM3\ARM_GCC_541\Debug\LED_T_Y.o .\CortexM3\ARM_GCC_541\Debug\LED_H_Y.o .\CortexM3\ARM_GCC_541\Debug\DEBOUNCE_CLK.o .\CortexM3\ARM_GCC_541\Debug\Hout.o .\CortexM3\ARM_GCC_541\Debug\HOUT_ISR.o .\CortexM3\ARM_GCC_541\Debug\UART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\ESPUART_IntClock.o .\CortexM3\ARM_GCC_541\Debug\CyDmac.o .\CortexM3\ARM_GCC_541\Debug\CyFlash.o .\CortexM3\ARM_GCC_541\Debug\CyLib.o .\CortexM3\ARM_GCC_541\Debug\cyPm.o .\CortexM3\ARM_GCC_541\Debug\CySpc.o .\CortexM3\ARM_GCC_541\Debug\cyutils.o .\CortexM3\ARM_GCC_541\Debug\cy_em_eeprom.o .\CortexM3\ARM_GCC_541\Debug\mistISR.o .\CortexM3\ARM_GCC_541\Debug\mistTimer.o .\CortexM3\ARM_GCC_541\Debug\mistTimer_PM.o .\CortexM3\ARM_GCC_541\Debug\Clock_1.o .\CortexM3\ARM_GCC_541\Debug\SDA_CTL.o .\CortexM3\ARM_GCC_541\Debug\SDA_CTL_PM.o .\CortexM3\ARM_GCC_541\Debug\SDA0.o .\CortexM3\ARM_GCC_541\Debug\SDA1.o .\CortexM3\ARM_GCC_541\Debug\SDA2.o .\CortexM3\ARM_GCC_541\Debug\EEPROM_1.o .\CortexM3\ARM_GCC_541\Debug\I_SW_T.o .\CortexM3\ARM_GCC_541\Debug\I_SW_H.o .\CortexM3\ARM_GCC_541\Debug\CyBootAsmGnu.o
 arm-none-eabi-ar.exe: creating .\CortexM3\ARM_GCC_541\Debug\Design01.a
-arm-none-eabi-gcc.exe -Wl,--start-group -o "C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\CortexM3\ARM_GCC_541\Debug\Design01.elf" .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\ssd1306.o .\CortexM3\ARM_GCC_541\Debug\aht.o .\CortexM3\ARM_GCC_541\Debug\handlers.o .\CortexM3\ARM_GCC_541\Debug\esp.o .\CortexM3\ARM_GCC_541\Debug\circbuf.o .\CortexM3\ARM_GCC_541\Debug\EEPROM.o .\CortexM3\ARM_GCC_541\Debug\menu.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\Design01.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -l m -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/Design01.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -u _printf_float -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
+arm-none-eabi-gcc.exe -Wl,--start-group -o "C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\CortexM3\ARM_GCC_541\Debug\Design01.elf" .\CortexM3\ARM_GCC_541\Debug\main.o .\CortexM3\ARM_GCC_541\Debug\ssd1306.o .\CortexM3\ARM_GCC_541\Debug\aht.o .\CortexM3\ARM_GCC_541\Debug\handlers.o .\CortexM3\ARM_GCC_541\Debug\esp.o .\CortexM3\ARM_GCC_541\Debug\circbuf.o .\CortexM3\ARM_GCC_541\Debug\EEPROM_functions.o .\CortexM3\ARM_GCC_541\Debug\menu.o .\CortexM3\ARM_GCC_541\Debug\cyfitter_cfg.o .\CortexM3\ARM_GCC_541\Debug\cymetadata.o .\CortexM3\ARM_GCC_541\Debug\Cm3Start.o .\CortexM3\ARM_GCC_541\Debug\Design01.a "C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CortexM3\ARM_GCC_541\Debug\CyComponentLibrary.a" -mcpu=cortex-m3 -mthumb -l m -L Generated_Source\PSoC5 -Wl,-Map,.\CortexM3\ARM_GCC_541\Debug/Design01.map -T Generated_Source\PSoC5\cm3gcc.ld -specs=nano.specs -u _printf_float -Wl,--gc-sections -g -ffunction-sections -Og -ffat-lto-objects -Wl,--end-group
 cyelftool.exe -C "C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\CortexM3\ARM_GCC_541\Debug\Design01.elf" --flash_row_size 256 --flash_size 262144 --flash_offset 0x00000000
 No ELF section .cychecksum found, creating one
 Application checksum calculated and stored in ELF section .cychecksum
 Checksum calculated and stored in ELF section .cymeta
 cyelftool.exe -S "C:\Users\Lucas\Documents\PSoC Creator\ECE405_PSoC5_MonitoringSystem\Design01.cydsn\CortexM3\ARM_GCC_541\Debug\Design01.elf"
-Flash used: 36122 of 262144 bytes (13.8%).
-SRAM used: 9905 of 65536 bytes (15.1%). Stack: 2048 bytes. Heap: 2048 bytes.
---------------- Build Succeeded: 10/25/2022 20:23:37 ---------------
+Flash used: 37354 of 262144 bytes (14.2%).
+SRAM used: 9921 of 65536 bytes (15.1%). Stack: 2048 bytes. Heap: 2048 bytes.
+--------------- Build Succeeded: 10/29/2022 13:24:45 ---------------
