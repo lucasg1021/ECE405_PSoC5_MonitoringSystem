@@ -24,11 +24,11 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag = 1; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 123;
+volatile unsigned KEY = 0;
 
 volatile int SetTemp;
 volatile int SetHumid;
@@ -73,13 +73,10 @@ int main(void)
     ESPUART_ClearTxBuffer();
     UART_Start();
     EEPROM_1_Start();
-
     esprx_int_StartEx(esp_int_Handler);
-//    TOUT_ISR_Start();
-
     I2C_Start();
     
-    // set which i2c to use
+    // set which i2c device to use
     changeI2CDevice(0);
     
     mistISR_Start();
@@ -94,8 +91,10 @@ int main(void)
     int listening = 0;
     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
 
+    // enable ESP
     ESP_RST_Write(1);
     
+    // turn on green temp & humid status LEDs
     LED_T_G_Write(1);
     LED_H_G_Write(1);
     
@@ -129,8 +128,8 @@ int main(void)
 //    
 //  //***************************************//  
 //    
-//    // get intial values from EEPROM
-//    changeI2CDevice(0);
+    
+//  get intial values from EEPROM
     readEEPROM(WIFISSID_STARTADDR, eepromS, 4);
     wifi_ssid = strdup(strtok(eepromS, "\n"));
     
@@ -148,7 +147,7 @@ int main(void)
     
     readEEPROM(TOLH_STARTADDR, eepromS, 1);
     tolH = eepromS[0];
-//
+
     sprintf(s, "%d", SetTemp);
     UART_PutString((char*)wifi_ssid);
     UART_PutString((char*)wifi_pwd);
@@ -185,6 +184,7 @@ int main(void)
     SW2_ISR_Start();
     ENC_ISR_Start();
 
+    // update temp and humid tolerances
     setTol();
     
     for(;;)
@@ -213,6 +213,7 @@ int main(void)
             CyWdtClear();
         }
         
+        // take temp and humid measurements from all three devices, average them
         changeI2CDevice(0);
         takeMeasurementAHT(&tempF0, &humid0);   // measure temp and humid
         changeI2CDevice(1);
@@ -223,7 +224,10 @@ int main(void)
         tempF = (tempF0 + tempF1 + tempF2) / 3;
         humid = (humid0 + humid1 + humid2) / 3;
         
+        // check that temp and humidity are within tolerance
         checkParam(tempF, humid);
+        
+        // check that the current sensing switches are showing the correct state
         checkISwitches();
         
         // print to OLED
@@ -236,51 +240,9 @@ int main(void)
 
         CyWdtClear();
 
-        // if connected to app, send temp and humidity information
+        // if connected to app, send temp and humidity information as well as alert/notice flags
         if(connection){
             sendDataESP(sESP, tempF, humid);
-//            // check if an alert has been triggered, send corresponding alarm code
-//            if(alertFlag){
-//                //check if notice has also been triggered
-//                if(noticeFlag){
-//                    sprintf(s,"ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-//                }
-//                else{
-//                    sprintf(s,"ALERT %d %.2f %.2f %d %d %d %d DATA", alertFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-//                }
-//                alertFlag = 0;
-//                noticeFlag = 0;
-//            }
-//            else if(noticeFlag){
-//                sprintf(s,"NOTICE %d %.2f %.2f %d %d %d %d DATA", noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-//                noticeFlag = 0;
-//            }
-//            else{
-//                sprintf(s,"%.2f %.2f %d %d %d %d DATA", tempF, humid, SetTemp, SetHumid, tolT, tolH);
-//            }
-//            
-//            if(keyFlag){
-//                encryptESP(s, KEY, strlen(s));
-//            }
-//            CyWdtClear();
-//            CyDelay(100);
-//            CyWdtClear();
-//
-//            // send data
-//            sprintf(sESP, "AT+CIPSEND=0,%i\r\n\n", strlen(s));
-//            ESPUART_PutString(sESP);
-//            waitForResponseESP(">", sESP, 2000);
-//            CyWdtClear();
-//            
-//            // send to connected device
-//            ESPUART_PutString(s);
-//            waitForResponseESP("OK\r\n", sESP, 1000);
-//           
-//            closeConnectionESP(sESP);
-//            CyWdtClear();
-//                                    
-//            connection = 0;
-//            listening = 0;
         }
         CyWdtClear();
         CyDelay(1000);
@@ -288,6 +250,7 @@ int main(void)
         
         setTol();
         
+        // clear ESP UART string variable
         memset(sESP, '\0', 80);
 
     }

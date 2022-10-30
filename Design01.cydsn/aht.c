@@ -56,9 +56,6 @@ void initializeAHT(){
         
         CyDelay(10);
     }
-    
-    setTol();
-   
 }
 
 void takeMeasurementAHT(float* tempF, float* humid){
@@ -274,6 +271,7 @@ void checkParam(float tempF, float humid){
         CyWdtClear();
 
     }
+    // check if any params within notice range (+- tol/2)
     if((tempF > (TH - tolT/2) && tempF < TH) || (tempF < (TL + tolT/2) && tempF > TL)|| (humid > (HH - tolH/2) && humid < HH) || (humid < (HL + tolH/2) && humid > HL)){    
         
         // temp high notice
@@ -360,6 +358,7 @@ void checkParam(float tempF, float humid){
     CyWdtClear();
 }
 
+// update max and min temp and humidities
 void setTol(){
   TH = SetTemp + tolT;
   TL = SetTemp - tolT;
@@ -369,14 +368,20 @@ void setTol(){
   CyWdtClear();
 }
 
+// AHT modules have hard coded i2c address, must multiplex to interface with all three
 void changeI2CDevice(int dev){
     switch(dev){
         // i2c device 0 - AHT 0, OLED display
         case 0:
+            // set SDA1, SD2, and SCL to high impedance mode
             SDA1_SetDriveMode(PIN_DM_DIG_HIZ);
             SDA2_SetDriveMode(PIN_DM_DIG_HIZ);
             SCL_SetDriveMode(PIN_DM_DIG_HIZ);
+            
+            // write 0 to control reg to select SDA0
             SDA_CTL_Write(0u);
+            
+            // set SDA0 and shared SCL to open drain
             SDA0_SetDriveMode(PIN_DM_OD_LO);
             SCL_SetDriveMode(PIN_DM_OD_LO);
             break;
