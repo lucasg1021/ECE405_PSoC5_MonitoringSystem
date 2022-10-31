@@ -34,13 +34,15 @@ void initESP(char* sESP){
     closeConnectionESP(sESP);
     waitForResponseESP(OK, sESP, 1000);
     
+    // enable ESP WDT
     ESPUART_PutString("AT+CSYSWDTENABLE\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
     
+    // set to station mode
     ESPUART_PutString("AT+CWMODE=1\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
 
-    // set up UART settings
+    // set up UART settings - only needs to be ran if first time using ESP module
 //    sprintf(s, "AT+UART=57600,8,1,0,0\r\n\n");
 //    ESPUART_PutString(s);
 //    CyDelay(1000);  
@@ -65,6 +67,7 @@ void initESP(char* sESP){
 void joinWifiESP(char *ssid, char *pwd, char* sESP){
     char s[80];
     
+    // join wifi network, keep trying until successfully joined
     sprintf(s, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, pwd);
     ESPUART_PutString(s);
     while(waitForResponseESP("OK\r\n", sESP, 10000)){
@@ -74,6 +77,7 @@ void joinWifiESP(char *ssid, char *pwd, char* sESP){
     CyDelay(1000);
 }
 
+// function that will constant pop from circular buffer until desired response from ESP seen or timeout
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     uint8_t c;
     uint8_t key8b = KEY & 0xFF;
@@ -86,11 +90,15 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     
     memset(sESP, '\0', 80);
     memset(str, '\0', 80);
+    
+    // loop until desired returnStr seen
     while(strstr(sESP, returnStr) == NULL){
+        // remove char from circbuf if there's a new one
         while(circBufPop(&espBuf, &c) != 0){
             time++;
             CyDelay(1);
             
+            // if no new char after timeout period, return -1
             if(time == Timeout){
             UART_PutString("Timed out waiting for response\r\n");
 //            
@@ -107,9 +115,11 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             CyWdtClear();
         }
         
+        // add new char to ESP string variable
         sESP[i] = c;
         UART_PutChar(c);
         
+        // if a key has been shared, decrypt 
         if(keyFlag){
             str[i] = c ^ key8b;   
         }
@@ -117,53 +127,53 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         i++;
         time = 0;
 
-       if(strstr(sESP, "CONNECT FAIL\r\n") != NULL){
-//            esprx_int_Disable();
-//            ESP_RST_Write(0);
-//            CyDelay(100);
-//            ESP_RST_Write(1);
-//            CyDelay(100);
-//            CySoftwareReset();
-        }
-        else if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
+        // if android requests data, set connection flag to 1 if key shared, else ESP ask for key
+        if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
                 connection = 1;   
             }
             else{
+                // ask android to run startup seq
                 requestStartup(sESP);
             }
             return -1;   
         }
+        // if set points have been updated in app look for DONE response from android
         else if(strstr(str, "SETPOINTS") != NULL){
             waitForResponseESP("DONE", sESP, 1000);
             return -1;   
         }
+        // android will send "DONE" after sending set temp, set humid, temp tolerance and humid tolerance 
         else if(strstr(str, "DONE") != NULL){
-                SetTemp = atoi(str);
-                str[0] = ' '; str[1] = ' '; str[2] = ' ';
-                SetHumid = atoi(str);
-                str[3] = ' '; str[4] = ' '; str[5] = ' ';
-                tolT = atoi(str);
-                str[6] = ' '; str[7] = ' ';
-                tolH = atoi(str);
-                
-                changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid, (uint8_t) tolT, (uint8_t) tolH);
-                
-                sprintf(s, "ACK %d %d %d %d", SetTemp, SetHumid, tolT, tolH);
-                encryptESP(s, KEY, 13);
-                                
-                ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
-                waitForResponseESP(">", sESP, 5000);
+            // get each set value and replace with space so next value can be extracted
+            SetTemp = atoi(str);
+            str[0] = ' '; str[1] = ' '; str[2] = ' ';
+            SetHumid = atoi(str);
+            str[3] = ' '; str[4] = ' '; str[5] = ' ';
+            tolT = atoi(str);
+            str[6] = ' '; str[7] = ' ';
+            tolH = atoi(str);
+            
+            // write set points to memory
+            changeSetPointsEEPROM((uint8_t) SetTemp, (uint8_t) SetHumid, (uint8_t) tolT, (uint8_t) tolH);
+            
+            // ACK and send new values back to ensure both sides have the same numbers
+            sprintf(s, "ACK %d %d %d %d", SetTemp, SetHumid, tolT, tolH);
+            encryptESP(s, KEY, 13);
+                            
+            ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
+            waitForResponseESP(">", sESP, 5000);
 
-                // send to connected device
-                ESPUART_PutString(s);
-                waitForResponseESP("OK\r\n", sESP, 1000);
-                
-                setTol();
+            // send to connected device
+            ESPUART_PutString(s);
+            waitForResponseESP("OK\r\n", sESP, 1000);
+            
+            setTol();
                 
             return 1;
         }
         else if(strstr(sESP, "STARTUP\r\n") != NULL){
+            // start key sharing
             getEncryptStartupESP(sESP); 
 
             return -1;
@@ -171,6 +181,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         else if(strstr(sESP, "ALREADY CONNECTED\r\n") != NULL){
             return 0;   
         }
+        // if receive 11 bytes - "REQUESTDATA" - encrypted but no key, request key sharing startup
         else if(strstr(sESP, "IPD,0,11") != NULL && !keyFlag){
             requestStartup(sESP);   
         }
@@ -188,20 +199,6 @@ void getEncryptStartupESP(char* sESP){
     const char colon[2] = ":";
     char* token;
     int baseESP, modESP;
-    
-//    token = strtok(sESP, colon); 
-//    char *str = strtok(NULL, "");
-//    CyWdtClear();
-//    modS[0] = str[0];
-//    modS[1] = str[1];
-//    baseS = str[3];
-//    CyWdtClear();
-//    
-//    modESP = atoi(modS);
-//    baseESP = baseS - '0';
-//    
-//    BASE = baseESP;
-//    MOD = modESP;
         
     // send ACK and start points
     ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
@@ -261,7 +258,6 @@ void initUDPConnectionESP(char* sESP){
     ESPUART_PutString("AT+CIPSTART=0,\"UDP\",\"0.0.0.0\",54321,54321,2\r\n\n");
 }
 
-
 void closeConnectionESP(char* sESP){
     //close connection
     ESPUART_PutString("AT+CIPSERVER=0\r\n\n");
@@ -281,7 +277,6 @@ void encryptESP(char* s, unsigned key, int len){
     }
 }
 
-
 void requestStartup(char* sESP){
     ESPUART_PutString("AT+CIPSEND=0,10\r\n\n");
     waitForResponseESP(">", sESP, 2000);
@@ -291,21 +286,6 @@ void requestStartup(char* sESP){
     waitForResponseESP("OK\r\n", sESP, 1000);
 
     closeConnectionESP(sESP);
-}
-
-void changeSetPointsESP(char* sESP){
-    char s[30];
-    waitForResponseESP("DONE", sESP, 1000);
-    
-    SetTemp = atoi(sESP);
-    sESP += 2;
-    SetHumid = atoi(sESP);
-    
-    sprintf(s, "%d\r\n%d", SetTemp, SetHumid);
-    UART_PutString(s);
-    
-    CyDelay(10000);
-    
 }
 
 void sendDataESP(char* sESP, float tempF, float humid){
