@@ -89,10 +89,6 @@ int main(void)
     alertTimer_WriteCounter(0);
         
     char s[80], sESP[80], eepromS[30];
-    char* str;
-    uint8 i2cWrBuf[3], i2cRdBuf[7];
-    volatile uint8_t eepromWrBuf[30], eepromRdBuf[30], eepromChar;
-    int listening = 0;
     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
 
     // enable ESP
@@ -123,21 +119,21 @@ int main(void)
 //    string6[0] = 2;// tolH
 //
 ////    // write/read wifi ssid
-//    writeEEPROM(WIFISSID_STARTADDR, string2, 4);
-//    writeEEPROM(WIFIPWD_STARTADDR, string, 11);
+//    writeEEPROM(WIFISSID_STARTADDR, string2, 12);
+//    writeEEPROM(WIFIPWD_STARTADDR, string, 10);
 //    writeEEPROM(SETTEMP_STARTADDR, string3, 1);
 //    writeEEPROM(SETHUMID_STARTADDR, string4, 1);
 //    writeEEPROM(TOLT_STARTADDR, string5, 1);
 //    writeEEPROM(TOLH_STARTADDR, string6, 1);
-//    
+    
 //  //***************************************//  
 //    
     
 //  get intial values from EEPROM
-    readEEPROM(WIFISSID_STARTADDR, eepromS, 4);
+    readEEPROM(WIFISSID_STARTADDR, eepromS, 30);
     wifi_ssid = strdup(strtok(eepromS, "\n"));
     
-    readEEPROM(WIFIPWD_STARTADDR, eepromS, 11);
+    readEEPROM(WIFIPWD_STARTADDR, eepromS, 30);
     wifi_pwd = strdup(strtok(eepromS, "\n"));
     
     readEEPROM(SETTEMP_STARTADDR, eepromS, 1);
@@ -159,8 +155,8 @@ int main(void)
 //    sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
 //    UART_PutString(s);
     
-    wifi_ssid = "belkin.640";
-    wifi_pwd = "f24f2829";
+//    wifi_ssid = "belkin.640";
+//    wifi_pwd = "f24f2829";
     
     // turn off ESP echo
     if(DEBUG_MSGS){
@@ -262,7 +258,6 @@ int main(void)
                 
         //clear I2C buffer
         I2C_MasterClearReadBuf();
-        memset(i2cRdBuf, 0, sizeof i2cRdBuf);
 
         CyWdtClear();
         

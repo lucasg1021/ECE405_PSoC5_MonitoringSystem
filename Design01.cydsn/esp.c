@@ -97,7 +97,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             
             // if no new char after timeout period, return -1
             if(time == Timeout){
-            //UART_PutString("Timed out waiting for response\r\n");
+            UART_PutString("Timed out waiting for response\r\n");
 //            
 //            if(timeoutCount == 10){
 //                esprx_int_Disable();

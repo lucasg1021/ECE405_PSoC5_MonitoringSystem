@@ -19,8 +19,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-    
-#define DEBUG_MSGS 1
 
 void initializeAHT(){
     uint8 i2cWrBuf[4];
