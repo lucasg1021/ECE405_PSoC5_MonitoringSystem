@@ -20,7 +20,7 @@
 #define AHT_ADDR (uint8)(0x38)
 #define DISPLAY_ADDRESS (0x3C)
     
-extern volatile int alertFlag, noticeFlag, mistFlag, equipFlag;
+extern volatile int alertFlag, noticeFlag, mistFlag, equipFlag, alertClkFlag;
 extern volatile int TH, HH;
 extern volatile int TL, HL;
 extern volatile int tolT, tolH;
@@ -30,7 +30,7 @@ void initializeAHT();
 void takeMeasurementAHT(float* tempF, float* humid);
 void restartAHT();
 
-void checkParam(float tempF, float humid);
+void checkParam(float tempF, float humid, int alertEnable);
 void checkISwitches();
 void setTol();
 void printTempHumid(float temp, float humid);

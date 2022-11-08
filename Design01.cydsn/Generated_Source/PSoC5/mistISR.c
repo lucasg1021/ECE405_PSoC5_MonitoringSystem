@@ -170,17 +170,17 @@ CY_ISR(mistISR_Interrupt)
     
     //if currently misting, turn off
     if(mistFlag == 1){
-        UART_PutString("DONE MISTING");
+        //UART_PutString("DONE MISTING");
         Hout_Write(0);
         mistTimer_Stop();
         mistFlag = 2;     //mistFlag = 2 to indicate misting just ended
         
-        // wait 10 minutes before misting again
+        // wait 2 minutes before misting again
         mistTimer_WriteCounter(0);
-        mistTimer_WritePeriod(60000);
+        mistTimer_WritePeriod(12000);
         mistTimer_Enable();
     }
-    // 10 minute period in between mists is over, can now mist
+    // period in between mists is over, can now mist
     else if(mistFlag == 2){
         mistTimer_Stop();
         mistFlag = 0;

@@ -16,6 +16,8 @@
 #include "cytypes.h"
 #include "cyfitter.h"
 #include "cypins.h"
+    
+#define DEBUG_MSGS 1    // indicate whether to show debugging messages in terminal
 
 extern volatile int connection, keyFlag, BASE, PRIV;
 extern volatile long long MOD;

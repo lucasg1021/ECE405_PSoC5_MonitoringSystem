@@ -24,11 +24,11 @@
 #define ESP_CIRCBUF_LEN 64  
 
 volatile int connection = 0; // flag indicating whether a device is currently connected (0 for no connection, 1 for connected)
-volatile int keyFlag = 0; // indicates if startup sequence has been executed and key has been set
+volatile int keyFlag = 1; // indicates if startup sequence has been executed and key has been set
 volatile int PRIV;
 volatile int BASE = 7;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 0;
+volatile unsigned KEY = 123;
 
 volatile int SetTemp;
 volatile int SetHumid;
@@ -45,6 +45,7 @@ volatile int alertFlag = 0;
 volatile int noticeFlag = 0;
 volatile int equipFlag = 0;
 volatile int mistFlag = 2;
+volatile int alertClkFlag = 0;
 
 volatile char * wifi_ssid;
 volatile char * wifi_pwd;
@@ -83,6 +84,9 @@ int main(void)
     mistTimer_WriteCounter(0);
     mistTimer_WritePeriod(6000);     // 6000/(100Hz CLK) = 1 minute period before misting can begin
     mistTimer_Enable();
+    
+    alertTimeISR_Start();
+    alertTimer_WriteCounter(0);
         
     char s[80], sESP[80], eepromS[30];
     char* str;
@@ -100,18 +104,18 @@ int main(void)
     
     
     //** Manual Write EEPROM ** //     
-//
-//    uint8_t string[11] = "baseball10";
-//    string[10] = '\n';
+
+//    uint8_t string2[11] = "belkin.640";
+//    string2[10] = '\n';
 //    
-//    uint8_t string2[4] = "LRG";
-//    string2[3] = '\n';
+//    uint8_t string[9] = "f24f2829";
+//    string[8] = '\n';
 //    
 //    uint8_t string3[1];
-//    string3[0] = 0x4A;                //Temp
+//    string3[0] = 78;                //Temp
 //    
 //    uint8_t string4[1];
-//    string4[0] = 50;               //Humidity 
+//    string4[0] = 80;               //Humidity 
 //    
 //    uint8_t string5[1];
 //    string5[0] = 2;           // tolT
@@ -148,12 +152,23 @@ int main(void)
     readEEPROM(TOLH_STARTADDR, eepromS, 1);
     tolH = eepromS[0];
 
-    sprintf(s, "%d", SetTemp);
-    UART_PutString((char*)wifi_ssid);
-    UART_PutString((char*)wifi_pwd);
-    UART_PutString(s);
-    sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
-    UART_PutString(s);
+//    sprintf(s, "%d", SetTemp);
+//    UART_PutString((char*)wifi_ssid);
+//    UART_PutString((char*)wifi_pwd);
+//    UART_PutString(s);
+//    sprintf(s, "%d %d %d", SetHumid, tolT, tolH);
+//    UART_PutString(s);
+    
+    wifi_ssid = "belkin.640";
+    wifi_pwd = "f24f2829";
+    
+    // turn off ESP echo
+    if(DEBUG_MSGS){
+        ESPUART_PutString("ATE1\r\n\n");
+    }
+    else{
+        ESPUART_PutString("ATE0\r\n\n");
+    }
     
     // initialize wifi settings and join network
     initESP(sESP);
@@ -177,7 +192,7 @@ int main(void)
     changeI2CDevice(0);
     
     // start WDT
-    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    //CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
@@ -223,12 +238,23 @@ int main(void)
         
         tempF = (tempF0 + tempF1 + tempF2) / 3;
         humid = (humid0 + humid1 + humid2) / 3;
+        tempF = tempF2;
+        humid = humid2;
+        
+        if(0){
+            sprintf(s, "%.2f %.2f\r\n", tempF, humid);
+            UART_PutString(s);
+        }
         
         // check that temp and humidity are within tolerance
-        checkParam(tempF, humid);
-        
-        // check that the current sensing switches are showing the correct state
-        checkISwitches();
+        if(alertClkFlag != -1){
+            checkParam(tempF, humid, 0);
+        }
+        else{
+            checkParam(tempF, humid, 1);
+            //UART_PutString("ALERT");
+            alertClkFlag = 0;
+        }
         
         // print to OLED
         changeI2CDevice(0);
@@ -239,6 +265,9 @@ int main(void)
         memset(i2cRdBuf, 0, sizeof i2cRdBuf);
 
         CyWdtClear();
+        
+        // check that the current sensing switches are showing the correct state
+        checkISwitches();
 
         // if connected to app, send temp and humidity information as well as alert/notice flags
         if(connection){

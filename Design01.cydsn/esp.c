@@ -9,26 +9,24 @@
  *
  * ========================================
 */
+#include "project.h"
 #include "esp.h"
-#include "ESPUART.h"
-#include "UART.h"
-#include "ESP_RST.h"
 #include "circbuf.h"
-#include "esprx_int.h"
 #include "EEPROM_functions.h"
 #include "aht.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 #define ESP_CIRCBUF_LEN 64  //esp.h
+
 
 extern uint8_t espStringData[ESP_CIRCBUF_LEN];
 extern circBufESP espBuf;
 
 void initESP(char* sESP){
-    char s[80];  
     char OK[] = "OK\r\n";
     
     closeConnectionESP(sESP);
@@ -54,9 +52,9 @@ void initESP(char* sESP){
     joinWifiESP((char *)wifi_ssid, (char *)wifi_pwd, sESP);
 
 ////  show device's current IP
-//    ESPUART_PutString("AT+CIFSR\r\n\n");
-//    CyDelay(1000);
-//    waitForResponseESP("OK", sESP, 5000);
+    ESPUART_PutString("AT+CIFSR\r\n\n");
+    CyDelay(1000);
+    waitForResponseESP("OK", sESP, 5000);
     
 //    enable multiple connections
     ESPUART_PutString("AT+CIPMUX=1\r\n\n");
@@ -86,7 +84,6 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     
     int i = 0;
     int time = 0;
-    int time2 = 0;
     
     memset(sESP, '\0', 80);
     memset(str, '\0', 80);
@@ -100,7 +97,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             
             // if no new char after timeout period, return -1
             if(time == Timeout){
-            UART_PutString("Timed out waiting for response\r\n");
+            //UART_PutString("Timed out waiting for response\r\n");
 //            
 //            if(timeoutCount == 10){
 //                esprx_int_Disable();
@@ -117,7 +114,10 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         
         // add new char to ESP string variable
         sESP[i] = c;
-        UART_PutChar(c);
+        
+        if(DEBUG_MSGS){
+            UART_PutChar(c);
+        }
         
         // if a key has been shared, decrypt 
         if(keyFlag){
@@ -128,9 +128,10 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
         time = 0;
 
         // if android requests data, set connection flag to 1 if key shared, else ESP ask for key
-        if(strstr(sESP, "REQUESTDATA") != NULL || strstr(str, "REQUESTDATA") != NULL){
+        if(strstr(str, "REQUESTDATA") != NULL){
             if(keyFlag){
-                connection = 1;   
+                connection = 1;
+                memset(str, '\0', 80);
             }
             else{
                 // ask android to run startup seq
@@ -194,12 +195,9 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
 
 //start the key exchange process with the app for encryption
 void getEncryptStartupESP(char* sESP){
-    char s[80], modS[2];
-    char baseS;
+    char s[80];
     const char colon[2] = ":";
-    char* token;
-    int baseESP, modESP;
-        
+
     // send ACK and start points
     ESPUART_PutString("AT+CIPSEND=0,13\r\n\n");
     waitForResponseESP(">", sESP, 5000);
@@ -219,8 +217,8 @@ void getEncryptStartupESP(char* sESP){
     int A = (int)pow((double)BASE, (double)PRIV) % MOD;
     
     waitForResponseESP("ENDSTARTUP", sESP, 60000);
-    token = strtok(sESP, colon); 
-    char *str2 = strtok(NULL, "");
+    char* _ = strtok(sESP, colon); 
+    char* str2 = strtok(NULL, "");
     CyWdtClear();
     
     int B = atoi(str2);

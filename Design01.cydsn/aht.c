@@ -9,24 +9,18 @@
  *
  * ========================================
 */
+
 #include "project.h"
 #include "aht.h"
 #include "I2C.h"
 #include "ssd1306.h"
-#include "Tout.h"
-#include "Hout.h"
-#include "LED_T_G.h"
-#include "LED_T_Y.h"
-#include "LED_T_R.h"
-#include "LED_H_G.h"
-#include "LED_H_Y.h"
-#include "LED_H_R.h"
 #include "esp.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
     
+#define DEBUG_MSGS 1
 
 void initializeAHT(){
     uint8 i2cWrBuf[4];
@@ -130,8 +124,8 @@ void printTempHumid(float temp, float humid){
 //    I2C_MasterClearStatus();
    
     //print menu to uart
-    sprintf(s, "Menu");   
-    gfx_setCursor(50,50);
+    sprintf(s, "Set Temp: %d F\r\n\nSet Humid: %d \%%", SetTemp, SetHumid);   
+    gfx_setCursor(2,35);
     gfx_println(s);
     display_update(); 
     I2C_MasterSendStop();
@@ -166,7 +160,7 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
     return result;
 }
 
-void checkParam(float tempF, float humid){
+void checkParam(float tempF, float humid, int alertEnable){
 
     // check if any params are in alert range
     if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){ 
@@ -178,8 +172,18 @@ void checkParam(float tempF, float humid){
             LED_T_R_Write(1);
             
             Tout_Write(0);
-            alertFlag = 1;  // flag = 1 for high temp alert
-           
+            
+            if(alertEnable){
+                alertFlag = 1;  // flag = 1 for high temp alert
+            }
+            // start clock timer for 3 minutes, check params again before alerting
+            else if(alertClkFlag == 0){
+                alertTimer_Stop();
+                alertTimer_WriteCounter(0);
+                alertTimer_WritePeriod(18000);   // 60 seconds
+                alertTimer_Enable();
+                alertClkFlag = 1;
+            }
         }
         // temp low alert
         else if(tempF < TL){
@@ -188,73 +192,148 @@ void checkParam(float tempF, float humid){
             LED_T_R_Write(1);
             
             Tout_Write(1);
-            alertFlag = 2;  // flag = 2 for low temp alert
+            if(alertEnable){
+                alertFlag = 2;  // flag = 2 for low temp alert
+            }
+            // start clock timer for 1 minute, check params again before alerting
+            else if(alertClkFlag == 0){
+                alertTimer_Stop();
+                alertTimer_WriteCounter(0);
+                alertTimer_WritePeriod(18000);   // 60 seconds
+                alertTimer_Enable();
+                alertClkFlag = 1;
+            }
         }
         else{
             LED_T_R_Write(0);
             LED_T_Y_Write(0);
             LED_T_G_Write(1);
-            
-            Tout_Write(0);
         }
+        // High humidity alert is unncessary
+        
         // humid high alert
-        if(humid > HH){
-            if(alertFlag == 1){
-                LED_H_G_Write(0);
-                LED_H_Y_Write(0);
-                LED_H_R_Write(1);
-                
-                alertFlag = 5;   //flag = 5 for T high and H high   
-            }
-            else if(alertFlag == 2){
-                LED_H_G_Write(0);
-                LED_H_Y_Write(0);
-                LED_H_R_Write(1);
-               
-                alertFlag = 6;  //flag = 6 for T low and H high   
-            }
-            else{
-                LED_H_G_Write(0);
-                LED_H_Y_Write(0);
-                LED_H_R_Write(1);
-
-                alertFlag = 3;  // flag = 3 for high humidity alert
-            }
-
-            Hout_Write(0);
-           
-        }
+//        if(humid > HH){
+//            if(alertFlag == 1){
+//                LED_H_G_Write(0);
+//                LED_H_Y_Write(0);
+//                LED_H_R_Write(1);
+//                
+//                if(alertEnable){
+//                    alertFlag = 5;   //flag = 5 for T high and H high   
+//                }
+//                // start clock timer for 1 minute, check params again before alerting
+//                else if(alertClkFlag == 0){
+//                    alertTimer_Stop();
+//                    alertTimer_WriteCounter(0);
+//                    alertTimer_WritePeriod(6000);   // 60 seconds
+//                    alertTimer_Enable();
+//                    alertClkFlag = 1;
+//                }                
+//            }
+//            else if(alertFlag == 2){
+//                LED_H_G_Write(0);
+//                LED_H_Y_Write(0);
+//                LED_H_R_Write(1);
+//               
+//                if(alertEnable){
+//                    alertFlag = 6;  //flag = 6 for T low and H high   
+//                }
+//                // start clock timer for 1 minute, check params again before alerting
+//                else if(alertClkFlag == 0){
+//                    alertTimer_Stop();
+//                    alertTimer_WriteCounter(0);
+//                    alertTimer_WritePeriod(6000);   // 60 seconds
+//                    alertTimer_Enable();
+//                    alertClkFlag = 1;
+//                }                
+//            }
+//            else{
+//                LED_H_G_Write(0);
+//                LED_H_Y_Write(0);
+//                LED_H_R_Write(1);
+//
+//                if(alertEnable){
+//                    alertFlag = 3;  // flag = 3 for high humidity alert
+//                }
+//                // start clock timer for 1 minute, check params again before alerting
+//                else if(alertClkFlag == 0){
+//                    alertTimer_Stop();
+//                    alertTimer_WriteCounter(0);
+//                    alertTimer_WritePeriod(6000);   // 60 seconds
+//                    alertTimer_Enable();
+//                    alertClkFlag = 1;
+//                }
+//            }
+//           
+//        }
         // humid low alert
-        else if(humid < HL){
+        if(humid < HL){
             if(alertFlag == 1){
                 LED_H_G_Write(0);
                 LED_H_Y_Write(0);
                 LED_H_R_Write(1);
                 
-                alertFlag = 7;   //flag = 7 for T high and H low 
+                if(alertEnable){
+                    alertFlag = 7;   //flag = 7 for T high and H low 
+                }
+                // start clock timer for 1 minute, check params again before alerting
+                else if(alertClkFlag == 0){
+                    alertTimer_Stop();
+                    alertTimer_WriteCounter(0);
+                    alertTimer_WritePeriod(18000);   // 60 seconds
+                    alertTimer_Enable();
+                    alertClkFlag = 1;
+                }
             }
             else if(alertFlag == 2){
                 LED_H_G_Write(0);
                 LED_H_Y_Write(0);
                 LED_H_R_Write(1);
                 
-                alertFlag = 8;  //flag = 6 for T low and H low  
+                if(alertEnable){
+                    alertFlag = 8;  //flag = 6 for T low and H low 
+                }
+                // start clock timer for 1 minute, check params again before alerting
+                else if(alertClkFlag == 0){
+                    alertTimer_Stop();
+                    alertTimer_WriteCounter(0);
+                    alertTimer_WritePeriod(18000);   // 60 seconds
+                    alertTimer_Enable();
+                    alertClkFlag = 1;
+                }                
             }
             else{
                 LED_H_G_Write(0);
                 LED_H_Y_Write(0);
                 LED_H_R_Write(1);
 
-                alertFlag = 4; // flag = 4 for H low
+                if(alertEnable){
+                    alertFlag = 4; // flag = 4 for H low
+                }
+                // start clock timer for 1 minute, check params again before alerting
+                else if(alertClkFlag == 0){
+                    alertTimer_Stop();
+                    alertTimer_WriteCounter(0);
+                    alertTimer_WritePeriod(18000);   // 60 seconds
+                    alertTimer_Enable();
+                    alertClkFlag = 1;
+                }                
             }
 
             if(!mistFlag){
-                // turn mister on for 10 seconds
-                UART_PutString("MISTING...");
+                // begin misting and reset timer
                 Hout_Write(1);
                 mistTimer_Stop();
                 mistTimer_WriteCounter(0);
-                mistTimer_WritePeriod(1000);
+                // if humidity much less than set point, mist for 3 minutes
+                if(humid < SetHumid - 2*tolH){
+                    // 18000 / 100 = 180 seconds
+                    mistTimer_WritePeriod(24000); 
+                }
+                else{
+                    // 9000 / 100 = 90 seconds
+                    mistTimer_WritePeriod(9000);
+                }
                 mistFlag = 1;       //mistFlag = 1 for currently misting
                 
                 mistTimer_Enable();
@@ -422,10 +501,16 @@ void checkISwitches(){
     // if lamp should be on but isn't
     if(tOut && !tSwitch){
         equipFlag = 1;
+        if(DEBUG_MSGS){
+            UART_PutString("LAMP IS OFF !!!!!!!\r\n");
+        }
     }
     // lamp should not be on but is
     else if(!tOut && tSwitch){
-        equipFlag = 2;  
+        equipFlag = 2;
+        if(DEBUG_MSGS){
+            UART_PutString("LAMP IS ON !!!!!!!\r\n");
+        }
     }
     
     // if mister should be on but isn't
@@ -433,13 +518,22 @@ void checkISwitches(){
         if(equipFlag == 1){
             // lamp and mister off
             equipFlag = 5;
+            if(DEBUG_MSGS){
+                UART_PutString("LAMP AND MISTER OFF !!!!!!!\r\n");
+            }
         }
         else if(equipFlag == 2){
             // lamp on, mister off
-            equipFlag = 6;    
+            equipFlag = 6;
+            if(DEBUG_MSGS){
+                UART_PutString("LAMP ON MISTER OFF !!!!!!!!!!!\r\n");
+            }
         }
         else{
-            equipFlag = 3;   
+            equipFlag = 3;
+            if(DEBUG_MSGS){
+                UART_PutString("MISTER OFF");
+            }
         }
     }
     // mister should be off but is on
@@ -447,13 +541,22 @@ void checkISwitches(){
         if(equipFlag == 1){
             // lamp off, mister on
             equipFlag = 7;
+            if(DEBUG_MSGS){
+                UART_PutString("LAMP IS OFF MISTER ON !!!!!!!\r\n");
+            }
         }
         else if(equipFlag == 2){
             // lamp and mister on
-            equipFlag = 8;    
+            equipFlag = 8; 
+            if(DEBUG_MSGS){
+                UART_PutString("LAMP AND MISTER ON !!!!!!!\r\n");
+            }
         }
         else{
-            equipFlag = 4;   
+            equipFlag = 4;
+            if(DEBUG_MSGS){
+                UART_PutString("MISTER OFF !!!!!!!!!\r\n");
+            }
         }
     }
     
