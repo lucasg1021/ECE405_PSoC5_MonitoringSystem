@@ -31,7 +31,7 @@ void takeMeasurementAHT(float* tempF, float* humid);
 void restartAHT();
 
 void checkParam(float tempF, float humid, int alertEnable);
-void checkISwitches();
+void checkISwitches(int alertEnable);
 void setTol();
 void printTempHumid(float temp, float humid);
 void changeI2CDevice(int dev);

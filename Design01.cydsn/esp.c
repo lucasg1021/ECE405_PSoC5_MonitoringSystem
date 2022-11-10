@@ -97,7 +97,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             
             // if no new char after timeout period, return -1
             if(time == Timeout){
-            UART_PutString("Timed out waiting for response\r\n");
+            //UART_PutString("Timed out waiting for response\r\n");
 //            
 //            if(timeoutCount == 10){
 //                esprx_int_Disable();
@@ -286,11 +286,11 @@ void requestStartup(char* sESP){
     closeConnectionESP(sESP);
 }
 
-void sendDataESP(char* sESP, float tempF, float humid){
+void sendDataESP(char* sESP, float tempF, float humid, int lampOn, int misterOn){
     char s[80];
     
-    sprintf(s, "EQUIP %d ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", equipFlag, alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
-    
+    sprintf(s, "STATUS %d %d EQUIP %d ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", lampOn, misterOn, equipFlag, alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
+
     if(keyFlag){
         encryptESP(s, KEY, strlen(s));
     }

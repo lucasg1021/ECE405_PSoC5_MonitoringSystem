@@ -90,6 +90,7 @@ int main(void)
         
     char s[80], sESP[80], eepromS[30];
     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
+    int lampOn, misterOn;
 
     // enable ESP
     ESP_RST_Write(1);
@@ -188,7 +189,7 @@ int main(void)
     changeI2CDevice(0);
     
     // start WDT
-    //CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
@@ -234,22 +235,33 @@ int main(void)
         
         tempF = (tempF0 + tempF1 + tempF2) / 3;
         humid = (humid0 + humid1 + humid2) / 3;
-        tempF = tempF2;
-        humid = humid2;
+//        tempF = tempF2;
+//        humid = humid2;
         
-        if(0){
-            sprintf(s, "%.2f %.2f\r\n", tempF, humid);
+        if(1){
+            sprintf(s, "%.2f %.2f\r\n", tempF0, humid0);
             UART_PutString(s);
         }
         
         // check that temp and humidity are within tolerance
         if(alertClkFlag != -1){
+            alertFlag = 0;
+            noticeFlag = 0;
+            equipFlag = 0;
             checkParam(tempF, humid, 0);
+            
+            // check that the current sensing switches are showing the correct state
+            checkISwitches(0);
         }
         else{
             checkParam(tempF, humid, 1);
-            //UART_PutString("ALERT");
+            // check that the current sensing switches are showing the correct state
+            checkISwitches(1);
             alertClkFlag = 0;
+        }
+        
+        if (alertFlag != 0 || noticeFlag != 0 || equipFlag != 0){
+            UART_PutString("\r\nALERT!!!!!!!!!\r\n\n");  
         }
         
         // print to OLED
@@ -260,13 +272,13 @@ int main(void)
         I2C_MasterClearReadBuf();
 
         CyWdtClear();
-        
-        // check that the current sensing switches are showing the correct state
-        checkISwitches();
+       
 
         // if connected to app, send temp and humidity information as well as alert/notice flags
         if(connection){
-            sendDataESP(sESP, tempF, humid);
+            lampOn = I_SW_T_Read();
+            misterOn = I_SW_H_Read();
+            sendDataESP(sESP, tempF, humid, lampOn, misterOn);
         }
         CyWdtClear();
         CyDelay(1000);

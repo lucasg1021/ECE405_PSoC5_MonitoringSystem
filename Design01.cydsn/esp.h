@@ -17,7 +17,7 @@
 #include "cyfitter.h"
 #include "cypins.h"
     
-#define DEBUG_MSGS 1    // indicate whether to show debugging messages in terminal
+#define DEBUG_MSGS 0    // indicate whether to show debugging messages in terminal
 
 extern volatile int connection, keyFlag, BASE, PRIV;
 extern volatile long long MOD;
@@ -32,7 +32,7 @@ void initUDPConnectionESP(char* sESP);
 void closeConnectionESP(char* sESP);
 void encryptESP(char* s, unsigned key, int len);
 void requestStartup(char* sESP);
-void sendDataESP(char* sESP, float temp, float humid);
+void sendDataESP(char* sESP, float temp, float humid, int lampOn, int misterOn);
 
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout);
 
