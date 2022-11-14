@@ -122,7 +122,7 @@ void printTempHumid(float temp, float humid){
 //    I2C_MasterClearStatus();
    
     //print menu to uart
-    sprintf(s, "Set Temp: %d F\r\n\nSet Humid: %d \%%", SetTemp, SetHumid);   
+    sprintf(s, "T: Set: %d F Tol: %d F\r\nH: Set: %d \%% Tol: %d \%%", SetTemp, tolT, SetHumid, tolH);   
     gfx_setCursor(2,35);
     gfx_println(s);
     display_update(); 

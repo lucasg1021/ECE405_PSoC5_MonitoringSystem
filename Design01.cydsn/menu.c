@@ -45,79 +45,208 @@ void menu(){
            
         }
     } 
-    while(flag == 1){        // If a button is pressed
-        if ((SW1_Flag == 1) && (SW2_Flag == 0)){     // If user selects Temperature settings
-           if((ENC_Flag == 1) && (SetTemp < 100)){                       // Increase temperature
-                SetTemp = SetTemp + 1;
-                ENC_Flag = 0;
-            display_clear();
-           
+
+    if ((SW1_Flag == 1) && (SW2_Flag == 0)){     // If user selects Temperature settings
+        SW1_Flag = 0; SW2_Flag = 0;
+        
+        while(flag == 1){
+            sprintf(s, "Press [L] for tol. \n [R] for set points");  
+            display_update();    
+            gfx_setTextSize(1);
+            gfx_setTextColor(WHITE);
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            CyWdtClear();
+        
+            if(SW1_Flag == 1 && SW2_Flag == 0){
+                flag = 2;
+                display_clear();
             }
-            else if((ENC_Flag == -1) && (SetTemp > 0)){                   // Decrease temperature
-                SetTemp = SetTemp - 1;
+            else if(SW2_Flag == 1 && SW1_Flag == 0){
+                flag = 3;
+                display_clear();
+            }
+        
+        }
+        
+        SW1_Flag = 0;
+        SW2_Flag = 0;
+        // Change tolerance
+        while(flag == 2){
+            //print new temp to uart
+            sprintf(s, "Temperature tol.: %d F\r\nPress Both Buttons to Confirm Changes", tolT);  
+            display_update();
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            I2C_MasterSendStop();
+            I2C_MasterClearStatus();
+            
+            if(ENC_Flag == 1){
+                tolT++;
                 ENC_Flag = 0;
                 display_clear();
-               
             }
-            Select = 1;
-                if(Select == 1){
-                    
-                            //print new temp to uart
-                    sprintf(s, "Set Temperature: %d F\r\nPress Both Buttons to Confirm Changes", SetTemp);  
-                    display_update();
-                    gfx_setCursor(2, 20);
-                    gfx_println(s);
-                    I2C_MasterSendStop();
-                    I2C_MasterClearStatus();
-                    
-                }
-               
-        }
-        else if((SW2_Flag == 1) && (SW1_Flag == 0)){    // If user selects Humidity settings
-           if((ENC_Flag == 1) && (SetHumid < 100)){                          // Increase humidity
-                SetHumid = SetHumid + 1;
+            else if(ENC_Flag == -1){
+                tolT--;
                 ENC_Flag = 0;
-            display_clear();
-            }           
-           else if((ENC_Flag == -1) && (SetHumid > 0)){             //Decrease humidity
-                SetHumid = SetHumid - 1;
-                ENC_Flag = 0;
-            display_clear();
-            } 
-            Select = 2;
-            if(Select == 2){
-                    sprintf(s, "Set Humidity: %d \%%\r\nPress Both Buttons to Confirm Changes", SetHumid);
-                    display_update();
-                    gfx_setCursor(2, 20);
-                    gfx_println(s); 
-                    I2C_MasterSendStop();
-                    I2C_MasterClearStatus();
+                display_clear();
             }
-        }
-        if((SW1_Flag == 1) && (SW2_Flag == 1)){
-            sprintf(s, "Changes Confirmed");
-             display_clear();
-             display_update();
-             gfx_setCursor(10, 30);
-             gfx_println(s);
-             display_update(); 
-             I2C_MasterSendStop();
-             I2C_MasterClearStatus();
-            
-            // write to EEPROM
-            changeSetPointsEEPROM(SetTemp, SetHumid, tolT, tolH);
+            else if(SW1_Flag && SW2_Flag){
+                sprintf(s, "Changes Confirmed");
+                display_clear();
+                display_update();
+                gfx_setCursor(10, 30);
+                gfx_println(s);
+                display_update(); 
+                I2C_MasterSendStop();
+                I2C_MasterClearStatus();
+                
+                flag = 0;
+            }
 
-            SW1_Flag = 0;
-            SW2_Flag = 0;
-            ENC_Flag = 0;
-            Select = 0;
-            flag = 2;
         }
-        CyWdtClear();
+        
+        // Change set point
+        while(flag == 3){
+            //print new temp to uart
+            sprintf(s, "Set Temp.: %d F\r\nPress Both Buttons to Confirm Changes", SetTemp);  
+            display_update();
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            I2C_MasterSendStop();
+            I2C_MasterClearStatus();
+            
+            if(ENC_Flag == 1){
+                SetTemp++;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(ENC_Flag == -1){
+                SetTemp--;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(SW1_Flag && SW2_Flag){
+                sprintf(s, "Changes Confirmed");
+                display_clear();
+                display_update();
+                gfx_setCursor(10, 30);
+                gfx_println(s);
+                display_update(); 
+                I2C_MasterSendStop();
+                I2C_MasterClearStatus();
+                
+                flag = 0;
+            }
+
+        }
+           
     }
-        setTol();
-        flag = 0;
-        CyWdtClear();
+    else if((SW2_Flag == 1) && (SW1_Flag == 0)){    // If user selects Humidity settings
+        SW1_Flag = 0; SW2_Flag = 0;
+        
+        while(flag == 1){
+            sprintf(s, "Press [L] for tol. \n [R] for set points");  
+            display_update();    
+            gfx_setTextSize(1);
+            gfx_setTextColor(WHITE);
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            CyWdtClear();
+        
+            if(SW1_Flag == 1 && SW2_Flag == 0){
+                flag = 2;
+                display_clear();
+            }
+            else if(SW2_Flag == 1 && SW1_Flag == 0){
+                flag = 3;
+                display_clear();
+            }
+        
+        }
+        
+        SW1_Flag = 0;
+        SW2_Flag = 0;
+        // Change tolerance
+        while(flag == 2){
+            //print new temp to uart
+            sprintf(s, "Humidity tol.: %d F\r\nPress Both Buttons to Confirm Changes", tolH);  
+            display_update();
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            I2C_MasterSendStop();
+            I2C_MasterClearStatus();
+            
+            if(ENC_Flag == 1){
+                tolH++;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(ENC_Flag == -1){
+                tolH--;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(SW1_Flag && SW2_Flag){
+                sprintf(s, "Changes Confirmed");
+                display_clear();
+                display_update();
+                gfx_setCursor(10, 30);
+                gfx_println(s);
+                display_update(); 
+                I2C_MasterSendStop();
+                I2C_MasterClearStatus();
+                
+                flag = 0;
+            }
+
+        }
+        
+        // Change set point
+        while(flag == 3){
+            //print new temp to uart
+            sprintf(s, "Set Humidity: %d F\r\nPress Both Buttons to Confirm Changes", SetHumid);  
+            display_update();
+            gfx_setCursor(2, 20);
+            gfx_println(s);
+            I2C_MasterSendStop();
+            I2C_MasterClearStatus();
+            
+            if(ENC_Flag == 1){
+                SetHumid++;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(ENC_Flag == -1){
+                SetHumid--;
+                ENC_Flag = 0;
+                display_clear();
+            }
+            else if(SW1_Flag && SW2_Flag){
+                sprintf(s, "Changes Confirmed");
+                display_clear();
+                display_update();
+                gfx_setCursor(10, 30);
+                gfx_println(s);
+                display_update(); 
+                I2C_MasterSendStop();
+                I2C_MasterClearStatus();
+                
+                flag = 0;
+            }
+
+        }
+           
+    }
+
+    // write to EEPROM
+    changeSetPointsEEPROM(SetTemp, SetHumid, tolT, tolH);
+    setTol();
+    flag = 0;
+    SW1_Flag = 0;
+    SW2_Flag = 0;
+    ENC_Flag = 0;
+    CyWdtClear();
     
 }
 /* [] END OF FILE */
