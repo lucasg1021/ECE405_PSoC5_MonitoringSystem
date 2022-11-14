@@ -21,7 +21,7 @@
 
 extern volatile int connection, keyFlag, BASE, PRIV;
 extern volatile long long MOD;
-extern volatile unsigned KEY;
+extern volatile long long KEY;
 extern volatile char * wifi_ssid;
 extern volatile char * wifi_pwd;
 

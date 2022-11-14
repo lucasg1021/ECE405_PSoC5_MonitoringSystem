@@ -160,7 +160,7 @@ float convertHumidity(uint8 num1, uint8 num2, uint8 num3){
 
 void checkParam(float tempF, float humid, int alertEnable){
 
-    int TIMERLEN = 18000;
+    int TIMERLEN = 3000;
     
     // check if any params are in alert range
     if((tempF > TH) || (tempF < TL) || (humid > HH) || (humid < HL)){ 
@@ -329,6 +329,7 @@ void checkParam(float tempF, float humid, int alertEnable){
             LED_H_R_Write(0);
             LED_H_Y_Write(0);
             LED_H_G_Write(1);
+            
         }
 
         CyWdtClear();
@@ -504,7 +505,7 @@ void changeI2CDevice(int dev){
 }
 
 void checkISwitches(int alertEnable){
-    int TIMERLEN = 18000;
+    int TIMERLEN = 3000;
     // check that heat lamp and mister are in the correct state
     // Tout & Hout will be 1 if device should be on
     int tOut = Tout_Read();

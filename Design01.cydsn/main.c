@@ -28,7 +28,7 @@ volatile int keyFlag = 1; // indicates if startup sequence has been executed and
 volatile int PRIV;
 volatile int BASE = 7;
 volatile long long MOD = 2147483647;
-volatile unsigned KEY = 123;
+volatile long long KEY = 123;
 
 volatile int SetTemp;
 volatile int SetHumid;
@@ -88,7 +88,7 @@ int main(void)
     alertTimeISR_Start();
     alertTimer_WriteCounter(0);
         
-    char s[80], sESP[80], eepromS[30];
+    char s[80], sESP[160], eepromS[30];
     float tempF, humid, tempF0, humid0, tempF1, humid1, tempF2, humid2;
     int lampOn, misterOn;
 
@@ -189,7 +189,7 @@ int main(void)
     changeI2CDevice(0);
     
     // start WDT
-    CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
+    //CyWdtStart(CYWDT_1024_TICKS, CYWDT_LPMODE_NOCHANGE);
     CyWdtClear();
 
     SW1_ISR_Start();
@@ -235,33 +235,29 @@ int main(void)
         
         tempF = (tempF0 + tempF1 + tempF2) / 3;
         humid = (humid0 + humid1 + humid2) / 3;
-//        tempF = tempF2;
-//        humid = humid2;
         
-        if(1){
-            sprintf(s, "%.2f %.2f\r\n", tempF0, humid0);
+        if(0){
+            sprintf(s, "%.2f %.2f\r\n%.2f %.2f\r\n%.2f %.2f\r\n", tempF0, humid0, tempF1, humid1, tempF2, humid2);
             UART_PutString(s);
         }
         
         // check that temp and humidity are within tolerance
         if(alertClkFlag != -1){
-            alertFlag = 0;
-            noticeFlag = 0;
-            equipFlag = 0;
             checkParam(tempF, humid, 0);
             
             // check that the current sensing switches are showing the correct state
-            checkISwitches(0);
+            checkISwitches(1);
         }
         else{
             checkParam(tempF, humid, 1);
             // check that the current sensing switches are showing the correct state
             checkISwitches(1);
-            alertClkFlag = 0;
-        }
-        
-        if (alertFlag != 0 || noticeFlag != 0 || equipFlag != 0){
-            UART_PutString("\r\nALERT!!!!!!!!!\r\n\n");  
+            alertClkFlag = -2;
+            
+            alertTimer_Stop();
+            alertTimer_WriteCounter(0);
+            alertTimer_WritePeriod(6000);
+            alertTimer_Enable();
         }
         
         // print to OLED
@@ -279,6 +275,8 @@ int main(void)
             lampOn = I_SW_T_Read();
             misterOn = I_SW_H_Read();
             sendDataESP(sESP, tempF, humid, lampOn, misterOn);
+            
+            alertClkFlag = 0;
         }
         CyWdtClear();
         CyDelay(1000);
@@ -287,7 +285,7 @@ int main(void)
         setTol();
         
         // clear ESP UART string variable
-        memset(sESP, '\0', 80);
+        memset(sESP, '\0', 160);
 
     }
 }

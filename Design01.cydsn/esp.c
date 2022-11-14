@@ -33,7 +33,7 @@ void initESP(char* sESP){
     waitForResponseESP(OK, sESP, 1000);
     
     // enable ESP WDT
-    ESPUART_PutString("AT+CSYSWDTENABLE\r\n\n");
+    ESPUART_PutString("AT+CSYSWDTDISABLE\r\n\n");
     waitForResponseESP(OK, sESP, 5000);
     
     // set to station mode
@@ -78,7 +78,7 @@ void joinWifiESP(char *ssid, char *pwd, char* sESP){
 // function that will constant pop from circular buffer until desired response from ESP seen or timeout
 int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
     uint8_t c;
-    uint8_t key8b = KEY & 0xFF;
+    uint8_t key8b = (unsigned)KEY & 0xFF;
 
     char str[80], s[30];
     
@@ -183,7 +183,7 @@ int waitForResponseESP(char returnStr[], char* sESP, int Timeout){
             return 0;   
         }
         // if receive 11 bytes - "REQUESTDATA" - encrypted but no key, request key sharing startup
-        else if(strstr(sESP, "IPD,0,11") != NULL && !keyFlag){
+        else if(strstr(sESP, "IPD,0,11") != NULL && keyFlag == 0){
             requestStartup(sESP);   
         }
         CyWdtClear();
@@ -236,11 +236,14 @@ void getEncryptStartupESP(char* sESP){
     waitForResponseESP("OK\r\n", sESP, 1000);
     CyWdtClear();
     
-    KEY = (unsigned)pow((double)B, (double)PRIV) % MOD;
+    KEY = ((long long)pow((double)B, (double)PRIV) % MOD) & 0xFF;
+    sprintf(s, "%i\r\n", PRIV);
+    UART_PutString(s);
     sprintf(s, "%i\r\n", B);
     UART_PutString(s);
-    sprintf(s, "%i\r\n", KEY);
+    sprintf(s, "%lld\r\n", KEY);
     UART_PutString(s);
+
     if(KEY != 0 && KEY != 1){
         keyFlag = 1;
     }
@@ -291,6 +294,7 @@ void sendDataESP(char* sESP, float tempF, float humid, int lampOn, int misterOn)
     
     sprintf(s, "STATUS %d %d EQUIP %d ALERT %d NOTICE %d %.2f %.2f %d %d %d %d DATA", lampOn, misterOn, equipFlag, alertFlag, noticeFlag, tempF, humid, SetTemp, SetHumid, tolT, tolH);
 
+    //UART_PutString(s);
     if(keyFlag){
         encryptESP(s, KEY, strlen(s));
     }
@@ -313,8 +317,6 @@ void sendDataESP(char* sESP, float tempF, float humid, int lampOn, int misterOn)
     CyWdtClear();
 
     connection = 0;
-    alertFlag = 0;
-    noticeFlag = 0;
     equipFlag = 0;
     
 }
