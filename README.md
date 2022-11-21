@@ -2,7 +2,7 @@
 
 ## ECE405 Senior Design Project Fall 2022
 
-Brennan Rusteberg, Garrett Prosise, Kelsey Haines, & Lucas Gillette
+Brennan Rusteberg, Garrett Prosise, Kelsey Haines, & Lucas Gillette   
 Code Written by Kelsey Haines & Lucas Gillette  
 Last updated 11/20/2022
 
