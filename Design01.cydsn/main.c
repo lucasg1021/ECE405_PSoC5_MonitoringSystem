@@ -226,12 +226,12 @@ int main(void)
         }
         
         // take temp and humid measurements from all three devices, average them
-//        changeI2CDevice(0);
-//        takeMeasurementAHT(&tempF0, &humid0);   // measure temp and humid
-//        changeI2CDevice(1);
-//        takeMeasurementAHT(&tempF1, &humid1);   // measure temp and humid
-//        changeI2CDevice(2);
-//        takeMeasurementAHT(&tempF2, &humid2);   // measure temp and humid
+        changeI2CDevice(0);
+        takeMeasurementAHT(&tempF0, &humid0);   // measure temp and humid
+        changeI2CDevice(1);
+        takeMeasurementAHT(&tempF1, &humid1);   // measure temp and humid
+        changeI2CDevice(2);
+        takeMeasurementAHT(&tempF2, &humid2);   // measure temp and humid
         
         tempF = (tempF0 + tempF1 + tempF2) / 3;
         humid = (humid0 + humid1 + humid2) / 3;
